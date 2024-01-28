@@ -36,6 +36,7 @@
 
                         <div class="dropdown-menu">
                             <a href="#" class="dropdown-item">Upload a file...</a>
+                            <a href="#" class="dropdown-item">Upload Biometric File</a>
                             <a href="#" class="dropdown-item">Download CSV template</a>
                         </div>
                     </div>
@@ -50,483 +51,70 @@
                 options.
             </div>
 
+            <div class="card-body">
+                <div class="alert alert-info border-0 alert-dismissible fade show">
+                    <span class="fw-semibold">Heads up!</span> You are currently viewing <a href="#" class="alert-link">January 01 2024 to January 31 2024</a>.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+
             <table class="table datatable-responsive">
                 <thead>
                     <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Job Title</th>
-                        <th>DOB</th>
+                        <th data-orderable="false" class="text-center">
+                            <input type="checkbox" class="form-check-input" id="cc_li_c">
+                        </th>
+                        <th>Date</th>
+                        <th>Employee Code</th>
+                        <th>Name</th>
+                        <th>Time In</th>
+                        <th>Time Out</th>
+                        <th class="text-center">Working Hours</th>
                         <th>Status</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Marth</td>
-                        <td><a href="#">Enright</a></td>
-                        <td>Traffic Court Referee</td>
-                        <td>22 Jun 1972</td>
-                        <td><span class="badge bg-success bg-opacity-10 text-success">Active</span></td>
-                        <td class="text-center">
-                            <div class="d-inline-flex">
-                                <div class="dropdown">
-                                    <a href="#" class="text-body" data-bs-toggle="dropdown">
-                                        <i class="ph-list"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-pdf me-2"></i>
-                                            Export to .pdf
+                    @foreach ($employees as $item) 
+                        @foreach ($item->attendances as $subItem)
+                        <tr>
+                            <th class="d-flex justify-content-center ">
+                                <input type="checkbox" class="form-check-input">
+                            </th>
+                            <td>{{ $subItem->date }}</td>
+                            <td><a href="#">{{ $item->code }}</a></td>
+                            <td>{{ $item->first_name .' '. $item->last_name }}</td>
+                            <td>{{ $subItem->time_in }}</td>
+                            <td>{{ $subItem->time_out }}</td>
+                            <td class="text-center">{{ $subItem->working_hours }}</td>
+                            <td><span class="badge {{ $statusColors[$subItem->status] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">{{ Str::title($subItem->status) }}</span></td>
+                            <td class="text-center">
+                                <div class="d-inline-flex">
+                                    <div class="dropdown">
+                                        <a href="#" class="text-body" data-bs-toggle="dropdown">
+                                            <i class="ph-list"></i>
                                         </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-csv me-2"></i>
-                                            Export to .csv
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-doc me-2"></i>
-                                            Export to .doc
-                                        </a>
+    
+                                        <div class="dropdown-menu dropdown-menu-end ">
+                                            <a href="#" class="dropdown-item">
+                                                <i class="ph-file-pdf me-2"></i>
+                                                Export to .pdf
+                                            </a>
+                                            <a href="#" class="dropdown-item">
+                                                <i class="ph-file-csv me-2"></i>
+                                                Export to .csv
+                                            </a>
+                                            <a href="#" class="dropdown-item">
+                                                <i class="ph-file-doc me-2"></i>
+                                                Export to .doc
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Jackelyn</td>
-                        <td>Weible</td>
-                        <td><a href="#">Airline Transport Pilot</a></td>
-                        <td>3 Oct 1981</td>
-                        <td><span class="badge bg-secondary bg-opacity-10 text-secondary">Inactive</span></td>
-                        <td class="text-center">
-                            <div class="d-inline-flex">
-                                <div class="dropdown">
-                                    <a href="#" class="text-body" data-bs-toggle="dropdown">
-                                        <i class="ph-list"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-pdf me-2"></i>
-                                            Export to .pdf
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-csv me-2"></i>
-                                            Export to .csv
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-doc me-2"></i>
-                                            Export to .doc
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Aura</td>
-                        <td>Hard</td>
-                        <td>Business Services Sales Representative</td>
-                        <td>19 Apr 1969</td>
-                        <td><span class="badge bg-danger bg-opacity-10 text-danger">Suspended</span></td>
-                        <td class="text-center">
-                            <div class="d-inline-flex">
-                                <div class="dropdown">
-                                    <a href="#" class="text-body" data-bs-toggle="dropdown">
-                                        <i class="ph-list"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-pdf me-2"></i>
-                                            Export to .pdf
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-csv me-2"></i>
-                                            Export to .csv
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-doc me-2"></i>
-                                            Export to .doc
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Nathalie</td>
-                        <td><a href="#">Pretty</a></td>
-                        <td>Drywall Stripper</td>
-                        <td>13 Dec 1977</td>
-                        <td><span class="badge bg-info bg-opacity-10 text-info">Pending</span></td>
-                        <td class="text-center">
-                            <div class="d-inline-flex">
-                                <div class="dropdown">
-                                    <a href="#" class="text-body" data-bs-toggle="dropdown">
-                                        <i class="ph-list"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-pdf me-2"></i>
-                                            Export to .pdf
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-csv me-2"></i>
-                                            Export to .csv
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-doc me-2"></i>
-                                            Export to .doc
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sharan</td>
-                        <td>Leland</td>
-                        <td>Aviation Tactical Readiness Officer</td>
-                        <td>30 Dec 1991</td>
-                        <td><span class="badge bg-secondary bg-opacity-10 text-secondary">Inactive</span></td>
-                        <td class="text-center">
-                            <div class="d-inline-flex">
-                                <div class="dropdown">
-                                    <a href="#" class="text-body" data-bs-toggle="dropdown">
-                                        <i class="ph-list"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-pdf me-2"></i>
-                                            Export to .pdf
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-csv me-2"></i>
-                                            Export to .csv
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-doc me-2"></i>
-                                            Export to .doc
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Maxine</td>
-                        <td><a href="#">Woldt</a></td>
-                        <td><a href="#">Business Services Sales Representative</a></td>
-                        <td>17 Oct 1987</td>
-                        <td><span class="badge bg-info bg-opacity-10 text-info">Pending</span></td>
-                        <td class="text-center">
-                            <div class="d-inline-flex">
-                                <div class="dropdown">
-                                    <a href="#" class="text-body" data-bs-toggle="dropdown">
-                                        <i class="ph-list"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-pdf me-2"></i>
-                                            Export to .pdf
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-csv me-2"></i>
-                                            Export to .csv
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-doc me-2"></i>
-                                            Export to .doc
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sylvia</td>
-                        <td><a href="#">Mcgaughy</a></td>
-                        <td>Hemodialysis Technician</td>
-                        <td>11 Nov 1983</td>
-                        <td><span class="badge bg-danger bg-opacity-10 text-danger">Suspended</span></td>
-                        <td class="text-center">
-                            <div class="d-inline-flex">
-                                <div class="dropdown">
-                                    <a href="#" class="text-body" data-bs-toggle="dropdown">
-                                        <i class="ph-list"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-pdf me-2"></i>
-                                            Export to .pdf
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-csv me-2"></i>
-                                            Export to .csv
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-doc me-2"></i>
-                                            Export to .doc
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Lizzee</td>
-                        <td><a href="#">Goodlow</a></td>
-                        <td>Technical Services Librarian</td>
-                        <td>1 Nov 1961</td>
-                        <td><span class="badge bg-danger bg-opacity-10 text-danger">Suspended</span></td>
-                        <td class="text-center">
-                            <div class="d-inline-flex">
-                                <div class="dropdown">
-                                    <a href="#" class="text-body" data-bs-toggle="dropdown">
-                                        <i class="ph-list"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-pdf me-2"></i>
-                                            Export to .pdf
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-csv me-2"></i>
-                                            Export to .csv
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-doc me-2"></i>
-                                            Export to .doc
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Kennedy</td>
-                        <td>Haley</td>
-                        <td>Senior Marketing Designer</td>
-                        <td>18 Dec 1960</td>
-                        <td><span class="badge bg-success bg-opacity-10 text-success">Active</span></td>
-                        <td class="text-center">
-                            <div class="d-inline-flex">
-                                <div class="dropdown">
-                                    <a href="#" class="text-body" data-bs-toggle="dropdown">
-                                        <i class="ph-list"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-pdf me-2"></i>
-                                            Export to .pdf
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-csv me-2"></i>
-                                            Export to .csv
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-doc me-2"></i>
-                                            Export to .doc
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Chantal</td>
-                        <td><a href="#">Nailor</a></td>
-                        <td>Technical Services Librarian</td>
-                        <td>10 Jan 1980</td>
-                        <td><span class="badge bg-secondary bg-opacity-10 text-secondary">Inactive</span></td>
-                        <td class="text-center">
-                            <div class="d-inline-flex">
-                                <div class="dropdown">
-                                    <a href="#" class="text-body" data-bs-toggle="dropdown">
-                                        <i class="ph-list"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-pdf me-2"></i>
-                                            Export to .pdf
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-csv me-2"></i>
-                                            Export to .csv
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-doc me-2"></i>
-                                            Export to .doc
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Delma</td>
-                        <td>Bonds</td>
-                        <td>Lead Brand Manager</td>
-                        <td>21 Dec 1968</td>
-                        <td><span class="badge bg-info bg-opacity-10 text-info">Pending</span></td>
-                        <td class="text-center">
-                            <div class="d-inline-flex">
-                                <div class="dropdown">
-                                    <a href="#" class="text-body" data-bs-toggle="dropdown">
-                                        <i class="ph-list"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-pdf me-2"></i>
-                                            Export to .pdf
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-csv me-2"></i>
-                                            Export to .csv
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-doc me-2"></i>
-                                            Export to .doc
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Roland</td>
-                        <td>Salmos</td>
-                        <td><a href="#">Senior Program Developer</a></td>
-                        <td>5 Jun 1986</td>
-                        <td><span class="badge bg-secondary bg-opacity-10 text-secondary">Inactive</span></td>
-                        <td class="text-center">
-                            <div class="d-inline-flex">
-                                <div class="dropdown">
-                                    <a href="#" class="text-body" data-bs-toggle="dropdown">
-                                        <i class="ph-list"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-pdf me-2"></i>
-                                            Export to .pdf
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-csv me-2"></i>
-                                            Export to .csv
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-doc me-2"></i>
-                                            Export to .doc
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Coy</td>
-                        <td>Wollard</td>
-                        <td>Customer Service Operator</td>
-                        <td>12 Oct 1982</td>
-                        <td><span class="badge bg-success bg-opacity-10 text-success">Active</span></td>
-                        <td class="text-center">
-                            <div class="d-inline-flex">
-                                <div class="dropdown">
-                                    <a href="#" class="text-body" data-bs-toggle="dropdown">
-                                        <i class="ph-list"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-pdf me-2"></i>
-                                            Export to .pdf
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-csv me-2"></i>
-                                            Export to .csv
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-doc me-2"></i>
-                                            Export to .doc
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Maxwell</td>
-                        <td>Maben</td>
-                        <td>Regional Representative</td>
-                        <td>25 Feb 1988</td>
-                        <td><span class="badge bg-danger bg-opacity-10 text-danger">Suspended</span></td>
-                        <td class="text-center">
-                            <div class="d-inline-flex">
-                                <div class="dropdown">
-                                    <a href="#" class="text-body" data-bs-toggle="dropdown">
-                                        <i class="ph-list"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-pdf me-2"></i>
-                                            Export to .pdf
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-csv me-2"></i>
-                                            Export to .csv
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-doc me-2"></i>
-                                            Export to .doc
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Cicely</td>
-                        <td>Sigler</td>
-                        <td><a href="#">Senior Research Officer</a></td>
-                        <td>15 Mar 1960</td>
-                        <td><span class="badge bg-info bg-opacity-10 text-info">Pending</span></td>
-                        <td class="text-center">
-                            <div class="d-inline-flex">
-                                <div class="dropdown">
-                                    <a href="#" class="text-body" data-bs-toggle="dropdown">
-                                        <i class="ph-list"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-pdf me-2"></i>
-                                            Export to .pdf
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-csv me-2"></i>
-                                            Export to .csv
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <i class="ph-file-doc me-2"></i>
-                                            Export to .doc
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
+                        @endforeach
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -567,7 +155,6 @@
                 }
             };
 
-            // Modal callbacks
             const _componentModalCallbacks = function() {
 
                 // onShow callback
@@ -603,7 +190,6 @@
                 }
             };
 
-            // Bootbox extension
             const _componentModalBootbox = function() {
                 if (typeof bootbox == 'undefined') {
                     console.warn('Warning - bootbox.min.js is not loaded.');
@@ -813,11 +399,6 @@
                 }
             };
 
-
-            //
-            // Return objects assigned to module
-            //
-
             return {
                 initComponents: function() {
                     _componentModalRemote();
@@ -827,9 +408,40 @@
             }
         }();
 
-
         document.addEventListener('DOMContentLoaded', function() {
             Modals.initComponents();
+
+    // Get the header checkbox and all checkboxes in the table body
+    const selectAllCheckbox = document.getElementById('cc_li_c');
+    const checkboxes = document.querySelectorAll('.datatable-responsive tbody input[type="checkbox"]');
+
+    // Add an event listener to the header checkbox
+    selectAllCheckbox.addEventListener('change', function () {
+        // Loop through all checkboxes in the table body and set their checked property
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+
+        // Set the indeterminate state based on checked checkboxes in the table body
+        updateIndeterminateState();
+    });
+
+    // Add an event listener to each checkbox in the table body
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            // If any checkbox in the body is unchecked, uncheck the header checkbox
+            selectAllCheckbox.checked = [...checkboxes].every(checkbox => checkbox.checked);
+
+            // Set the indeterminate state based on checked checkboxes in the table body
+            updateIndeterminateState();
+        });
+    });
+
+    // Function to update the indeterminate state of the header checkbox
+    function updateIndeterminateState() {
+        const checkedCheckboxes = [...checkboxes].filter(checkbox => checkbox.checked);
+        selectAllCheckbox.indeterminate = checkedCheckboxes.length > 0 && checkedCheckboxes.length < checkboxes.length;
+    }
         });
     </script>
 @endsection

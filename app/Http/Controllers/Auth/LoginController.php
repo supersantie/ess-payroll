@@ -52,6 +52,8 @@ class LoginController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+        
+        $request->logLoginActivity();
 
         return redirect()->intended(RouteServiceProvider::HOME);
     }

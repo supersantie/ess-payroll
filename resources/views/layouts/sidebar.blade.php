@@ -41,7 +41,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages.payroll.employee" class="nav-link">
+                            <a href="{{ route('employees') }}" class="nav-link {{ request()->routeIs('employees') ? 'active' : '' }}">
                                 <i class="ph-users-four"></i>
                                 <span>
                                     Employees
@@ -49,7 +49,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages.payroll.attendance" class="nav-link">
+                            <a href="{{ route('attendance') }}" class="nav-link {{ request()->routeIs('attendance') ? 'active' : '' }}">
                                 <i class="ph-calendar"></i>
                                 <span>
                                     Attendance
@@ -57,39 +57,39 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages.payroll.overtime" class="nav-link">
+                            <a href="{{ route('overtime') }}" class="nav-link {{ request()->routeIs('overtime') ? 'active' : '' }}">
                                 <i class="ph-timer"></i>
                                 <span>
                                     Overtime
                                 </span>
                             </a>
                         </li>
-                        <li class="nav-item nav-item-submenu">
+                        <li class="nav-item nav-item-submenu {{ request()->routeIs('reports.*') ? 'nav-item-open' : '' }}">
                             <a href="#" class="nav-link">
                                 <i class="ph-scroll"></i>
                                 <span>Reports</span>
                             </a>
-                            <ul class="nav-group-sub collapse">
-                                <li class="nav-item"><a href="pages.payroll.reports.payroll" class="nav-link">Payroll</a></li>
-                                <li class="nav-item"><a href="pages.payroll.reports.payslip" class="nav-link">Payslip</a></li>
+                            <ul class="nav-group-sub collapse {{ request()->routeIs('reports.*') ? 'show' : '' }}">
+                                <li class="nav-item"><a href="{{ route('reports.payroll') }}" class="nav-link {{ request()->routeIs('reports.payroll') ? 'active' : '' }}">Payroll</a></li>
+                                <li class="nav-item"><a href="{{ route('reports.payslip') }}" class="nav-link {{ request()->routeIs('reports.payslip') ? 'active' : '' }}">Payslip</a></li>
                                 <li class="nav-item"><a href="pages.payroll.reports.13th_month" class="nav-link">13th Month Pay</a></li>
-                                <li class="nav-item"><a href="pages.payroll.reports.cut_off" class="nav-link">Cut-off</a></li>
+                                <li class="nav-item"><a href="{{ route('reports.cut_off') }}" class="nav-link {{ request()->routeIs('reports.cut_off') ? 'active' : '' }}">Cut-off</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item nav-item-submenu">
+                        <li class="nav-item nav-item-submenu {{ request()->routeIs('deductions_and_contributions.*') ? 'nav-item-open' : '' }}" >
                             <a href="#" class="nav-link">
                                 <i class="ph-scales"></i>
                                 <span>Deductions & Contributions</span>
                             </a>
-                            <ul class="nav-group-sub collapse">
-                                <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.deductions" class="nav-link">Deduction</a></li>
+                            <ul class="nav-group-sub collapse {{ request()->routeIs('deductions_and_contributions.*') ? 'show' : '' }}">
+                                <li class="nav-item"><a href="{{ route('deductions_and_contributions.deductions') }}" class="nav-link {{ request()->routeIs('deductions_and_contributions.deductions') ? 'active' : '' }}">Deduction</a></li>
                                 <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.sss" class="nav-link">SSS Loan</a></li>
                                 <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.pag_ibig" class="nav-link">Pag Ibig Loan</a></li>
                                 <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.phil_health" class="nav-link">Philhealth Loan</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="pages.payroll.incentives_and_allowance" class="nav-link">
+                            <a href="{{ route('perks') }}" class="nav-link {{ request()->routeIs('perks') ? 'active' : '' }}">
                                 <i class="ph-gift"></i>
                                 <span>
                                     Incentives & Allowance
@@ -97,7 +97,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages.payroll.leave_of_absence" class="nav-link">
+                            <a href="{{ route('leaves') }}" class="nav-link {{ request()->routeIs('leaves') ? 'active' : '' }}">
                                 <i class="ph-calendar-x"></i>
                                 <span>
                                     Leave of Absence
@@ -105,7 +105,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages.payroll.activity_logs" class="nav-link">
+                            <a href="{{ route('activity_logs') }}" class="nav-link {{ request()->routeIs('activity_logs') ? 'active' : '' }}">
                                 <i class="ph-clock-counter-clockwise"></i>
                                 <span>
                                     Activity Logs
