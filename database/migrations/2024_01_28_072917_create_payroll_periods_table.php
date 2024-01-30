@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('payroll_periods', function (Blueprint $table) {
             $table->id();
+            $table->enum('periodical_type', ['monthly', 'semi monthly']);
+            $table->enum('duration', ['12 days', '30 days']);
             $table->timestamps();
         });
     }

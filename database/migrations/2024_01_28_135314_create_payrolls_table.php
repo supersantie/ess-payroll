@@ -15,16 +15,16 @@ return new class extends Migration
             $table->id();
             $table->string('employee_code')->index();
             $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
-            $table->double('paid_hours');
-            $table->double('overtime');
-            $table->double('sss');
-            $table->double('phil_health');
-            $table->double('pag_ibig');
-            $table->double('net_pay');
-            $table->dateTime('date_issued');
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
-            $table->enum('status', ['released', 'hold', 'issued']);
+            $table->double('paid_hours')->default(0.0);
+            $table->double('overtime')->default(0.0);
+            $table->double('sss')->default(0.0);
+            $table->double('phil_health')->default(0.0);
+            $table->double('pag_ibig')->default(0.0);
+            $table->double('net_pay')->default(0.0);
+            $table->dateTime('date_issued')->nullable();
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
+            $table->enum('status', ['released', 'hold', 'issued'])->default('released');
             $table->timestamps();
         });
     }

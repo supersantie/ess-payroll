@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LimitlessController;
 use App\Http\Controllers\OvertimeController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\PayrollSettingController;
 use App\Http\Controllers\PayslipController;
 use App\Http\Controllers\PerkController;
 
@@ -44,6 +45,7 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::controller(AttendanceController::class)->group(function() {
         Route::get('/attendance', 'index')->name('attendance');
+        Route::post('/attendance/release', 'store')->name('attendance.release');
     });
 
     Route::controller(OvertimeController::class)->group(function() {
@@ -76,6 +78,10 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::controller(CutoffController::class)->group(function() {
         Route::get('/cutoff', 'index')->name('reports.cut_off');
+    });
+
+    Route::controller(PayrollSettingController::class)->group(function() {
+        Route::get('/payroll_settings', 'index')->name('payroll_settings');
     });
 
     Route::group(['middleware' => 'auth'], function () {

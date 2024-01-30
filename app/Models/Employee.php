@@ -9,6 +9,9 @@ class Employee extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['payroll_status'];
+
+
     public function getRouteKeyName(): string
     {
         return 'code';

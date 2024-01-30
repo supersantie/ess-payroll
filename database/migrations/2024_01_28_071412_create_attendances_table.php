@@ -19,6 +19,7 @@ return new class extends Migration
             $table->double('working_hours');
             $table->enum('status', ['on time', 'undertime', 'late']);
             $table->date('date');
+            $table->enum('payroll_status', ['recorded', 'processed'])->default('recorded');
             $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
             $table->timestamps();
         });

@@ -23,8 +23,9 @@
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Job Title</th>
+                    <th class="text-end" data-orderable="false">Basic Daily Rate</th>
                     <th>Date Hired</th>
-                    <th>Status</th>
+                    <th class="text-center"S>Status</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
@@ -34,6 +35,7 @@
                         <td>{{ $item->first_name }}</td>
                         <td><a href="#">{{ $item->last_name }}</a></td>
                         <td>Traffic Court Referee</td>
+                        <td class="text-end">P {{ $item->basic_daily_rate }}</td>
                         <td>{{ $item->date_hired }}</td>
                         <td>
                             <span class="badge {{ $statusColors[$item->status] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">

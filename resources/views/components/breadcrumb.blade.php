@@ -118,17 +118,13 @@
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-end w-100 w-lg-auto">
+                        <a href="{{ route('payroll_settings') }}" class="dropdown-item">
+                            <i class="ph-airplay me-2"></i>
+                            System
+                        </a>
                         <a href="#" class="dropdown-item">
                             <i class="ph-shield-warning me-2"></i>
-                            Account security
-                        </a>
-                        <a href="#" class="dropdown-item">
-                            <i class="ph-chart-bar me-2"></i>
-                            Analytics
-                        </a>
-                        <a href="#" class="dropdown-item">
-                            <i class="ph-lock-key me-2"></i>
-                            Privacy
+                            Roles & Permissions
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
