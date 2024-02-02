@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Deduction;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
 class DeductionController extends Controller
@@ -14,7 +15,11 @@ class DeductionController extends Controller
     {
         //
 
-        return view('pages.payroll.deductions_and_contributions.deductions');
+        $deductions = Employee::with('deductions', 'deductions.cutoffs')->get();
+
+        // dd($deductions);
+
+        return view('pages.payroll.deductions_and_contributions.deductions', compact('deductions'));
     }
 
     /**

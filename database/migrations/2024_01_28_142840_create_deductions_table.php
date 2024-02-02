@@ -13,11 +13,16 @@ return new class extends Migration
     {
         Schema::create('deductions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('employee_code')->index();
+            $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
+            $table->unsignedBigInteger('cutoff_id');
+            $table->foreign('cutoff_id')->references('id')->on('cutoffs')->onDelete('cascade');
             $table->double('amount');
             $table->enum('type', ['benefits', 'others']);
+            $table->enum('status', ['deducted', 'pending']);
             $table->timestamps();
         });
+        
     }
 
     /**

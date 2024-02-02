@@ -40,5 +40,9 @@ class Employee extends Model
     public function payslips(){
         return $this->hasMany(Payslip::class, 'employee_code', $this->getRouteKeyName());
     }
+
+    public function deductions(){
+        return $this->hasMany(Deduction::class, 'employee_code', $this->getRouteKeyName());
+    }
     
 }

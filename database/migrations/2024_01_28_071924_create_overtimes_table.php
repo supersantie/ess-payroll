@@ -17,10 +17,12 @@ return new class extends Migration
             $table->integer('no_of_hours');
             $table->double('rate_percentage');
             $table->dateTime('date_issued');
-            $table->enum('status', ['approved', 'denied', 'pending'])->default('pending');
+            $table->enum('status', ['approved', 'denied', 'pending', 'processed'])->default('pending');
+            // Set a specific length for the 'status' enum
             $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
             $table->timestamps();
         });
+        
     }
 
     /**

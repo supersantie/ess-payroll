@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Overtime extends Model
 {
     use HasFactory;
+
+    protected $fillable = ["status"];
     
     public function employee(){
         $this->belongsTo(Employee::class);

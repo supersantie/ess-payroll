@@ -12,9 +12,9 @@ class CutoffController extends Controller
      */
     public function index()
     {
-        //
+        $cutoffs = Cutoff::all();
 
-        return view('pages.payroll.reports.cut_off');
+        return view('pages.payroll.reports.cut_off', compact("cutoffs"));
     }
 
     /**

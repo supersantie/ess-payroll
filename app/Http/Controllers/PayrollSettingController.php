@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PayrollSetting;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\PayrollSetting;
 
 class PayrollSettingController extends Controller
 {
@@ -12,10 +13,18 @@ class PayrollSettingController extends Controller
      */
     public function index()
     {
-        //
+        $settings = PayrollSetting::all();
+        $keySetting = [];
 
-        return view('pages.payroll.settings');
+        foreach($settings as $setting){
+            $keySetting[$setting->key] = $setting->value;
+        }
+        
+    
+        return view('pages.payroll.settings', compact('settings', 'keySetting'));
     }
+    
+    
 
     /**
      * Show the form for creating a new resource.
@@ -30,7 +39,7 @@ class PayrollSettingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -54,7 +63,21 @@ class PayrollSettingController extends Controller
      */
     public function update(Request $request, PayrollSetting $payrollSetting)
     {
+
+        // dd($request->all());
         //
+        try {
+            foreach ($request->all() as $key => $value) {
+                // Update or create a record based on the 'key' value
+                PayrollSetting::updateOrCreate(
+                    ['key' => $key],
+                    ['value' => $value]
+                );
+            }
+        } catch (\Throwable $th) {
+            // Handle the exception, log it, or rethrow if necessary
+            throw $th;
+        }
     }
 
     /**

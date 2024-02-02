@@ -15,13 +15,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        // Run constant tables
+        $this->call([
+            PayrollSettingsSeeder::class,
+            // EmployeeSeeder::class
+        ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
+        // Run test datas
         \App\Models\Employee::factory(5)->create();
     }
 }

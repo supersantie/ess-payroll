@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Payroll;
 use App\Models\Employee;
+use App\Models\PayrollSetting;
 use Illuminate\Http\Request;
 
 class PayrollController extends Controller
@@ -14,16 +15,14 @@ class PayrollController extends Controller
     public function index()
     {
         //
-
         $payrolls = Employee::with('payrolls')->get();
-
         $statusColors = [
             'on time' => 'bg-success bg-opacity-10 text-success',
             'undertime' => 'bg-secondary bg-opacity-10 text-secondary',
             'late' => 'bg-danger bg-opacity-10 text-danger',
         ];
 
-        return view('pages.payroll.reports.payroll', compact('payrolls'));
+        return view('pages.payroll.reports.payroll', compact('payrolls', ));
     }
 
     /**

@@ -9,8 +9,34 @@
 <div class="content">
 
     <div class="card">
-        <div class="card-header">
+        <div class="card-header d-flex align-items-center justify-content-between">
             <h5 class="mb-0">Payroll List</h5>
+            <div class="d-flex gap-2">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary btn-labeled btn-labeled-start dropdown-toggle"
+                        data-bs-toggle="dropdown">
+                        <span class="btn-labeled-icon bg-black bg-opacity-20">
+                            <i class="ph-plus"></i>
+                        </span>
+                        Add Entry
+                    </button>
+
+                    <div class="dropdown-menu">
+                        <a href="javascript:(0)" class="dropdown-item" id="modal_remote">Add manually</a>
+                        <a href="#" class="dropdown-item">Upload a file...</a>
+                        <a href="#" class="dropdown-item">Upload biometric file</a>
+                        <a href="#" class="dropdown-item">Download CSV template</a>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-secondary btn-labeled btn-labeled-start" id="release_payroll"
+                        >
+                    <span class="btn-labeled-icon bg-black bg-opacity-20">
+                        <i class="ph-scroll"></i>
+                    </span>
+                    Generate Payslip
+                </button>
+            </div>
         </div>
 
         <div class="card-body">
@@ -82,6 +108,7 @@
                 @endforeach
             </tbody>
         </table>
+        
     </div>
 </div>
 <!-- /content area -->

@@ -28,6 +28,15 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach ($cutoffs as $key)
+                    <tr>
+                        <td>{{ $key->generated_date }}</td>
+                        <td>{{ $key->start_date }}</td>
+                        <td>{{ $key->end_date }}</td>
+                        <td>{{ $key->total_released_amount }}</td>
+                        <td></td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
     </div>

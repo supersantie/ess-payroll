@@ -1,20 +1,21 @@
 <?php
 
-use App\Http\Controllers\ActivityLogController;
-use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\CutoffController;
-use App\Http\Controllers\DeductionController;
-use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\LeaveController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LimitlessController;
-use App\Http\Controllers\OvertimeController;
-use App\Http\Controllers\PayrollController;
-use App\Http\Controllers\PayrollSettingController;
-use App\Http\Controllers\PayslipController;
 use App\Http\Controllers\PerkController;
+use App\Http\Controllers\LeaveController;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\CutoffController;
+use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\PayslipController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\OvertimeController;
+use App\Http\Controllers\DeductionController;
+use App\Http\Controllers\LimitlessController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\PayrollSettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,10 @@ Route::group(['middleware' => 'web'], function () {
     Route::controller(AttendanceController::class)->group(function() {
         Route::get('/attendance', 'index')->name('attendance');
         Route::post('/attendance/release', 'store')->name('attendance.release');
+
+
+        Route::get('/attendance/export', 'export')->name('attendance.export');
+        Route::get('/attendance/import', 'import')->name('attendance.import');
     });
 
     Route::controller(OvertimeController::class)->group(function() {
@@ -82,6 +87,7 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::controller(PayrollSettingController::class)->group(function() {
         Route::get('/payroll_settings', 'index')->name('payroll_settings');
+        Route::post('/payroll_settings', 'update')->name('payroll_settings.update');
     });
 
     Route::group(['middleware' => 'auth'], function () {
@@ -89,5 +95,6 @@ Route::group(['middleware' => 'web'], function () {
     });
 });
 
-
 require __DIR__ . '/auth.php';
+require __DIR__ . '/exports.php';
+require __DIR__ . '/imports.php';

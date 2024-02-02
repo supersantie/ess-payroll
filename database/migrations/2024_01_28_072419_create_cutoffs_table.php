@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('cutoffs', function (Blueprint $table) {
             $table->id();
+            $table->dateTime('generated_date');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->double('total_released_amount');
             $table->timestamps();
         });
     }
