@@ -27,10 +27,94 @@
                         </button>
 
                         <div class="dropdown-menu">
-                            <a href="javascript:(0)" class="dropdown-item" id="modal_remote">Add manually</a>
-                            <a href="#" class="dropdown-item">Upload a file...</a>
+                            <a href="javascript:(0)" class="dropdown-item" data-bs-toggle="modal"
+                                data-bs-target="#addManuallyModal">Add manually</a>
+                            <a href="#" class="dropdown-item" data-bs-toggle="modal"
+                                data-bs-target="#uploadFileModal">Upload a file...</a>
                             <a href="#" class="dropdown-item">Upload biometric file</a>
                             <a href="#" class="dropdown-item">Download CSV template</a>
+                        </div>
+
+                        {{-- Add manually modal --}}
+                        <div class="modal fade" id="addManuallyModal" aria-hidden="true"
+                            aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalToggleLabel">
+                                            Add Manually
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <form id="manualEntryForm">
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                You are using the <code>manual entry</code>. But you have a choice to <a
+                                                    href="" class="link-primary">Upload a file</a> to lessen the
+                                                hassle.
+                                            </div>
+                                            <div class="mb-3 d-flex align-items-center  justify-content-between gap-2">
+                                                <select data-placeholder="Select a employee..."
+                                                    class="form-control select w-100" name="employee">
+                                                    @foreach ($employees as $item)
+                                                        <option value="{{ $item->code }}   ">
+                                                            {{ $item->first_name . ' ' . $item->last_name }} </option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="d-flex align-items-center gap-2 w-100 ">
+                                                    <button type="button" id="addRow"
+                                                        class="btn btn-success btn-labeled btn-labeled-start flex-shrink-0 ">
+                                                        <span class="btn-labeled-icon bg-black bg-opacity-20">
+                                                            <i class="ph-plus"></i>
+                                                        </span>
+                                                        Add Row
+                                                    </button>
+                                                    <button type="button" id="clearAll"
+                                                        class="btn btn-danger btn-labeled btn-labeled-start flex-shrink-0 ">
+                                                        <span class="btn-labeled-icon bg-black bg-opacity-20">
+                                                            <i class="ph-trash"></i>
+                                                        </span>
+                                                        Clear all
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <table class="w-100" id="manualAttendanceTable">
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary">
+                                                Save Changes
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Upload file modal --}}
+                        <div class="modal fade" id="uploadFileModal" tabindex="-1" data-bs-backdrop="static"
+                            data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm"
+                                role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalTitleId">
+                                            Modal title
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary">Save</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -77,11 +161,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($employees as $item)
+                    @foreach ($attendances as $item)
                         @foreach ($item->attendances as $subItem)
                             <tr>
                                 <th class="d-flex justify-content-center ">
-                                    <input type="checkbox" class="form-check-input" data-employee-id="{{ $item->code }}">
+                                    <input type="checkbox" class="form-check-input"
+                                        data-employee-id="{{ $item->code }}">
                                 </th>
                                 <td>{{ $subItem->date }}</td>
                                 <td><a href="#">{{ $item->code }}</a></td>
@@ -130,13 +215,13 @@
     <script src="{{ URL::asset('assets/js/vendor/tables/datatables/datatables.min.js') }}"></script>
     <script src="{{ URL::asset('assets/js/vendor/tables/datatables/extensions/responsive.min.js') }}"></script>
     <script src="{{ URL::asset('assets/js/vendor/notifications/bootbox.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/js/vendor/forms/selects/select2.min.js') }}"></script>
     <script src="{{ URL::asset('assets/js/vendor/notifications/sweet_alert.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/js/vendor/forms/selects/select2.min.js') }}"></script>
 @endsection
 @section('scripts')
     <script src="{{ URL::asset('assets/demo/pages/datatables_extension_responsive.js') }}"></script>
-    <script src="{{ URL::asset('assets/demo/pages/form_select2.js') }}"></script>
     <script src="{{ URL::asset('assets/demo/pages/extra_sweetalert.js') }}"></script>
+    <script src="{{ URL::asset('assets/demo/pages/form_select2.js') }}"></script>
     {{-- <script src="{{URL::asset('assets/demo/pages/components_modals.js')}}"></script> --}}
     <script>
         const Modals = function() {
@@ -249,7 +334,7 @@
 
                 // Send the checked checkboxes' values through AJAX
                 $.ajax({
-                    url: '/attendance/release',
+                    url: '/payroll/store',
                     method: 'POST',
                     data: {
                         'name': 'test',
@@ -266,6 +351,96 @@
                     }
                 });
             });
+
+
+            var maxRows = 5; // Maximum number of rows
+            // Add Row
+            $("#addRow").click(function() {
+                var currentRows = $("#manualAttendanceTable tbody tr").length;
+
+                if (currentRows < maxRows) {
+                    var newRow = '<tr>' +
+                        '<td><input type="date" class="form-control" name="date[]" id="" aria-describedby="helpId" placeholder="" /></td>' +
+                        '<td><input type="time" class="form-control" name="time_in[]" id="" aria-describedby="helpId" placeholder="" /></td>' +
+                        '<td><input type="time" class="form-control" name="time_out[]" id="" aria-describedby="helpId" placeholder="" /></td>' +
+                        '<td><button type="button" class="btn btn-danger btn-icon delete-row"><i class="ph-trash"></i></button></td>' +
+                        '</tr>';
+
+                    $("#manualAttendanceTable tbody").append(newRow);
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Maximum limit of 5 rows reached!',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    });
+                }
+            });
+
+            // Remove Row
+            $(document).on('click', '.delete-row', function() {
+                $(this).closest('tr').remove();
+            });
+
+            // Clear All
+            $("#clearAll").click(function() {
+                $("#manualAttendanceTable tbody").empty();
+            });
+
+            $("#manualEntryForm").on("submit", function(e) {
+                e.preventDefault();
+
+                let formData = new FormData($(this)[0]);
+                $.ajax({
+                    url: '/attendance/store',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    success: function(response) {
+                        // Check if the response contains the expected data
+                        if (response && response.attendance_records) {
+                            // Close the modal
+                            $('#addManuallyModal').modal('hide');
+
+                            // Display SweetAlert for success
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Attendance records saved successfully!',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            });
+                        } else {
+                            // Handle unexpected response
+                            console.error('Unexpected response format:', response);
+                        }
+                    },
+                    error: function(error) {
+                        // Close the modal (in case it's still open)
+                        $('#addManuallyModal').modal('hide');
+
+                        // Display SweetAlert for error
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'An error occurred while saving attendance records.',
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        });
+                        console.error(error);
+                    }
+                });
+            });
+
+
 
         });
     </script>

@@ -11,6 +11,7 @@ use App\Imports\UsersImport;
 use Illuminate\Http\Request;
 use App\Exports\AttendancesExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Database\QueryException;
 
 class AttendanceController extends Controller
 {
@@ -19,7 +20,8 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-        $employees = Employee::whereHas('attendances', function ($query) {
+        $employees = Employee::all();
+        $attendances = Employee::whereHas('attendances', function ($query) {
             $query->where('payroll_status', '!=', 'processed');
         })->get();
 
@@ -29,7 +31,7 @@ class AttendanceController extends Controller
             'late' => 'bg-danger bg-opacity-10 text-danger',
         ];
         //
-        return view('pages.payroll.attendance', compact('employees', 'statusColors'));
+        return view('pages.payroll.attendance', compact('employees', 'attendances', 'statusColors'));
     }
 
     /**
@@ -45,70 +47,65 @@ class AttendanceController extends Controller
      */
     public function store(Request $request)
     {
-        $currentDate = now();
-        $startOfMonth = $currentDate->clone()->startOfMonth();
-        $endOfMonth = $currentDate->clone()->endOfMonth();
-
-        // Adjust start date to skip weekends
-        $startOfMonth->startOfMonth()->weekday() === Carbon::SUNDAY && $startOfMonth->addWeekday(); // Skip Sunday
-        $startOfMonth->startOfMonth()->weekday() === Carbon::SATURDAY && $startOfMonth->addWeekday(2); // Skip Saturday
-
-        // Adjust end date to skip weekends
-        $endOfMonth->endOfMonth()->weekday() === Carbon::SATURDAY && $endOfMonth->subWeekday(); // Skip Saturday
-        $endOfMonth->endOfMonth()->weekday() === Carbon::SUNDAY && $endOfMonth->subWeekday(2); // Skip Sunday
-
-        $employeeIds = $request->employeeIds;
-        $employees = Employee::with(['attendances', 'overtimes'])->whereIn('code', $employeeIds)->get();
-
-        $totalReleasedPay = 0;
-        foreach ($employees as $employee) {
-            $employeeId = $employee->code;
-
-            $attendanceRecords = $employee->attendances;
-            $overtimeRecords = $employee->overtimes;
-
-            $totalWorkingHours = 0;
-            $totalOvertimeHours = 0;
-
-            $baseSalary = $employee->basic_daily_rate;
-
-            foreach ($attendanceRecords as $record) {
-                $totalWorkingHours += $record->working_hours;
-                $record->update(['payroll_status' => 'processed']);
+        try {
+            $employeeCode = $request->employee;
+            $employee = Employee::where('code', $employeeCode)->first();
+            $basicDailyRate = $employee->basic_daily_rate;
+            $hourRate = $basicDailyRate / 8;
+    
+            $dates = $request->date;
+            $timeIn = $request->time_in;
+            $timeOut = $request->time_out;
+    
+            $attendanceRecords = [];
+    
+            // Process each attendance record separately
+            foreach ($dates as $key => $date) {
+                // No need to parse timeIn and timeOut since they are already in the format 'H:i:s'
+                $startTime = $timeIn[$key];
+                $endTime = $timeOut[$key];
+    
+                // Calculate the difference in hours
+                $hoursWorked = Carbon::parse($endTime)->diffInHours($startTime);
+    
+                // Calculate the earnings for this attendance record
+                $earnings = $hoursWorked * $hourRate;
+    
+                // Create an array for the current attendance record
+                $attendanceRecord = [
+                    'employee_code' => $employeeCode,
+                    'date' => $date,
+                    'time_in' => $startTime,
+                    'time_out' => $endTime,
+                    'working_hours' => $hoursWorked,
+                    'earnings' => $earnings,
+                    'status' => 'on time'
+                ];
+    
+                // Save $attendanceRecord to your database
+                // Ensure that the 'employee_code' field is not set to null
+                Attendance::create($attendanceRecord);
+    
+                // Add the current attendance record array to the larger array
+                $attendanceRecords[] = $attendanceRecord;
             }
-
-            foreach ($overtimeRecords as $overtime) {
-                $totalOvertimeHours += $overtime->no_of_hours;
-                $overtime->update(['status' => 'processed']);
-            }
-
-            $hourRate = $baseSalary / 8;
-
-            $netPay = ($hourRate * $totalWorkingHours) + ($hourRate * $totalOvertimeHours * ($overtime->rate_percentage / 100));
-
-            Payroll::create([
-                "employee_code" => $employeeId,
-                "paid_hours" => $totalWorkingHours,
-                "overtime" => $totalOvertimeHours,
-                "net_pay" => $netPay,
-                "start_date" => $startOfMonth,
-                "end_date" => $endOfMonth,
-            ]);
-
-            $totalReleasedPay += $netPay;
-
-            echo "Payroll Released!";
+    
+            // Return a JSON response for your AJAX request
+            return response()->json(['attendance_records' => $attendanceRecords], 200);
+        } catch (QueryException $e) {
+            // Handle the exception (e.g., log the error, return an error response)
+            return response()->json(['error' => 'Database error'], 500);
+        } catch (\Exception $e) {
+            // Handle other exceptions
+            return response()->json(['error' => 'An error occurred'], 500);
         }
-
-        Cutoff::create([
-            "generated_date" => $currentDate,
-            "start_date" => $startOfMonth,
-            "end_date" => $endOfMonth,
-            "total_released_amount" => $totalReleasedPay
-        ]);
-
-        echo "Total Released Pay: " . $totalReleasedPay;
     }
+
+
+
+
+
+
 
 
     /**

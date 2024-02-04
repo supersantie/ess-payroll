@@ -1,6 +1,8 @@
 <?php
 
+use App\Mail\PayrollNotify;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PerkController;
 use App\Http\Controllers\LeaveController;
@@ -40,60 +42,72 @@ Route::group(['middleware' => 'web'], function () {
         Route::post('/logout', 'logout')->name('logout');
     });
 
-    Route::controller(EmployeeController::class)->group(function() {
+    Route::controller(EmployeeController::class)->group(function () {
         Route::get('/employees', 'index')->name('employees');
     });
 
-    Route::controller(AttendanceController::class)->group(function() {
+    Route::controller(AttendanceController::class)->group(function () {
         Route::get('/attendance', 'index')->name('attendance');
-        Route::post('/attendance/release', 'store')->name('attendance.release');
+        Route::post('/attendance/store', 'store')->name('attendance.store');
 
 
         Route::get('/attendance/export', 'export')->name('attendance.export');
         Route::get('/attendance/import', 'import')->name('attendance.import');
     });
 
-    Route::controller(OvertimeController::class)->group(function() {
+    Route::controller(OvertimeController::class)->group(function () {
         Route::get('/overtime', 'index')->name('overtime');
     });
 
-    Route::controller(DeductionController::class)->group(function() {
+    Route::controller(DeductionController::class)->group(function () {
         Route::get('/deductions', 'index')->name('deductions_and_contributions.deductions');
     });
 
-    Route::controller(LeaveController::class)->group(function() {
+    Route::controller(LeaveController::class)->group(function () {
         Route::get('/leaves', 'index')->name('leaves');
     });
 
-    Route::controller(PerkController::class)->group(function() {
+    Route::controller(PerkController::class)->group(function () {
         Route::get('/perks', 'index')->name('perks');
     });
 
-    Route::controller(ActivityLogController::class)->group(function() {
+    Route::controller(ActivityLogController::class)->group(function () {
         Route::get('/activity_logs', 'index')->name('activity_logs');
     });
 
-    Route::controller(PayrollController::class)->group(function() {
+    Route::controller(PayrollController::class)->group(function () {
         Route::get('/payroll', 'index')->name('reports.payroll');
+        Route::post('/payroll/store', 'store')->name('reports.payroll.store');
     });
 
-    Route::controller(PayslipController::class)->group(function() {
+    Route::controller(PayslipController::class)->group(function () {
         Route::get('/payslip', 'index')->name('reports.payslip');
     });
 
-    Route::controller(CutoffController::class)->group(function() {
+    Route::controller(CutoffController::class)->group(function () {
         Route::get('/cutoff', 'index')->name('reports.cut_off');
     });
 
-    Route::controller(PayrollSettingController::class)->group(function() {
+    Route::controller(PayrollSettingController::class)->group(function () {
         Route::get('/payroll_settings', 'index')->name('payroll_settings');
         Route::post('/payroll_settings', 'update')->name('payroll_settings.update');
+    });
+
+    Route::get('/test_email', function () {
+        try {
+            Mail::to('gcristianber@gmail.com')->send(new PayrollNotify());
+            return response()->json(['Great! Successfully send in your mail']);
+        } catch (Exception $e) {
+            return response()->json(['Sorry! Please try again latter']);
+        }
     });
 
     Route::group(['middleware' => 'auth'], function () {
         Route::get('{any}', [LimitlessController::class, 'index'])->name('index');
     });
 });
+
+
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/exports.php';
