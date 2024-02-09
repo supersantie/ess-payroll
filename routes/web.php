@@ -17,6 +17,7 @@ use App\Http\Controllers\LimitlessController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\EssAccountController;
 use App\Http\Controllers\PayrollSettingController;
 
 /*
@@ -33,6 +34,15 @@ use App\Http\Controllers\PayrollSettingController;
 Route::group(['middleware' => 'web'], function () {
     Route::get('/', function () {
         return view('auth.login');
+    });
+
+    Route::get('/ess', function () {
+        return view('auth.ess_login');
+    });
+
+    Route::controller(EssAccountController::class)->group(function () {
+        Route::post('/ess', 'login')->name('ess.login');
+        Route::post('/ess/logout', 'logout')->name('ess.logout');
     });
 
     // Auth::routes();
@@ -90,7 +100,7 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::controller(PayrollSettingController::class)->group(function () {
         Route::get('/payroll_settings', 'index')->name('payroll_settings');
-        Route::post('/payroll_settings', 'update')->name('payroll_settings.update');
+        Route::post('/payroll_settings', 'update')->name('update');
     });
 
     Route::get('/test_email', function () {

@@ -15,6 +15,9 @@
             <div class="card">
                 <div class="card-header d-flex align-items-center">
                     <h5 class="mb-0">Traffic sources</h5>
+                    @can('test')
+                    <p>test</p>
+                    @endcan
                     <div class="ms-auto">
                         <label class="form-check form-switch form-check-reverse">
                             <input type="checkbox" class="form-check-input" checked>

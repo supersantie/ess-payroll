@@ -17,6 +17,12 @@ class Employee extends Model
         return 'code';
     }
 
+    public function ess_account()
+    {
+        return $this->hasOne(\App\Models\EssAccount::class, 'employee_code', 'code');
+    }
+    
+
     public function attendances(){
         return $this->hasMany(Attendance::class, 'employee_code', $this->getRouteKeyName());
     }

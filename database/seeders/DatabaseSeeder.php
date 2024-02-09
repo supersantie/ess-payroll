@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Employee;
+use App\Models\EssAccount;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,6 +23,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Run test datas
-        \App\Models\Employee::factory(5)->create();
+        Employee::factory(5)->has(EssAccount::factory()->count(1))->create();
     }
 }
