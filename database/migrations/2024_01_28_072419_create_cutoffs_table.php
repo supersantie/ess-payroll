@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->double('total_released_amount');
+            $table->enum('payroll_period', ['1st cutoff', '2nd cutoff']);
             $table->timestamps();
         });
     }
