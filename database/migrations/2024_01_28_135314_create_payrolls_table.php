@@ -25,6 +25,7 @@ return new class extends Migration
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->enum('status', ['released', 'hold', 'issued'])->default('released');
+
             $table->timestamps();
         });
     }

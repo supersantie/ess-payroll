@@ -46,11 +46,9 @@ class PayrollController extends Controller
         $startOfMonth = $currentDate->clone()->startOfMonth();
         $endOfMonth = $currentDate->clone()->endOfMonth();
 
-        // Adjust start date to skip weekends
         $startOfMonth->startOfMonth()->weekday() === Carbon::SUNDAY && $startOfMonth->addWeekday(); // Skip Sunday
         $startOfMonth->startOfMonth()->weekday() === Carbon::SATURDAY && $startOfMonth->addWeekday(2); // Skip Saturday
 
-        // Adjust end date to skip weekends
         $endOfMonth->endOfMonth()->weekday() === Carbon::SATURDAY && $endOfMonth->subWeekday(); // Skip Saturday
         $endOfMonth->endOfMonth()->weekday() === Carbon::SUNDAY && $endOfMonth->subWeekday(2); // Skip Sunday
 
@@ -61,20 +59,20 @@ class PayrollController extends Controller
         foreach ($employees as $employee) {
             $employeeId = $employee->code;
 
-            $attendanceRecords = $employee->attendances;
+            // Exclude attendance records with a 'processed' status
+            $attendanceRecords = $employee->attendances()->where('payroll_status', '!=', 'processed')->get();
             $overtimeRecords = $employee->overtimes;
-
+        
             $totalWorkingHours = 0;
             $totalOvertimeHours = 0;
-
+        
             $baseSalary = $employee->basic_daily_rate;
-
+        
             foreach ($attendanceRecords as $record) {
                 $totalWorkingHours += $record->working_hours;
                 $record->update(['payroll_status' => 'processed']);
             }
 
-            // Initialize $netPay inside the loop
             $netPay = 0;
 
             foreach ($overtimeRecords as $overtime) {
@@ -82,7 +80,6 @@ class PayrollController extends Controller
                 $overtime->update(['status' => 'processed']);
             }
 
-            // Calculate net pay inside the loop
             $netPay = ($baseSalary / 8 * $totalWorkingHours) + ($baseSalary / 8 * $totalOvertimeHours * ($overtimeRecords->count() > 0 ? $overtimeRecords->first()->rate_percentage / 100 : 0));
 
             Payroll::create([
@@ -99,15 +96,23 @@ class PayrollController extends Controller
             echo "Payroll Released!";
         }
 
+        $previousCutoff = Cutoff::orderBy('generated_date', 'desc')->first();
+        $previousCutoffIsFirst = $previousCutoff && $previousCutoff->payroll_period === '1st cutoff';
+
+        $payrollPeriod = $previousCutoffIsFirst ? '2nd cutoff' : '1st cutoff';
+
         Cutoff::create([
             "generated_date" => $currentDate,
             "start_date" => $startOfMonth,
             "end_date" => $endOfMonth,
+            "payroll_period" => $payrollPeriod,
             "total_released_amount" => $totalReleasedPay
         ]);
 
         echo "Total Released Pay: " . $totalReleasedPay;
     }
+
+
 
 
     /**
@@ -142,11 +147,12 @@ class PayrollController extends Controller
         //
     }
 
-    public function sendToEmail(Request $request, $id){
+    public function sendToEmail(Request $request, $id)
+    {
         $user = User::findOrFail($id);
-        Mail::send("mails.test", ["data"=>"Test Data"], function($m) use ($user) {
+        Mail::send("mails.test", ["data" => "Test Data"], function ($m) use ($user) {
             $m->from('hello@app.com', 'Your Application');
- 
+
             $m->to("gcristianber@gmail.com", "Cristianber Gordora")->subject('Test Email');
         });
     }

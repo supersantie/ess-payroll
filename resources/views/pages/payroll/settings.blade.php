@@ -39,7 +39,8 @@
 
                         <div class="mb-3">
                             <label class="form-label">System Name:</label>
-                            <input type="text" class="form-control" name="system_name" value="{{ $keySetting["system_name"] ?? '' }}">
+                            <input type="text" class="form-control" name="system_name"
+                                value="{{ $keySetting['system_name'] ?? '' }}">
                         </div>
 
                         <div class="mb-3">
@@ -56,17 +57,20 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">SSS:</label>
-                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency" name="sss">
+                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency"
+                                name="sss">
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Philhealth:</label>
-                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency" name="philhealth">
+                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency"
+                                name="philhealth">
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">PAG IBIG:</label>
-                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency" name="pag_ibig">
+                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency"
+                                name="pag_ibig">
                         </div>
                     </fieldset>
 
@@ -77,16 +81,47 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Overtime Rate:</label>
-                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency" name="overtime_rate">
+                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency"
+                                name="overtime_rate">
+                        </div>
+                        <div class="row justify-content-center align-items-center g-2 mb-3">
+                            <div class="col">
+                                <label for="" class="form-label">Hour Start:</label>
+                                <input type="time" class="form-control" name="" id=""
+                                    aria-describedby="helpId" placeholder="" />
+                            </div>
+                            <div class="col">
+                                <label for="" class="form-label">Hour End:</label>
+                                <input type="time" class="form-control" name="" id=""
+                                    aria-describedby="helpId" placeholder="" />
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Holiday Rate:</label>
-                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency" name="holiday_rate">
+                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency"
+                                name="holiday_rate">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Night Differential Rate:</label>
-                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency" name="night_diff_rate">
+                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency"
+                                name="night_diff_rate">
                         </div>
+                        <div class="row justify-content-center align-items-center g-2 mb-3">
+                            <div class="col">
+                                <label for="" class="form-label">Hour Start:</label>
+                                <input type="time" class="form-control" name="" id=""
+                                    aria-describedby="helpId" placeholder="" />
+                            </div>
+                            <div class="col">
+                                <label for="" class="form-label">Hour End:</label>
+                                <input type="time" class="form-control" name="" id=""
+                                    aria-describedby="helpId" placeholder="" />
+                            </div>
+                        </div>
+
+
+
+
                     </fieldset>
 
                     <fieldset class="mb-3">
@@ -98,7 +133,8 @@
 
                         <div class="mb-3">
                             <label class="form-label">Payroll</label>
-                            <select data-placeholder="Select something" class="form-control select-access-value" name="payroll_period">
+                            <select data-placeholder="Select something" class="form-control select-access-value"
+                                name="payroll_period">
                                 <option></option>
                                 <option value="monthly">Monthly</option>
                                 <option value="semi monthly">Semi Monthly</option>
@@ -107,7 +143,8 @@
 
                         <div class="mb-3">
                             <label class="form-label">Loan Payments</label>
-                            <select data-placeholder="Select something" class="form-control select-access-value" name="payroll_period">
+                            <select data-placeholder="Select something" class="form-control select-access-value"
+                                name="payroll_period">
                                 <option></option>
                                 <option value="monthly">Every first cut off</option>
                                 <option value="semi monthly">Every second cut off</option>
@@ -117,7 +154,8 @@
 
                         <div class="mb-3">
                             <label class="form-label">Contribution Period</label>
-                            <select data-placeholder="Select something" class="form-control select-access-value" name="payroll_period">
+                            <select data-placeholder="Select something" class="form-control select-access-value"
+                                name="payroll_period">
                                 <option></option>
                                 <option value="monthly">Every first cut off</option>
                                 <option value="semi monthly">Every second cut off</option>
@@ -148,8 +186,8 @@
     <script src="{{ URL::asset('assets/demo/pages/form_select2.js') }}"></script>
 
     <script>
-        $(function(){
-           $("#payrollSettingsForm").on("submit", function(e){
+        $(function() {
+            $("#payrollSettingsForm").on("submit", function(e) {
                 e.preventDefault();
 
                 let formData = new FormData($(this)[0])
@@ -160,8 +198,8 @@
                     url: '/payroll_settings',
                     method: 'POST',
                     data: formData,
-                    processData: false,  
-            contentType: false,
+                    processData: false,
+                    contentType: false,
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,
                     },
@@ -172,7 +210,7 @@
                         console.error(error);
                     }
                 });
-           })
+            })
         })
     </script>
 @endsection
