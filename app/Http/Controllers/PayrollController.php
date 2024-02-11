@@ -9,6 +9,7 @@ use App\Models\Payroll;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Models\PayrollSetting;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class PayrollController extends Controller
@@ -62,12 +63,12 @@ class PayrollController extends Controller
             // Exclude attendance records with a 'processed' status
             $attendanceRecords = $employee->attendances()->where('payroll_status', '!=', 'processed')->get();
             $overtimeRecords = $employee->overtimes;
-        
+
             $totalWorkingHours = 0;
             $totalOvertimeHours = 0;
-        
+
             $baseSalary = $employee->basic_daily_rate;
-        
+
             foreach ($attendanceRecords as $record) {
                 $totalWorkingHours += $record->working_hours;
                 $record->update(['payroll_status' => 'processed']);
@@ -97,9 +98,15 @@ class PayrollController extends Controller
         }
 
         $previousCutoff = Cutoff::orderBy('generated_date', 'desc')->first();
-        $previousCutoffIsFirst = $previousCutoff && $previousCutoff->payroll_period === '1st cutoff';
 
-        $payrollPeriod = $previousCutoffIsFirst ? '2nd cutoff' : '1st cutoff';
+        if (!$previousCutoff || $previousCutoff->payroll_period === '2nd cutoff') {
+            $payrollPeriod = '1st cutoff';
+            Log::info('Setting payroll period to 1st cutoff');
+        } else {
+            $payrollPeriod = '2nd cutoff';
+            Log::info('Setting payroll period to 2nd cutoff');
+        }
+        
 
         Cutoff::create([
             "generated_date" => $currentDate,
