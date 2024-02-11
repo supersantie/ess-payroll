@@ -13,7 +13,9 @@ class PerkController extends Controller
      */
     public function index()
     {
+        $employees = Employee::all();
         $perks = Employee::with('perks')->get();
+
 
         $statusColors = [
             'released' => 'bg-success bg-opacity-10 text-success',
@@ -21,7 +23,7 @@ class PerkController extends Controller
             'issued' => 'bg-warning bg-opacity-10 text-warning',
         ];
         //
-        return view('pages.payroll.incentives_and_allowance', compact('perks', 'statusColors'));
+        return view('pages.payroll.incentives_and_allowance', compact('employees','perks', 'statusColors'));
     }
 
     /**

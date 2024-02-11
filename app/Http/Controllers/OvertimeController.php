@@ -16,8 +16,6 @@ class OvertimeController extends Controller
         //
         $employees = Employee::with('overtimes')->get();
 
-        
-
         $statusColors = [
             'approved' => 'bg-success bg-opacity-10 text-success',
             'pending' => 'bg-warning bg-opacity-10 text-warning',

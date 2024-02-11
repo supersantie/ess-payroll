@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('perks', function (Blueprint $table) {
             $table->id();
+            $table->enum('perk_type', ['13th month', 'allowance']);
             $table->string('employee_code')->index();
             $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
+            $table->double('hours');
             $table->dateTime('date_issued');
             $table->text('description');
             $table->double('amount');
-            $table->enum('perk_type', ['13th month', 'allowance']);
             $table->enum('status', ['released', 'hold', 'issued']);
             $table->timestamps();
         });
