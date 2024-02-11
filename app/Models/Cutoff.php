@@ -13,6 +13,7 @@ class Cutoff extends Model
         "generated_date",
         "start_date",
         "end_date",
-        "total_released_amount"
+        "total_released_amount",
+        "payroll_period"
     ];
 }

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Employee;
 use App\Models\Overtime;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 
 class OvertimeController extends Controller
 {
@@ -15,6 +17,11 @@ class OvertimeController extends Controller
     {
         //
         $employees = Employee::with('overtimes')->get();
+
+        // dd($employees);
+        // foreach($employees as $employee){
+        //     dd($employee->overtimes);
+        // }
 
         $statusColors = [
             'approved' => 'bg-success bg-opacity-10 text-success',
@@ -38,7 +45,44 @@ class OvertimeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $currentDate = now();
+            $employeeCode = $request->employee;
+
+            $dates = $request->date;
+            $timeIn = $request->time_in;
+            $timeOut = $request->time_out;
+
+            $overtimeRecords = [];
+
+            foreach ($dates as $key => $date) {
+                $startTime = $timeIn[$key];
+                $endTime = $timeOut[$key];
+
+                $hoursWorked = Carbon::parse($endTime)->diffInHours($startTime);
+
+                $overtimeRecord = [
+                    'employee_code' => $employeeCode,
+                    'date_issued' => $currentDate,
+                    'no_of_hours' => $hoursWorked,
+                    'rate_percentage' => 25,
+                    'status' => 'pending'
+                ];
+
+                Overtime::create($overtimeRecord);
+
+                $overtimeRecords[] = $overtimeRecord;
+            }
+
+            // Return a JSON response for your AJAX request
+            return response()->json(['attendance_records' => $overtimeRecords], 200);
+        } catch (QueryException $e) {
+            // Handle the exception (e.g., log the error, return an error response)
+            return response()->json(['error' => $e], 500);
+        } catch (\Exception $e) {
+            // Handle other exceptions
+            return response()->json(['error' => $e], 500);
+        }
     }
 
     /**

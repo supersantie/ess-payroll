@@ -115,15 +115,6 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('leaves') }}"
-                                class="nav-link {{ request()->routeIs('leaves') ? 'active' : '' }}">
-                                <i class="ph-calendar-x"></i>
-                                <span>
-                                    Leave of Absence
-                                </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a href="{{ route('activity_logs') }}"
                                 class="nav-link {{ request()->routeIs('activity_logs') ? 'active' : '' }}">
                                 <i class="ph-clock-counter-clockwise"></i>

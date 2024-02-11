@@ -67,15 +67,14 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::controller(OvertimeController::class)->group(function () {
         Route::get('/overtime', 'index')->name('overtime');
+
+        Route::post('/overtime/store', 'store')->name('overtime.store');
     });
 
     Route::controller(DeductionController::class)->group(function () {
         Route::get('/deductions', 'index')->name('deductions_and_contributions.deductions');
     });
 
-    Route::controller(LeaveController::class)->group(function () {
-        Route::get('/leaves', 'index')->name('leaves');
-    });
 
     Route::controller(PerkController::class)->group(function () {
         Route::get('/perks', 'index')->name('perks');

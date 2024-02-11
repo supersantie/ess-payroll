@@ -415,51 +415,51 @@
                 e.preventDefault();
 
                 let formData = new FormData($(this)[0]);
-                // $.ajax({
-                //     url: '/attendance/store',
-                //     method: 'POST',
-                //     data: formData,
-                //     processData: false,
-                //     contentType: false,
-                //     headers: {
-                //         'X-CSRF-TOKEN': csrfToken,
-                //     },
-                //     success: function(response) {
-                //         // Check if the response contains the expected data
-                //         if (response && response.attendance_records) {
-                //             // Close the modal
-                //             $('#addManuallyModal').modal('hide');
+                $.ajax({
+                    url: '/overtime/store',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    success: function(response) {
+                        // Check if the response contains the expected data
+                        if (response && response.attendance_records) {
+                            // Close the modal
+                            $('#addManuallyModal').modal('hide');
 
-                //             // Display SweetAlert for success
-                //             Swal.fire({
-                //                 icon: 'success',
-                //                 title: 'Success!',
-                //                 text: 'Attendance records saved successfully!',
-                //                 customClass: {
-                //                     confirmButton: 'btn btn-primary',
-                //                 },
-                //             });
-                //         } else {
-                //             // Handle unexpected response
-                //             console.error('Unexpected response format:', response);
-                //         }
-                //     },
-                //     error: function(error) {
-                //         // Close the modal (in case it's still open)
-                //         $('#addManuallyModal').modal('hide');
+                            // Display SweetAlert for success
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Attendance records saved successfully!',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            });
+                        } else {
+                            // Handle unexpected response
+                            console.error('Unexpected response format:', response);
+                        }
+                    },
+                    error: function(error) {
+                        // Close the modal (in case it's still open)
+                        $('#addManuallyModal').modal('hide');
 
-                //         // Display SweetAlert for error
-                //         Swal.fire({
-                //             icon: 'error',
-                //             title: 'Error!',
-                //             text: 'An error occurred while saving attendance records.',
-                //             customClass: {
-                //                 confirmButton: 'btn btn-primary',
-                //             },
-                //         });
-                //         console.error(error);
-                //     }
-                // });
+                        // Display SweetAlert for error
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'An error occurred while saving attendance records.',
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        });
+                        console.error(error);
+                    }
+                });
             });
 
 
