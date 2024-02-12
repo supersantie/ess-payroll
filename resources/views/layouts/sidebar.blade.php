@@ -42,14 +42,23 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ route('employees') }}"
-                                class="nav-link {{ request()->routeIs('employees') ? 'active' : '' }}">
+                        <li
+                            class="nav-item nav-item-submenu {{ request()->routeIs('employees.*') ? 'nav-item-open' : '' }}">
+                            <a href="#" class="nav-link">
                                 <i class="ph-users-four"></i>
-                                <span>
-                                    Employees
-                                </span>
+                                <span>Employee</span>
                             </a>
+                            <ul class="nav-group-sub collapse {{ request()->routeIs('employees.*') ? 'show' : '' }}">
+                                <li class="nav-item"><a href="{{ route('employees.list') }}"
+                                        class="nav-link {{ request()->routeIs('employees.list') ? 'active' : '' }}">Employee List</a>
+                                </li>
+                                <li class="nav-item"><a href="{{ route('employees.list') }}"
+                                    class="nav-link {{ request()->routeIs('employees.list') ? '' : '' }}">Employee Requests</a>
+                                </li>
+                                <li class="nav-item"><a href="{{ route('employees.list') }}"
+                                    class="nav-link {{ request()->routeIs('employees.list') ? '' : '' }}">Employee Loan</a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('attendance') }}"
