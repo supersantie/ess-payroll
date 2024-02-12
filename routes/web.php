@@ -55,7 +55,6 @@ Route::group(['middleware' => 'web'], function () {
     Route::controller(EmployeeController::class)->group(function () {
         Route::get('/employees', 'index')->name('employees.list');
         Route::get('/employee/employee-requests', 'empRequests')->name('employee.requests');
-        Route::get('/employee/employee-loan', 'empLoan')->name('employee.loan');
     });
 
     Route::controller(AttendanceController::class)->group(function () {
