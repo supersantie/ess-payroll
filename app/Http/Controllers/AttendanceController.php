@@ -7,6 +7,7 @@ use App\Models\Cutoff;
 use App\Models\Payroll;
 use App\Models\Employee;
 use App\Models\Attendance;
+use App\Models\ActivityLog;
 use App\Imports\UsersImport;
 use Illuminate\Http\Request;
 use App\Exports\AttendancesExport;
@@ -56,7 +57,7 @@ class AttendanceController extends Controller
             $employeeCode = $request->employee;
             $employee = Employee::where('code', $employeeCode)->first();
             $basicDailyRate = $employee->basic_daily_rate;
-            $hourRate = $basicDailyRate / 8;
+            $hourRate = $basicDailyRate / 8; // TODO: Base this in the Payroll Settings (Working Hours)
 
             $dates = $request->date;
             $timeIn = $request->time_in;
@@ -64,19 +65,15 @@ class AttendanceController extends Controller
 
             $attendanceRecords = [];
 
-            // Process each attendance record separately
             foreach ($dates as $key => $date) {
-                // No need to parse timeIn and timeOut since they are already in the format 'H:i:s'
+
                 $startTime = $timeIn[$key];
                 $endTime = $timeOut[$key];
 
-                // Calculate the difference in hours
                 $hoursWorked = Carbon::parse($endTime)->diffInHours($startTime);
 
-                // Calculate the earnings for this attendance record
                 $earnings = $hoursWorked * $hourRate;
 
-                // Create an array for the current attendance record
                 $attendanceRecord = [
                     'employee_code' => $employeeCode,
                     'date' => $date,
@@ -87,21 +84,26 @@ class AttendanceController extends Controller
                     'status' => 'on time'
                 ];
 
-                // Save $attendanceRecord to your database
-                // Ensure that the 'employee_code' field is not set to null
                 Attendance::create($attendanceRecord);
 
-                // Add the current attendance record array to the larger array
                 $attendanceRecords[] = $attendanceRecord;
-            }
 
-            // Return a JSON response for your AJAX request
+                $userEmail = $request->user()->email ?? ''; 
+                $description = 'Attendance record created';
+                $ipAddress = $request->ip();
+                $actionType = 'create';
+
+                ActivityLog::create([
+                    'user_email' => $userEmail,
+                    'description' => $description,
+                    'ip_address' => $ipAddress,
+                    'action_type' => $actionType,
+                ]);
+            }
             return response()->json(['attendance_records' => $attendanceRecords], 200);
         } catch (QueryException $e) {
-            // Handle the exception (e.g., log the error, return an error response)
             return response()->json(['error' => 'Database error'], 500);
         } catch (\Exception $e) {
-            // Handle other exceptions
             return response()->json(['error' => 'An error occurred'], 500);
         }
     }

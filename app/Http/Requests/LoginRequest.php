@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\ActivityLog;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\Lockout;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\RateLimiter;
@@ -50,7 +51,33 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        // Authentication successful, create activity log
+        $this->createActivityLog();
+
         RateLimiter::clear($this->throttleKey());
+    }
+
+    /**
+     * Create activity log after successful authentication.
+     */
+    protected function createActivityLog(): void
+    {
+        $userEmail = $this->input('email');
+        $description = 'User logged in';
+        $ipAddress = $this->ip();
+        $actionType = 'login';
+
+        try {
+            ActivityLog::create([
+                'user_email' => $userEmail,
+                'description' => $description,
+                'ip_address' => $ipAddress,
+                'action_type' => $actionType,
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Error inserting activity log: " . $e->getMessage());
+        }
+        
     }
 
     /**
@@ -83,5 +110,4 @@ class LoginRequest extends FormRequest
     {
         return Str::transliterate(Str::lower($this->input('email')).'|'.$this->ip());
     }
-
 }

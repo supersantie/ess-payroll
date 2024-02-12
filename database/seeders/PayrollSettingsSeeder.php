@@ -24,6 +24,8 @@ class PayrollSettingsSeeder extends Seeder
             "holiday_rate" => "",
             "night_diff_rate" => "",
             "payroll_period" => "",
+            "contribution_period" => "",
+            "loans_period" => "",
         ];
 
         foreach ($payrollSettings as $key => $value) {
