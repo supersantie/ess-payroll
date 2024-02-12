@@ -55,9 +55,6 @@
                                 <li class="nav-item"><a href="{{ route('employees.list') }}"
                                     class="nav-link {{ request()->routeIs('employees.list') ? '' : '' }}">Employee Requests</a>
                                 </li>
-                                <li class="nav-item"><a href="{{ route('employees.list') }}"
-                                    class="nav-link {{ request()->routeIs('employees.list') ? '' : '' }}">Employee Loan</a>
-                                </li>
                             </ul>
                         </li>
                         <li class="nav-item">
