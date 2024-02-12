@@ -53,7 +53,8 @@ Route::group(['middleware' => 'web'], function () {
     });
 
     Route::controller(EmployeeController::class)->group(function () {
-        Route::get('/employees', 'index')->name('employees');
+        Route::get('/employees', 'index')->name('employees.list');
+        Route::get('/employee/employee-requests', 'empRequests')->name('employee.requests');
     });
 
     Route::controller(AttendanceController::class)->group(function () {
