@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('user_email')->index();
             $table->text('description');
-            $table->dateTime('action_date');
-            $table->string('time_elapsed');
             $table->string('ip_address');
             $table->enum('action_type', ['login', 'logout', 'create', 'edit', 'delete', 'view', 'upload', 'print']);
             $table->foreign('user_email')->references('email')->on('users')->onDelete('cascade');

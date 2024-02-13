@@ -50,6 +50,7 @@
                                     Employees
                                 </span>
                             </a>
+
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('attendance') }}"
@@ -94,15 +95,15 @@
                             </a>
                             <ul
                                 class="nav-group-sub collapse {{ request()->routeIs('deductions_and_contributions.*') ? 'show' : '' }}">
-                                <li class="nav-item"><a href="{{ route('deductions_and_contributions.deductions') }}"
-                                        class="nav-link {{ request()->routeIs('deductions_and_contributions.deductions') ? 'active' : '' }}">Deduction</a>
-                                </li>
                                 <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.sss"
                                         class="nav-link">SSS Loan</a></li>
                                 <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.pag_ibig"
                                         class="nav-link">Pag Ibig Loan</a></li>
                                 <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.phil_health"
                                         class="nav-link">Philhealth Loan</a></li>
+
+                                <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.phil_health"
+                                        class="nav-link">Company Loan</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">

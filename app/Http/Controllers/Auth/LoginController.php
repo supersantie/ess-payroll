@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use App\Providers\RouteServiceProvider;
-use App\Http\Requests\LoginRequest;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller 
@@ -48,6 +49,9 @@ class LoginController extends Controller
     public function store(LoginRequest $request)
     {
         // $request->authenticate();
+
+        Log::info('Accessed the login controller');
+
 
         $request->authenticate();
 
