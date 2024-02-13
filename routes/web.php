@@ -39,6 +39,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::controller(EssAccountController::class)->group(function () {
         Route::post('/ess', 'login')->name('ess.login');
         Route::post('/ess/logout', 'logout')->name('ess.logout');
+        Route::get('/ess/home', 'home')->name('ess.home');
     });
 
     // Auth::routes();
@@ -49,8 +50,7 @@ Route::group(['middleware' => 'web'], function () {
     });
 
     Route::controller(EmployeeController::class)->group(function () {
-        Route::get('/employees', 'index')->name('employees.list');
-        Route::get('/employee/employee-requests', 'empRequests')->name('employee.requests');
+        Route::get('/employees', 'index')->name('employees');
     });
 
     Route::controller(AttendanceController::class)->group(function () {
