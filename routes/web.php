@@ -1,18 +1,14 @@
 <?php
 
 use App\Mail\PayrollNotify;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PerkController;
-use App\Http\Controllers\LeaveController;
-use App\Http\Controllers\UsersController;
 use App\Http\Controllers\CutoffController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PayslipController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\OvertimeController;
-use App\Http\Controllers\DeductionController;
 use App\Http\Controllers\LimitlessController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\LoginController;
@@ -71,11 +67,6 @@ Route::group(['middleware' => 'web'], function () {
 
         Route::post('/overtime/store', 'store')->name('overtime.store');
     });
-
-    Route::controller(DeductionController::class)->group(function () {
-        Route::get('/deductions', 'index')->name('deductions_and_contributions.deductions');
-    });
-
 
     Route::controller(PerkController::class)->group(function () {
         Route::get('/perks', 'index')->name('perks');

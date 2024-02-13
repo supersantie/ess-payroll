@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Cutoff;
 use App\Models\Payroll;
 use App\Models\Employee;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use App\Models\PayrollSetting;
 use Illuminate\Support\Facades\Log;
@@ -94,6 +95,7 @@ class PayrollController extends Controller
 
             $totalReleasedPay += $netPay;
 
+
             echo "Payroll Released!";
         }
 
@@ -117,6 +119,18 @@ class PayrollController extends Controller
         ]);
 
         echo "Total Released Pay: " . $totalReleasedPay;
+        
+        $userEmail = $request->user()->email ?? ''; 
+        $description = 'Payroll released for ' . $payrollPeriod . ' with total amount of ' . $totalReleasedPay;
+        $ipAddress = $request->ip();
+        $actionType = 'create';
+
+        ActivityLog::create([
+            'user_email' => $userEmail,
+            'description' => $description,
+            'ip_address' => $ipAddress,
+            'action_type' => $actionType,
+        ]);
     }
 
 

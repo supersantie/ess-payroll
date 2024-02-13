@@ -58,7 +58,7 @@
                         <td><span class="badge {{ $actionColors[$subItem->action_type] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">{{ Str::title($subItem->action_type) }}</span></td>
                         <td>{{ $subItem->description }}</td>
                         <td><a href="#">{{ $subItem->action_date }}</a></td>
-                        <td>{{ $subItem->time_elapsed }}</td>
+                        <td>{{ \Carbon\Carbon::parse($subItem->created_at)->diffForHumans() }}</td>
                         <td>{{ $subItem->ip_address }}</td>
                         <td class="text-center">
                             <div class="d-inline-flex">
