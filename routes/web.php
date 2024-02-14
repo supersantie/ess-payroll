@@ -14,6 +14,8 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\EssAccountController;
+use App\Http\Controllers\EssDashboardController;
+use App\Http\Controllers\EssRequestsController;
 use App\Http\Controllers\PayrollSettingController;
 
 /*
@@ -39,7 +41,6 @@ Route::group(['middleware' => 'web'], function () {
     Route::controller(EssAccountController::class)->group(function () {
         Route::post('/ess', 'login')->name('ess.login');
         Route::post('/ess/logout', 'logout')->name('ess.logout');
-        Route::get('/ess/home', 'home')->name('ess.home');
     });
 
     // Auth::routes();
@@ -92,6 +93,14 @@ Route::group(['middleware' => 'web'], function () {
     Route::controller(PayrollSettingController::class)->group(function () {
         Route::get('/payroll_settings', 'index')->name('payroll_settings');
         Route::post('/payroll_settings', 'update')->name('update');
+    });
+    
+    Route::controller(EssDashboardController::class)->group(function () {
+        Route::get('/ess/dashboard', 'dashboard')->name('ess.dashboard');
+    });
+
+    Route::controller(EssRequestsController::class)->group(function () {
+        Route::get('/ess/requests', 'requests')->name('ess.requests');
     });
 
     Route::get('/test_email', function () {

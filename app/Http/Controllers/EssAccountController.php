@@ -18,17 +18,17 @@ class EssAccountController extends Controller
 
         try {
             $employee = Employee::with('ess_account')->where('code', $request->employee_code)->firstOrFail();
-            $checkEssAccount = EssAccount::with('employee')->where('employee_code', $request->employee_code)->firstOrFail();
+            $essAccount = EssAccount::with('employee')->where('employee_code', $request->employee_code)->firstOrFail();
             
             // dd($checkEssAccount);
             // dd($employee);
 
-            return view('pages.ess.ess-home', compact('employee', 'checkEssAccount'));
+            return view('pages.ess.dashboard', compact('employee', 'essAccount'));
 
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             $message = "Employee " . $request->employee_code . " not found! Contact the HR Department for further assistance.";
             dd($message);
-        }
+    }
         
         
         // try {
