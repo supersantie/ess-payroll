@@ -15,14 +15,17 @@ return new class extends Migration
             $table->id();
             $table->string('employee_code')->index();
             $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
-
             $table->string('password');
             $table->string('email')->unique();
-            $table->string('ess_avatar')->nullable();
+            $table->string('otp_code')->nullable();
+            $table->timestamp('otp_requested_at')->nullable(); // Change this line to define otp_requested_at as timestamp
+            $table->string('avatar')->nullable();
             $table->enum('status', ['active', 'deactivated']);
             $table->timestamps();
         });
     }
+    
+
 
     /**
      * Reverse the migrations.

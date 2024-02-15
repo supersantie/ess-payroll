@@ -6,7 +6,7 @@
 <div class="content d-flex justify-content-center align-items-center">
 
     <!-- Login form -->
-    <form class="login-form" method="POST" action="{{ route('ess.login') }}">
+    <form class="login-form" method="POST" action="{{ route('ess.login.verify') }}">
         @csrf
         <div class="card mb-0">
             <div class="card-body">

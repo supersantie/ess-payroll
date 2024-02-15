@@ -20,8 +20,10 @@ return new class extends Migration
             $table->double('basic_daily_rate')->required();
             $table->string('profile_picture')->nullable();
             $table->string('email')->nullable();
+
             $table->date('date_hired')->required();
             $table->enum('status', ['full time', 'part time', 'probationary', 'terminated'])->default('probationary');
+            
             $table->timestamps();
         });
     }

@@ -3,17 +3,19 @@
 use App\Mail\PayrollNotify;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EssController;
 use App\Http\Controllers\PerkController;
 use App\Http\Controllers\CutoffController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PayslipController;
+use App\Http\Controllers\TimeLogController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\OvertimeController;
 use App\Http\Controllers\LimitlessController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\EssAccountController;
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\PayrollSettingController;
 
 /*
@@ -32,21 +34,29 @@ Route::group(['middleware' => 'web'], function () {
         return view('auth.login');
     });
 
-    Route::get('/ess', function () {
-        return view('auth.ess_login');
-    });
+    Route::prefix('ess')->group(function(){
+        Route::get('/dashboard', function () {
+            return view('pages.ess.dashboard');
+        })->name('ess.dashboard');
 
-    Route::controller(EssAccountController::class)->group(function () {
-        Route::post('/ess', 'login')->name('ess.login');
-        Route::post('/ess/logout', 'logout')->name('ess.logout');
-        Route::get('/ess/home', 'home')->name('ess.home');
+        Route::controller(EssController::class)->group(function(){
+            Route::get('/login', 'index')->name('ess.login');
+            Route::post('/verify', 'verify')->name('ess.login.verify');
+            Route::post('/validate', 'validateOTP')->name('ess.validate.otp');
+            Route::get('/logout', 'destroy')->name('ess.logout');
+        })->prefix('auth');
+
+        Route::controller(TimeLogController::class)->group(function(){
+            Route::get('/tna', 'index')->name('tna.index');
+            Route::post('/tna', 'store')->name('tna.store');
+        })->prefix('tna');
     });
 
     // Auth::routes();
 
     Route::controller(LoginController::class)->group(function () {
         Route::post('/', 'login')->name('login');
-        Route::post('/logout', 'logout')->name('logout');
+    Route::post('/logout', 'logout')->name('logout');
     });
 
     Route::controller(EmployeeController::class)->group(function () {
@@ -93,6 +103,7 @@ Route::group(['middleware' => 'web'], function () {
         Route::get('/payroll_settings', 'index')->name('payroll_settings');
         Route::post('/payroll_settings', 'update')->name('update');
     });
+
 
     Route::get('/test_email', function () {
         try {

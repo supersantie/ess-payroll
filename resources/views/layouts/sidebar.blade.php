@@ -138,6 +138,26 @@
                                 </span>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('tna.index') }}" class="nav-link {{ request()->routeIs('tna.index') ? 'active' : '' }}">
+                                <i class="ph-folder-simple-lock"></i>
+                                <span>
+                                    Time & Attendance
+                                </span>
+                            </a>
+                        </li>
+                        <li
+                            class="nav-item nav-item-submenu {{ request()->routeIs('deductions_and_contributions.*') ? 'nav-item-open' : '' }}">
+                            <a href="#" class="nav-link">
+                                <i class="ph-spinner-gap"></i>
+                                <span>Requests</span>
+                            </a>
+                            <ul class="nav-group-sub collapse {{ request()->routeIs('deductions_and_contributions.*') ? 'show' : '' }}">
+                                <li class="nav-item"><a href="" class="nav-link">Leave</a></li>
+                                <li class="nav-item"><a href="" class="nav-link">Reimbursement</a></li>
+                                <li class="nav-item"><a href="" class="nav-link">Certificate of Employment</a></li>
+                            </ul>
+                        </li>
                         <li
                             class="nav-item nav-item-submenu {{ request()->routeIs('deductions_and_contributions.*') ? 'nav-item-open' : '' }}">
                             <a href="#" class="nav-link">
@@ -157,40 +177,7 @@
                                         class="nav-link">Evaluations</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a href="index" class="nav-link">
-                                <i class="ph-medal"></i>
-                                <span>
-                                    Training and Certifications
-                                </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="index" class="nav-link">
-                                <i class="ph-clock"></i>
-                                <span>
-                                    Shift Management
-                                </span>
-                            </a>
-                        </li>
 
-                        <li class="nav-item">
-                            <a href="index" class="nav-link">
-                                <i class="ph-folder-simple-lock"></i>
-                                <span>
-                                    Personal Files
-                                </span>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="index" class="nav-link">
-                                <i class="ph-spinner-gap"></i>
-                                <span>
-                                    Requests
-                                </span>
-                            </a>
-                        </li>
                         <li class="nav-item">
                             <a href="index" class="nav-link">
                                 <i class="ph-gift"></i>
@@ -207,8 +194,6 @@
                                 </span>
                             </a>
                         </li>
-
-
 
                         <li class="nav-item">
                             <a href="index" class="nav-link">
@@ -935,7 +920,8 @@
                                 </li>
                                 <li class="nav-item"><a href="datatable_advanced" class="nav-link">Advanced
                                         examples</a></li>
-                                <li class="nav-item"><a href="datatable_sorting" class="nav-link">Sorting options</a>
+                                <li class="nav-item"><a href="datatable_sorting" class="nav-link">Sorting
+                                        options</a>
                                 </li>
                                 <li class="nav-item"><a href="datatable_api" class="nav-link">Using API</a></li>
                                 <li class="nav-item"><a href="datatable_data_sources" class="nav-link">Data
