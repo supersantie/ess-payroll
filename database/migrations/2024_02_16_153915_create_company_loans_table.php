@@ -11,28 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ess_accounts', function (Blueprint $table) {
+        Schema::create('company_loans', function (Blueprint $table) {
             $table->id();
             $table->string('employee_code')->index();
             $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
-            $table->string('password');
-            $table->string('email')->unique();
-            $table->double('outstanding_loan_balance');
-            $table->string('otp_code')->nullable();
-            $table->timestamp('otp_requested_at')->nullable(); // Change this line to define otp_requested_at as timestamp
-            $table->string('avatar')->nullable();
-            $table->enum('status', ['active', 'deactivated'])->default('active');
+            $table->double('amount')->required();
+            $table->integer('months_to_be_paid')->required();
+            $table->double('amount_to_pay')->required();
+            $table->string('transaction_proof')->required();
+            $table->enum('loan_repayment', ['Every 1st Cutoff', 'Every 2nd Cutoff']);
+            $table->enum('loan_status', ['Pending','Unsettled', 'Paid'])->default('Unsettled');
             $table->timestamps();
         });
     }
-    
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('ess_accounts');
+        Schema::dropIfExists('company_loans');
     }
 };

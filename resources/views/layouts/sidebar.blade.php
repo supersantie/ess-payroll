@@ -102,8 +102,8 @@
                                 <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.phil_health"
                                         class="nav-link">Philhealth Loan</a></li>
 
-                                <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.phil_health"
-                                        class="nav-link">Company Loan</a></li>
+                                <li class="nav-item"><a href="{{ route('deductions_and_contributions.company_loans') }}"
+                                        class="nav-link {{ request()->routeIs('deductions_and_contributions.company_loans') ? 'active' : '' }}">Company Loan</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -147,25 +147,25 @@
                             </a>
                         </li>
                         <li
-                            class="nav-item nav-item-submenu {{ request()->routeIs('deductions_and_contributions.*') ? 'nav-item-open' : '' }}">
+                            class="nav-item nav-item-submenu">
                             <a href="#" class="nav-link">
                                 <i class="ph-spinner-gap"></i>
                                 <span>Requests</span>
                             </a>
-                            <ul class="nav-group-sub collapse {{ request()->routeIs('deductions_and_contributions.*') ? 'show' : '' }}">
+                            <ul class="nav-group-sub collapse ">
                                 <li class="nav-item"><a href="" class="nav-link">Leave</a></li>
                                 <li class="nav-item"><a href="" class="nav-link">Reimbursement</a></li>
                                 <li class="nav-item"><a href="" class="nav-link">Certificate of Employment</a></li>
                             </ul>
                         </li>
                         <li
-                            class="nav-item nav-item-submenu {{ request()->routeIs('deductions_and_contributions.*') ? 'nav-item-open' : '' }}">
+                            class="nav-item nav-item-submenu">
                             <a href="#" class="nav-link">
                                 <i class="ph-scales"></i>
                                 <span>Company Policies</span>
                             </a>
                             <ul
-                                class="nav-group-sub collapse {{ request()->routeIs('deductions_and_contributions.*') ? 'show' : '' }}">
+                                class="nav-group-sub collapse">
 
                                 <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.sss"
                                         class="nav-link">Memo</a></li>

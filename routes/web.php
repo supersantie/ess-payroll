@@ -1,6 +1,7 @@
 <?php
 
 use App\Mail\PayrollNotify;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EssController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\EssAccountController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\CompanyLoanController;
 use App\Http\Controllers\PayrollSettingController;
 
 /*
@@ -34,29 +36,43 @@ Route::group(['middleware' => 'web'], function () {
         return view('auth.login');
     });
 
-    Route::prefix('ess')->group(function(){
-        Route::get('/dashboard', function () {
-            return view('pages.ess.dashboard');
-        })->name('ess.dashboard');
 
-        Route::controller(EssController::class)->group(function(){
+    Route::prefix('ess')->group(function () {
+
+        // Route::controller(EssController::class)->group(function(){
+        //     Route::get('/login', 'index')->name('ess.login');
+        //     Route::post('/verify', 'verify')->name('ess.login.verify');
+        //     Route::get('/validate', 'validateOTP')->name('ess.validate.otp');
+        //     Route::post('/logout', 'destroy')->name('ess.logout');
+        // })->prefix('auth');
+
+        Route::controller(EssController::class)->group(function () {
             Route::get('/login', 'index')->name('ess.login');
             Route::post('/verify', 'verify')->name('ess.login.verify');
-            Route::post('/validate', 'validateOTP')->name('ess.validate.otp');
-            Route::get('/logout', 'destroy')->name('ess.logout');
+            Route::post('/validate_otp', 'validateOTP')->name('auth.validate.otp');
+            Route::post('/logout', 'destroy')->name('ess.logout');
         })->prefix('auth');
 
-        Route::controller(TimeLogController::class)->group(function(){
-            Route::get('/tna', 'index')->name('tna.index');
-            Route::post('/tna', 'store')->name('tna.store');
-        })->prefix('tna');
+
+        Route::middleware(['ess.account'])->group(function () {
+            Route::get('/dashboard', function (Request $request) {
+                // dd($request->session()->get('info')->first_name);
+                return view('pages.ess.dashboard');
+            })->name('ess.dashboard');
+
+            Route::controller(TimeLogController::class)->group(function () {
+                Route::get('/tna', 'index')->name('tna.index');
+                Route::post('/tna', 'store')->name('tna.store');
+            })->prefix('tna');
+        });
     });
+
 
     // Auth::routes();
 
     Route::controller(LoginController::class)->group(function () {
         Route::post('/', 'login')->name('login');
-    Route::post('/logout', 'logout')->name('logout');
+        Route::post('/logout', 'logout')->name('logout');
     });
 
     Route::controller(EmployeeController::class)->group(function () {
@@ -102,6 +118,10 @@ Route::group(['middleware' => 'web'], function () {
     Route::controller(PayrollSettingController::class)->group(function () {
         Route::get('/payroll_settings', 'index')->name('payroll_settings');
         Route::post('/payroll_settings', 'update')->name('update');
+    });
+
+    Route::controller(CompanyLoanController::class)->group(function () {
+        Route::get('/company_loans', 'index')->name('deductions_and_contributions.company_loans');
     });
 
 
