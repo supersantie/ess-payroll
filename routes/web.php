@@ -51,6 +51,8 @@ Route::group(['middleware' => 'web'], function () {
             Route::post('/verify', 'verify')->name('ess.login.verify');
             Route::post('/validate_otp', 'validateOTP')->name('auth.validate.otp');
             Route::post('/logout', 'destroy')->name('ess.logout');
+
+            Route::get('/tna/capture', 'captureAttendance')->name('ess.tna.capture');
         })->prefix('auth');
 
 

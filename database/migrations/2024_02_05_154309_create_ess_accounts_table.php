@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
             $table->string('password');
             $table->string('email')->unique();
-            $table->double('outstanding_loan_balance');
+            $table->double('outstanding_loan_balance')->default(0);
             $table->string('otp_code')->nullable();
             $table->timestamp('otp_requested_at')->nullable(); // Change this line to define otp_requested_at as timestamp
             $table->string('avatar')->nullable();
