@@ -18,10 +18,9 @@ class EssAccountFactory extends Factory
      */
     public function definition(): array
     {
-        $employee = Employee::factory()->create();
         return [
             //
-            'employee_code' => $employee->code,
+            'employee_code' => Employee::factory(),
             'password' => Hash::make('123456'),
             'email' => fake()->unique()->safeEmail(),
         ];

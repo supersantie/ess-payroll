@@ -34,7 +34,8 @@
                             <i class="ph-dots-three sidebar-resize-show"></i>
                         </li>
                         <li class="nav-item">
-                            <a href="index" class="nav-link">
+                            <a href="{{ route('ess.dashboard') }}"
+                            class="nav-link {{ request()->routeIs('ess.dashboard') ? 'active' : '' }}">
                                 <i class="ph-house"></i>
                                 <span>
                                     Dashboard

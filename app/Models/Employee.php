@@ -17,7 +17,7 @@ class Employee extends Model
         return 'code';
     }
 
-    public function ess_account()
+    public function essAccount()
     {
         return $this->hasOne(EssAccount::class, 'employee_code', $this->getRouteKeyName());
     }
@@ -31,10 +31,6 @@ class Employee extends Model
         return $this->hasMany(Overtime::class, 'employee_code', $this->getRouteKeyName());
     }
 
-    public function leaves(){
-        return $this->hasMany(Leave::class, 'employee_code', $this->getRouteKeyName());
-    }
-
     public function perks(){
         return $this->hasMany(Perk::class, 'employee_code', $this->getRouteKeyName());
     }
@@ -45,10 +41,6 @@ class Employee extends Model
 
     public function payslips(){
         return $this->hasMany(Payslip::class, 'employee_code', $this->getRouteKeyName());
-    }
-
-    public function deductions(){
-        return $this->hasMany(Deduction::class, 'employee_code', $this->getRouteKeyName());
     }
     
 }

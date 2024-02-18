@@ -56,8 +56,8 @@ class EssController extends Controller
         Mail::to($employee->email)->send(new OtpEmail($otp));
 
         $employeeCode = $employee->employee_code;
-
-        return view('auth.ess_otp');
+        
+        return view('auth.ess_otp', compact($employeeCode));
     }
 
     public function validateOTP(Request $request)
@@ -95,5 +95,9 @@ class EssController extends Controller
 
         // return view('auth.ess_login');
         return redirect()->intended('/ess/login');
+    }
+
+    public function captureAttendance(){
+        return view('pages.ess.tna_capture');
     }
 }

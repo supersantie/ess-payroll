@@ -4,6 +4,7 @@
     <!-- Content area -->
     <div class="content d-flex justify-content-center align-items-center">
 
+
         <!-- Login form -->
         <form class="otp-form" id="OtpForm" method="POST">
             @csrf
@@ -71,7 +72,7 @@
                     data: {
                         _token: $('meta[name="csrf-token"]').attr('content'),
                         otp_code: otpInputs,
-                        employee_code: 'DSQEE-56467',
+                        employee_code: '{{ $employeeCode }}',
                     },
                     success: function(response) {
                         // Check if the response indicates success
