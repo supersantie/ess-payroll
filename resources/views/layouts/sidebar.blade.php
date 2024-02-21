@@ -95,12 +95,10 @@
                             </a>
                             <ul
                                 class="nav-group-sub collapse {{ request()->routeIs('deductions_and_contributions.*') ? 'show' : '' }}">
-                                <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.sss"
-                                        class="nav-link">SSS Loan</a></li>
-                                <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.pag_ibig"
-                                        class="nav-link">Pag Ibig Loan</a></li>
-                                <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.phil_health"
-                                        class="nav-link">Philhealth Loan</a></li>
+                                <li class="nav-item"><a href="{{ route('deductions_and_contributions.sss') }}"
+                                    class="nav-link {{ request()->routeIs('deductions_and_contributions.sss') ? 'active' : '' }}">SSS Loan</a></li>
+                                <li class="nav-item"><a href="{{ route('deductions_and_contributions.pagibig') }}"
+                                    class="nav-link {{ request()->routeIs('deductions_and_contributions.pagibig') ? 'active' : '' }}">Pag Ibig Loan</a></li>
 
                                 <li class="nav-item"><a href="{{ route('deductions_and_contributions.company_loans') }}"
                                         class="nav-link {{ request()->routeIs('deductions_and_contributions.company_loans') ? 'active' : '' }}">Company Loan</a></li>
@@ -124,86 +122,6 @@
                                 </span>
                             </a>
                         </li>
-
-                        <!-- Main -->
-                        <li class="nav-item-header pt-0">
-                            <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">ESS</div>
-                            <i class="ph-dots-three sidebar-resize-show"></i>
-                        </li>
-                        <li class="nav-item">
-                            <a href="index" class="nav-link">
-                                <i class="ph-house"></i>
-                                <span>
-                                    Dashboard
-                                </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('tna.index') }}" class="nav-link {{ request()->routeIs('tna.index') ? 'active' : '' }}">
-                                <i class="ph-folder-simple-lock"></i>
-                                <span>
-                                    Time & Attendance
-                                </span>
-                            </a>
-                        </li>
-                        <li
-                            class="nav-item nav-item-submenu">
-                            <a href="#" class="nav-link">
-                                <i class="ph-spinner-gap"></i>
-                                <span>Requests</span>
-                            </a>
-                            <ul class="nav-group-sub collapse ">
-                                <li class="nav-item"><a href="" class="nav-link">Leave</a></li>
-                                <li class="nav-item"><a href="" class="nav-link">Reimbursement</a></li>
-                                <li class="nav-item"><a href="" class="nav-link">Certificate of Employment</a></li>
-                            </ul>
-                        </li>
-                        <li
-                            class="nav-item nav-item-submenu">
-                            <a href="#" class="nav-link">
-                                <i class="ph-scales"></i>
-                                <span>Company Policies</span>
-                            </a>
-                            <ul
-                                class="nav-group-sub collapse">
-
-                                <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.sss"
-                                        class="nav-link">Memo</a></li>
-                                <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.pag_ibig"
-                                        class="nav-link">Personnel Action Notice</a></li>
-                                <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.phil_health"
-                                        class="nav-link">Incident Report</a></li>
-                                <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.phil_health"
-                                        class="nav-link">Evaluations</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="index" class="nav-link">
-                                <i class="ph-gift"></i>
-                                <span>
-                                    Benefits
-                                </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="index" class="nav-link">
-                                <i class="ph-scroll"></i>
-                                <span>
-                                    Payslips
-                                </span>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="index" class="nav-link">
-                                <i class="ph-kanban"></i>
-                                <span>
-                                    Tasks
-                                </span>
-                            </a>
-                        </li>
-
 
 
 

@@ -30,6 +30,16 @@ class TimeLogController extends Controller
     public function store(Request $request)
     {
         //
+
+        // Get the image (required)
+        // Get the time in (required)
+        // Get the time out (required)
+        // Get the current date 
+        // Get the current employee logged in
+        // Store all the data
+        // Store the image into storage
+
+        // Throw an error if the user doesnt provide each
     }
 
     /**

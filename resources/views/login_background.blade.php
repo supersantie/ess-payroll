@@ -25,7 +25,7 @@
                 <div class="content d-flex justify-content-center align-items-center">
 
                     <!-- Login form -->
-                    <form class="login-form" action="index">
+                    <form class="login-form" method="POST" action="{{ route('ess.login.verify') }}">
                         <div class="card mb-0">
                             <div class="card-body">
                                 <div class="text-center mb-3">
@@ -37,22 +37,35 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label">Username</label>
+                                    <label for="email" class="form-label">{{ __('Employee Code') }}</label>
                                     <div class="form-control-feedback form-control-feedback-start">
-                                        <input type="text" class="form-control" placeholder="john@doe.com">
+                                        <input id="employee_code" type="employee_code"
+                                            class="form-control mask_currency @error('employee_code') is-invalid @enderror"
+                                            name="employee_code" required autofocus>
                                         <div class="form-control-feedback-icon">
                                             <i class="ph-user-circle text-muted"></i>
                                         </div>
+                                        @error('employee_code')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label">Password</label>
+                                    <label for="password" class="form-label">{{ __('Password') }}</label>
                                     <div class="form-control-feedback form-control-feedback-start">
-                                        <input type="password" class="form-control" placeholder="•••••••••••">
+                                        <input id="password" type="password"
+                                            class="form-control @error('password') is-invalid @enderror" name="password" required>
                                         <div class="form-control-feedback-icon">
                                             <i class="ph-lock text-muted"></i>
                                         </div>
+                                        @error('password')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
                                     </div>
                                 </div>
 

@@ -17,8 +17,7 @@ return new class extends Migration
             $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
             $table->double('amount')->required();
             $table->integer('months_to_be_paid')->required();
-            $table->double('amount_to_pay')->required();
-            $table->string('transaction_proof')->required();
+            $table->double('amount_to_be_paid')->required();
             $table->enum('loan_repayment', ['Every 1st Cutoff', 'Every 2nd Cutoff']);
             $table->enum('loan_status', ['Pending','Unsettled', 'Paid'])->default('Unsettled');
             $table->timestamps();

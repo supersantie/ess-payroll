@@ -57,8 +57,17 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">SSS:</label>
-                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency"
-                                name="sss">
+                            <div class="row justify-content-center align-items-center g-2">
+                                <div class="col">
+                                    <input type="text" class="form-control" placeholder="Enter employee share percentage"
+                                        name="sss">
+                                </div>
+                                <div class="col">
+                                    <input type="text" class="form-control" placeholder="Enter employer share percentage"
+                                        name="sss">
+                                </div>
+                            </div>
+
                         </div>
 
                         <div class="mb-3">

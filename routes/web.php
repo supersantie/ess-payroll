@@ -18,6 +18,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\EssAccountController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\CompanyLoanController;
+use App\Http\Controllers\LoanController;
 use App\Http\Controllers\PayrollSettingController;
 
 /*
@@ -55,17 +56,25 @@ Route::group(['middleware' => 'web'], function () {
             Route::get('/tna/capture', 'captureAttendance')->name('ess.tna.capture');
         })->prefix('auth');
 
-
         Route::middleware(['ess.account'])->group(function () {
             Route::get('/dashboard', function (Request $request) {
-                // dd($request->session()->get('info')->first_name);
                 return view('pages.ess.dashboard');
             })->name('ess.dashboard');
 
-            Route::controller(TimeLogController::class)->group(function () {
+            // Time and Attendance
+            Route::controller(TimeLogController::class)->group(function () {              
                 Route::get('/tna', 'index')->name('tna.index');
                 Route::post('/tna', 'store')->name('tna.store');
             })->prefix('tna');
+            // End of Time and Attendance
+
+            // Payslip
+            Route::controller(PayslipController::class)->group(function () {
+                Route::get('/payslips', 'index')->name('payslips.index');
+            })->prefix('payslips');
+            // End of Payslip
+
+
         });
     });
 
@@ -124,6 +133,13 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::controller(CompanyLoanController::class)->group(function () {
         Route::get('/company_loans', 'index')->name('deductions_and_contributions.company_loans');
+
+        Route::post('/company_loans/store', 'store')->name('deductions_and_contributions.company_loans.store');
+    });
+
+    Route::controller(LoanController::class)->group(function () {
+        Route::get('/sss', 'sss')->name('deductions_and_contributions.sss');
+        Route::get('/pagibig', 'pagibig')->name('deductions_and_contributions.pagibig');
     });
 
 
