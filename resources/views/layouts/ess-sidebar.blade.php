@@ -86,24 +86,15 @@
                             <a href="index" class="nav-link">
                                 <i class="ph-gift"></i>
                                 <span>
-                                    Benefits
+                                    EE & ER Shares
                                 </span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="index" class="nav-link">
+                            <a href="{{ route('payslips.index') }}" class="nav-link {{ request()->routeIs('payslips.index') ? 'active' : '' }}">
                                 <i class="ph-scroll"></i>
                                 <span>
                                     Payslips
-                                </span>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="index" class="nav-link">
-                                <i class="ph-kanban"></i>
-                                <span>
-                                    Tasks
                                 </span>
                             </a>
                         </li>

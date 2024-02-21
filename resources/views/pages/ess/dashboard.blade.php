@@ -475,49 +475,11 @@
                 <div class="mb-3">
                     <div class="row row-tile g-0">
                         <div class="col">
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#modalId"
+                            <a href="{{ route('ess.tna.capture') }}" role="button"
                                 class="btn btn-light w-100 flex-column rounded-0 rounded-top-start py-2">
                                 <i class="ph-calendar-check text-primary ph-2x mb-1"></i>
                                 Time & Attendance
-                            </button>
-
-                            <!-- Modal -->
-                            <div class="modal fade" id="modalId" tabindex="-1" role="dialog"
-                                aria-labelledby="modalTitleId" aria-hidden="true" data-bs-keyboard="false">
-                                <div class="modal-dialog modal-lg modal-dialog-centered " role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="modalTitleId">
-                                                Attendance Capture
-                                            </h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <video id="video" autoplay class="w-100"></video>
-
-                                            <div class="form-check form-check-inline mt-3">
-                                                <input class="form-check-input" type="checkbox" id="agreeTerms"
-                                                    value="agreed" />
-                                                <label class="form-check-label" for="agreeTerms">
-                                                    By checking this box, I agree to the <a href="#"
-                                                        data-bs-toggle="modal" data-bs-dismiss="modal"
-                                                        data-bs-target="#termsModal">terms and conditions</a>.
-                                                </label>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="modal-footer ">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                Close
-                                            </button>
-                                            <button type="button" class="btn btn-primary">Submit</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
+                            </a>
 
                             <button type="button"
                                 class="btn btn-light w-100 flex-column rounded-0 rounded-bottom-start py-2">
@@ -684,14 +646,14 @@
             });
 
             $('#modalId').on('hidden.bs.modal', function() {
-    const videoElement = $('#video')[0];
-    const stream = videoElement.srcObject;
-    if (stream) {
-        const tracks = stream.getTracks();
-        tracks.forEach(track => track.stop());
-        videoElement.srcObject = null;
-    }
-});
+                const videoElement = $('#video')[0];
+                const stream = videoElement.srcObject;
+                if (stream) {
+                    const tracks = stream.getTracks();
+                    tracks.forEach(track => track.stop());
+                    videoElement.srcObject = null;
+                }
+            });
         });
     </script>
 @endsection

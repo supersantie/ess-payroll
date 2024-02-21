@@ -23,7 +23,8 @@ class EmployeeFactory extends Factory
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'date_hired' => fake()->date(),
-            'basic_daily_rate' => fake()->randomFloat(2, 354.32, 610)
+            'basic_daily_rate' => floatval(610),
+            'monthly_salary' => floatval(16500)
         ];
     }
 }

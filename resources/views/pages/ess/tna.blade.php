@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.ess-master')
 @section('content')
     @component('components.breadcrumb')
         @slot('title')

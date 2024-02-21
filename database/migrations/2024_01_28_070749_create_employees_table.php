@@ -18,8 +18,12 @@ return new class extends Migration
             $table->string('middle_name')->nullable();
             $table->string('last_name');
             $table->double('basic_daily_rate')->required();
+            $table->double('monthly_salary')->required();
             $table->string('profile_picture')->nullable();
             $table->string('email')->nullable();
+
+            $table->string('ss_number')->nullable();
+            $table->string('pagibig_number')->nullable();
 
             $table->date('date_hired')->required();
             $table->enum('status', ['full time', 'part time', 'probationary', 'terminated'])->default('probationary');

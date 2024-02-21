@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Loan;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
 class LoanController extends Controller
@@ -10,9 +11,32 @@ class LoanController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+
+    public function sss()
     {
-        //
+        $employees = Employee::with('overtimes')->get();
+
+        $statusColors = [
+            'approved' => 'bg-success bg-opacity-10 text-success',
+            'pending' => 'bg-warning bg-opacity-10 text-warning',
+            'declined' => 'bg-danger bg-opacity-10 text-danger',
+        ];
+
+        return view('pages.payroll.deductions_and_contributions.sss', compact('employees', 'statusColors'));
+    }
+
+    public function pagibig()
+    {
+
+        $employees = Employee::with('overtimes')->get();
+
+        $statusColors = [
+            'approved' => 'bg-success bg-opacity-10 text-success',
+            'pending' => 'bg-warning bg-opacity-10 text-warning',
+            'declined' => 'bg-danger bg-opacity-10 text-danger',
+        ];
+
+        return view('pages.payroll.deductions_and_contributions.pag_ibig', compact('employees', 'statusColors'));
     }
 
     /**
@@ -20,7 +44,8 @@ class LoanController extends Controller
      */
     public function create()
     {
-        //
+        $employees = Employee::with('overtimes')->get();
+        return view('pages.payroll.overtime', compact('employees', 'statusColors'));
     }
 
     /**

@@ -23,6 +23,7 @@ class EssAccountFactory extends Factory
             'employee_code' => Employee::factory(),
             'password' => Hash::make('123456'),
             'email' => fake()->unique()->safeEmail(),
+            'working_email' => fake()->unique()->safeEmail(),
         ];
     }
 }
