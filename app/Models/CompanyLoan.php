@@ -14,4 +14,8 @@ class CompanyLoan extends Model
     public function employee(){
         $this->belongsTo(Employee::class);
     }
+
+    public function essAccount(){
+        $this->belongsTo(Employee::class);
+    }
 }

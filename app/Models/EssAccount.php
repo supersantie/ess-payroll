@@ -18,5 +18,8 @@ class EssAccount extends Model
         return $this->belongsTo(Employee::class, 'employee_code');
     }
 
+    public function loans(){
+        return $this->hasMany(CompanyLoan::class, 'employee_code', $this->getRouteKeyName());
+    }
 
 }

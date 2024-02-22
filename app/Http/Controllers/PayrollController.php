@@ -8,6 +8,7 @@ use App\Models\Cutoff;
 use App\Models\Payroll;
 use App\Models\Employee;
 use App\Models\ActivityLog;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\PayrollSetting;
 use Illuminate\Support\Facades\Log;
@@ -21,7 +22,11 @@ class PayrollController extends Controller
     public function index()
     {
         //
-        $payrolls = Employee::with('payrolls')->get();
+
+        $payrolls = Employee::with(['payrolls', 'companyLoans' => function ($query) {
+            $query->where('loan_status', 'Unsettled');
+        }])->get();
+
         $statusColors = [
             'on time' => 'bg-success bg-opacity-10 text-success',
             'undertime' => 'bg-secondary bg-opacity-10 text-secondary',
@@ -44,6 +49,15 @@ class PayrollController extends Controller
      */
     public function store(Request $request)
     {
+
+        /*
+            TODO:
+            - Check if the employee has previous unsettled loan from company
+            - Throw error if have previous loan
+            
+
+        */
+
         $currentDate = now();
         $startOfMonth = $currentDate->clone()->startOfMonth();
         $endOfMonth = $currentDate->clone()->endOfMonth();
@@ -55,19 +69,37 @@ class PayrollController extends Controller
         $endOfMonth->endOfMonth()->weekday() === Carbon::SUNDAY && $endOfMonth->subWeekday(2); // Skip Sunday
 
         $employeeIds = $request->employeeIds;
-        $employees = Employee::with(['attendances', 'overtimes'])->whereIn('code', $employeeIds)->get();
+        $employees = Employee::with(['attendances', 'overtimes', 'companyLoans' => function ($query) {
+            $query->where('loan_status', 'Unsettled');
+        }])->whereIn('code', $employeeIds)->get();
 
+        $previousCutoff = Cutoff::orderBy('generated_date', 'desc')->first();
+        $loanAmount = 0.00;
         $totalReleasedPay = 0;
+
         foreach ($employees as $employee) {
             $employeeId = $employee->code;
 
-            // Exclude attendance records with a 'processed' status
+            // Process company loan
+            $employeeCompanyLoan = $employee->companyLoans->first();
+            $employeeLoanAmount = $employee->companyLoans->first()->amount_to_be_paid;
+
+            if (!$previousCutoff || $previousCutoff->payroll_period === '2nd cutoff') {
+                $payrollPeriod = '1st cutoff';
+            } else {
+                $payrollPeriod = '2nd cutoff';
+            }
+
+            if (Str::of($employeeCompanyLoan->loan_repayment)->replaceFirst("Every ", "")->lower()->value == $payrollPeriod) {
+                $loanAmount =  $employeeLoanAmount;
+                $employeeCompanyLoan->update(["loan_status"=>"Paid"]);
+            }
+
+            // Process attendance and overtime
             $attendanceRecords = $employee->attendances()->where('payroll_status', '!=', 'processed')->get();
             $overtimeRecords = $employee->overtimes;
-
             $totalWorkingHours = 0;
             $totalOvertimeHours = 0;
-
             $baseSalary = $employee->basic_daily_rate;
 
             foreach ($attendanceRecords as $record) {
@@ -75,32 +107,33 @@ class PayrollController extends Controller
                 $record->update(['payroll_status' => 'processed']);
             }
 
-            $netPay = 0;
-
             foreach ($overtimeRecords as $overtime) {
                 $totalOvertimeHours += $overtime->no_of_hours;
                 $overtime->update(['status' => 'processed']);
             }
 
+            // Calculate net pay
             $netPay = ($baseSalary / 8 * $totalWorkingHours) + ($baseSalary / 8 * $totalOvertimeHours * ($overtimeRecords->count() > 0 ? $overtimeRecords->first()->rate_percentage / 100 : 0));
 
+            $netPayAfterLoan = $netPay - $loanAmount;
+
+            // Create payroll record
             Payroll::create([
                 "employee_code" => $employeeId,
                 "paid_hours" => $totalWorkingHours,
                 "overtime" => $totalOvertimeHours,
-                "net_pay" => $netPay,
+                "company_loan" => $loanAmount,
+                "net_pay" => $netPayAfterLoan,
                 "start_date" => $startOfMonth,
                 "end_date" => $endOfMonth,
             ]);
 
             $totalReleasedPay += $netPay;
 
-
             echo "Payroll Released!";
         }
 
-        $previousCutoff = Cutoff::orderBy('generated_date', 'desc')->first();
-
+        // Create cutoff record
         if (!$previousCutoff || $previousCutoff->payroll_period === '2nd cutoff') {
             $payrollPeriod = '1st cutoff';
             Log::info('Setting payroll period to 1st cutoff');
@@ -108,7 +141,6 @@ class PayrollController extends Controller
             $payrollPeriod = '2nd cutoff';
             Log::info('Setting payroll period to 2nd cutoff');
         }
-        
 
         Cutoff::create([
             "generated_date" => $currentDate,
@@ -119,8 +151,9 @@ class PayrollController extends Controller
         ]);
 
         echo "Total Released Pay: " . $totalReleasedPay;
-        
-        $userEmail = $request->user()->email ?? ''; 
+
+        // Log activity
+        $userEmail = $request->user()->email ?? '';
         $description = 'Payroll released for ' . $payrollPeriod . ' with total amount of ' . $totalReleasedPay;
         $ipAddress = $request->ip();
         $actionType = 'create';
@@ -132,6 +165,7 @@ class PayrollController extends Controller
             'action_type' => $actionType,
         ]);
     }
+
 
 
 
