@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
             $table->double('paid_hours')->default(0.0);
             $table->double('overtime')->default(0.0);
+            $table->double('company_loan')->default(0.0);
             $table->double('sss')->default(0.0);
             $table->double('phil_health')->default(0.0);
             $table->double('pag_ibig')->default(0.0);

@@ -180,7 +180,7 @@
                 </thead>
                 <tbody>
                     @foreach ($employees as $item)
-                        @foreach ($item->loans as $subItem)
+                        @foreach ($item->companyLoans as $subItem)
                             <tr>
                                 <th class="d-flex justify-content-center ">
                                     <input type="checkbox" class="form-check-input"

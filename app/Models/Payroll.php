@@ -21,5 +21,6 @@ class Payroll extends Model
         'start_date',
         'end_date',
         'status',
+        'company_loan'
     ];
 }

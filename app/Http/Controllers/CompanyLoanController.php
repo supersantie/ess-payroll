@@ -17,7 +17,7 @@ class CompanyLoanController extends Controller
         //
         $employees = Employee::all();
 
-        $loans = Employee::with("loans")->get();
+        $loans = Employee::with("companyLoans")->get();
 
         // dd()
 
