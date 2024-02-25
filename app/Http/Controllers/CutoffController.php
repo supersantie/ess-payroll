@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CutoffExport;
+use Carbon\Carbon;
 use App\Models\Cutoff;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CutoffController extends Controller
 {
@@ -63,5 +66,15 @@ class CutoffController extends Controller
     public function destroy(Cutoff $cutoff)
     {
         //
+    }
+
+    public function export()
+    {
+        $currentDate = Carbon::now()->format('m-d-Y');
+        $fileName = $currentDate . "-cutoff.xlsx"; // Specify the file extension
+
+        return Excel::download(new CutoffExport, $fileName);
+
+        // dd("test");
     }
 }

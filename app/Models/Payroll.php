@@ -23,4 +23,9 @@ class Payroll extends Model
         'status',
         'company_loan'
     ];
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'employee_code', 'code');
+    }
 }

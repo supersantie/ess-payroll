@@ -99,21 +99,30 @@
                             data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm"
                                 role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="modalTitleId">
-                                            Modal title
-                                        </h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
+                                <form id="importExcelForm" enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modalTitleId">
+                                                Modal title
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label for="" class="form-label">Choose file</label>
+                                                <input type="file" class="form-control" name="file" id=""
+                                                    placeholder="" aria-describedby="fileHelpId" />
+                                                <div id="fileHelpId" class="form-text">Help text</div>
+                                            </div>
 
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary">Upload</button>
+                                        </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary">Save</button>
-                                    </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -129,11 +138,10 @@
             </div>
 
             <div class="card-body">
-                The <code>Responsive</code> extension for DataTables can be applied to a DataTable in one of two ways; with
-                a specific <code>class name</code> on the table, or using the DataTables initialisation options. This method
-                shows the latter, with the <code>responsive</code> option being set to the boolean value <code>true</code>.
-                The <code>responsive</code> option can be given as a boolean value, or as an object with configuration
-                options.
+                This table stores attendance data for individuals, allowing tracking of their presence or absence in various
+                events, classes, or meetings. It facilitates manual entry of attendance records, as well as import/export
+                functionality for convenient data management. Additionally, it supports modification of attendance data to
+                accommodate updates or corrections.
             </div>
 
             <div class="card-body">
@@ -455,6 +463,74 @@
                         });
                         console.error(error);
                     }
+                });
+            });
+
+            $("#importExcelForm").on("submit", function(e) {
+                e.preventDefault();
+
+                let formData = new FormData($(this)[0]);
+                $.ajax({
+                    url: '/attendance/import',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    success: function(response) {
+                        // Check if the response contains the expected data
+                        if (response && response.success) {
+                            // Close the modal
+                            $('#uploadFileModal').modal('hide');
+
+                            // Display SweetAlert for success
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Perk record saved successfully!',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            }).then(function() {
+                                location.reload()
+                            });
+                        } else {
+                            // Handle unexpected response
+                            console.error('Unexpected response format:', response);
+                        }
+                    },
+                    error: function(response) {
+                        // Close the modal (in case it's still open)
+                        $('#uploadFileModal').modal('hide');
+
+                        // Format error messages into a list
+                        var errorList = '';
+                        if (response.responseJSON && response.responseJSON.errors) {
+                            errorList = '<ul class="list-group">';
+                            $.each(response.responseJSON.errors, function(index, error) {
+                                errorList += '<li class="list-group-item">' + error +
+                                    '</li>';
+                            });
+                            errorList += '</ul>';
+                        }
+
+                        // Display Swal with error messages
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: 'An error occurred while saving attendance records:<br><br>' +
+                                errorList,
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        }).then(function() {
+                            location.reload()
+                        });
+                        console.error(response);
+                    }
+
                 });
             });
 

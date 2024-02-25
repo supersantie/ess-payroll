@@ -15,7 +15,7 @@
                         <div class="d-inline-flex bg-primary bg-opacity-10 text-primary lh-1 rounded-pill p-3 mb-3 mt-1">
                             <i class="ph-envelope ph-2x"></i>
                         </div>
-                        <h5 class="mb-0">We send OTP in gcr****@gmail.com</h5>
+                        <h5 class="mb-0">We send OTP in {{ $employeeMail }}</h5>
                         <span class="d-block text-muted">We'll send you instructions in email</span>
                     </div>
 

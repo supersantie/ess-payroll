@@ -1,6 +1,6 @@
 @extends('layouts.ess-master')
 @section('content')
-    @component('components.breadcrumb')
+    @component('components.ess-breadcrumb')
         @slot('title')
             Dashboard
         @endslot

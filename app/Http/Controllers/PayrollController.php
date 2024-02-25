@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PayrollExport;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Cutoff;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\PayrollSetting;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\QueryException;
 
 class PayrollController extends Controller
@@ -118,10 +120,29 @@ class PayrollController extends Controller
                     $overtime->update(['status' => 'processed']);
                 }
 
-                // Calculate net pay
                 $netPay = ($baseSalary / 8 * $totalWorkingHours) + ($baseSalary / 8 * $totalOvertimeHours * ($overtimeRecords->count() > 0 ? $overtimeRecords->first()->rate_percentage / 100 : 0));
 
                 $netPayAfterLoan = $netPay - $loanAmount;
+
+                // Check if the payroll period is 2nd cutoff then deduct the following
+                // SSS: 4.5% of employee's base salary
+                // Philhealth: 5% of employee's base salary
+                // PAGIBIG: 200
+
+                $sssContribution = 0;
+                $pagibigContribution = 0;
+                $philhealthContribution = 0;
+
+                if($payrollPeriod == '2nd cutoff')
+                {
+                    $sssContribution = $employee->basic_daily_rate * 0.45;
+                    $pagibigContribution = 200;
+                    $philhealthContribution = $employee->basic_daily_rate * 0.5;
+
+                    $totalContributionDeduction = $sssContribution + $pagibigContribution + $philhealthContribution;
+
+                    $netPay = $netPayAfterLoan - $totalContributionDeduction;
+                }
 
                 // Create payroll record
                 Payroll::create([
@@ -129,7 +150,10 @@ class PayrollController extends Controller
                     "paid_hours" => $totalWorkingHours,
                     "overtime" => $totalOvertimeHours,
                     "company_loan" => $loanAmount,
-                    "net_pay" => $netPayAfterLoan,
+                    "sss" => $sssContribution,
+                    "phil_health" => $philhealthContribution,
+                    "pag_ibig" => $pagibigContribution,
+                    "net_pay" => $netPay,
                     "start_date" => $startOfMonth,
                     "end_date" => $endOfMonth,
                 ]);
@@ -143,6 +167,7 @@ class PayrollController extends Controller
                 Log::info('Setting payroll period to 1st cutoff');
             } else {
                 $payrollPeriod = '2nd cutoff';
+
                 Log::info('Setting payroll period to 2nd cutoff');
             }
 
@@ -151,9 +176,8 @@ class PayrollController extends Controller
                 "start_date" => $startOfMonth,
                 "end_date" => $endOfMonth,
                 "payroll_period" => $payrollPeriod,
-                "total_released_amount" => $totalReleasedPay
+                "total_released_amount" => $totalReleasedPay - $loanAmount
             ]);
-
 
             // Log activity
             $userEmail = $request->user()->email ?? '';
@@ -219,5 +243,18 @@ class PayrollController extends Controller
 
             $m->to("gcristianber@gmail.com", "Cristianber Gordora")->subject('Test Email');
         });
+    }
+
+    public function export()
+    {
+        $currentDate = Carbon::now()->format('m-d-Y');
+        $fileName = $currentDate . "-payroll.xlsx"; // Specify the file extension
+
+        // dd(Payroll::with('employee')->get());
+
+        // dd(Employee::with('payrolls')->get());
+        return Excel::download(new PayrollExport, $fileName);
+
+        // dd("test");
     }
 }

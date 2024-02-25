@@ -58,16 +58,52 @@
                             <input type="checkbox" class="form-check-input" id="cc_li_c">
                         </th>
                         <th>Date</th>
-                        <th>Image Capture</th>
-                        <th>IP Address</th>
-                        <th>Location</th>
                         <th>Time In</th>
                         <th>Time Out</th>
+                        <th class="text-center">Working Hours</th>
                         <th>Status</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($attendances as $item)
+                        <tr>
+                            <th data-orderable="false" class="text-center">
+                                <input type="checkbox" class="form-check-input" id="cc_li_c">
+                            </th>
+                            <td>{{ \Carbon\Carbon::parse($item->date)->format('d M Y'); }}</td>
+                            <td>{{ $item->time_in }}</td>
+                            <td>{{ $item->time_out }}</td>
+                            <td class="text-center">{{ $item->working_hours }}</td>
+                            <td><span
+                                    class="badge {{ $statusColors[$item->status] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">{{ Str::title($item->status) }}</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="d-inline-flex">
+                                    <div class="dropdown">
+                                        <a href="#" class="text-body" data-bs-toggle="dropdown">
+                                            <i class="ph-list"></i>
+                                        </a>
+
+                                        <div class="dropdown-menu dropdown-menu-end ">
+                                            <a href="#" class="dropdown-item">
+                                                <i class="ph-file-pdf me-2"></i>
+                                                Export to .pdf
+                                            </a>
+                                            <a href="#" class="dropdown-item">
+                                                <i class="ph-file-csv me-2"></i>
+                                                Export to .csv
+                                            </a>
+                                            <a href="#" class="dropdown-item">
+                                                <i class="ph-file-doc me-2"></i>
+                                                Export to .doc
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>

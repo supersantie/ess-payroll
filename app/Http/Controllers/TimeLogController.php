@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
 use App\Models\TimeLog;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,14 @@ class TimeLogController extends Controller
     public function index()
     {
         //
-        return view('pages.ess.tna');
+
+
+
+        $attendances = Attendance::where('employee_code', session('info')->code)->get();
+
+        // dd($employee);
+
+        return view('pages.ess.tna', compact('attendances'));
     }
 
     /**

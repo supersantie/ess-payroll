@@ -11,6 +11,8 @@ use App\Models\ActivityLog;
 use App\Imports\UsersImport;
 use Illuminate\Http\Request;
 use App\Exports\AttendanceExport;
+use App\Imports\AttendanceImport;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\QueryException;
 
@@ -57,7 +59,7 @@ class AttendanceController extends Controller
             $employeeCode = $request->employee;
             $employee = Employee::where('code', $employeeCode)->first();
             $basicDailyRate = $employee->basic_daily_rate;
-            $hourRate = $basicDailyRate / 8; // TODO: Base this in the Payroll Settings (Working Hours)
+            $hourRate = $basicDailyRate / 8;
 
             $dates = $request->date;
             $timeIn = $request->time_in;
@@ -88,7 +90,7 @@ class AttendanceController extends Controller
 
                 $attendanceRecords[] = $attendanceRecord;
 
-                $userEmail = $request->user()->email ?? ''; 
+                $userEmail = $request->user()->email ?? '';
                 $description = 'Attendance record created';
                 $ipAddress = $request->ip();
                 $actionType = 'create';
@@ -145,8 +147,28 @@ class AttendanceController extends Controller
         return Excel::download(new AttendanceExport, 'attendances.xlsx');
     }
 
-    public function import()
+    public function import(Request $request)
     {
-        Excel::import(new UsersImport, request()->file('test.xlsx'));
+        try {
+            ActivityLog::create([
+                'user_email' => Auth::user()->email,
+                'description' => Auth::user()->name . " imports excel file to Attendance",
+                'ip_address' => $_SERVER['REMOTE_ADDR'],
+                'action_type' => "upload",
+            ]);
+
+
+            $fileData = Excel::toArray(new AttendanceImport, $request->file('file'));
+            $errors = (new AttendanceImport())->collection(collect($fileData[0])); // Assuming you are interested in the first sheet
+            
+            if (!empty($errors)) {
+                return response()->json(["errors" => $errors], 422);
+            }
+            
+            return response()->json(["success" => "Import attendance success!"]);
+        } catch (\Throwable $e) {
+            return response()->json(["error" => "Import failed: " . $e->getMessage()], 500);
+        }
     }
+    
 }

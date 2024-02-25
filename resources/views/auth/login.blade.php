@@ -62,6 +62,10 @@
                     <button type="submit" class="btn btn-primary w-100"> {{ __('Login') }}</button>
                 </div>
 
+                <div class="mb-3">
+                    <a href="{{ route('ess.login') }}" class="btn btn-light w-100">Go to ESS Portal</a>
+                </div>
+
                 <div class="text-center">
                     @if (Route::has('password.request'))
                     <a href="{{ route('password.request') }}">

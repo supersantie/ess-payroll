@@ -2,14 +2,14 @@
 
 namespace App\Exports;
 
-use App\Models\Cutoff;
+use App\Models\ActivityLog;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class CutoffExport implements FromCollection,  WithHeadings, WithStyles, ShouldAutoSize
+class ActivityLogExport implements FromCollection,  WithHeadings, WithStyles, ShouldAutoSize
 {
     /**
      * @return \Illuminate\Support\Collection
@@ -17,17 +17,16 @@ class CutoffExport implements FromCollection,  WithHeadings, WithStyles, ShouldA
     public function collection()
     {
         //
-        return Cutoff::select('generated_date', 'start_date', 'end_date', 'total_released_amount', 'payroll_period')->get();
+        return ActivityLog::select('user_email', 'description', 'ip_address', 'action_type')->get();
     }
 
     public function headings(): array
     {
         return [
-            'Generated Date',
-            'Start Date',
-            'End Date',
-            'Total Released Amount',
-            'Payroll Period',
+            'User Email',
+            'Description',
+            'IP Address',
+            'Action Type',
         ];
     }
 
@@ -35,20 +34,19 @@ class CutoffExport implements FromCollection,  WithHeadings, WithStyles, ShouldA
     public function map($row): array
     {
         return [
-            $row->generated_date,
-            $row->start_date,
-            $row->end_date,
-            $row->total_released_amount,
-            $row->payroll_period,
+            $row->user_email,
+            $row->description,
+            $row->ip_address,
+            $row->action_type,
         ];
     }
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->getStyle('A1:E1')->applyFromArray([
+        $sheet->getStyle('A1:D1')->applyFromArray([
             'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                'startColor' => ['rgb' => '27ae60']
+                'startColor' => ['rgb' => 'e74c3c']
             ],
 
             'font' => [

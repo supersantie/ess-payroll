@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
+use App\Exports\ActivityLogExport;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ActivityLogController extends Controller
 {
@@ -78,5 +81,14 @@ class ActivityLogController extends Controller
     public function destroy(ActivityLog $activityLog)
     {
         //
+    }
+
+    public function export()
+    {
+        $currentDate = Carbon::now()->format('m-d-Y');
+        $fileName = $currentDate . "-activity-logs.xlsx"; // Specify the file extension
+
+        return Excel::download(new ActivityLogExport, $fileName);
+
     }
 }
