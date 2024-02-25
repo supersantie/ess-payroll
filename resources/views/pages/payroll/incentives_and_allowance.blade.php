@@ -2,10 +2,10 @@
 @section('content')
     @component('components.breadcrumb')
         @slot('title')
-            Home
+            Deduction & Contributions
         @endslot
         @slot('subtitle')
-            Incentives & Allowance
+            Company Loan
         @endslot
     @endcomponent
 
@@ -13,8 +13,9 @@
     <div class="content">
 
         <div class="card">
-            <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="mb-0">Incentives & Allowance List</h5>
+            <div class="card-header d-flex align-items-center justify-content-between ">
+                <h5 class="mb-0">Company Loan List</h5>
+
                 <div class="d-flex gap-2">
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary btn-labeled btn-labeled-start dropdown-toggle"
@@ -33,6 +34,8 @@
                             <a href="#" class="dropdown-item">Upload biometric file</a>
                             <a href="#" class="dropdown-item">Download CSV template</a>
                         </div>
+
+
 
                         {{-- Add manually modal --}}
                         <div class="modal fade" id="addManuallyModal" aria-hidden="true"
@@ -53,7 +56,8 @@
                                                     href="" class="link-primary">Upload a file</a> to lessen the
                                                 hassle.
                                             </div>
-                                            <div class="mb-3 d-flex align-items-center  justify-content-between gap-2">
+                                            <div class="mb-3 d-flex flex-column   justify-content-between   ">
+                                                <label for="" class="form-label">Employee Name</label>
                                                 <select data-placeholder="Select a employee..."
                                                     class="form-control select w-100" name="employee">
                                                     @foreach ($employees as $item)
@@ -61,27 +65,30 @@
                                                             {{ $item->first_name . ' ' . $item->last_name }} </option>
                                                     @endforeach
                                                 </select>
-                                                <div class="d-flex align-items-center gap-2 w-100 ">
-                                                    <button type="button" id="addRow"
-                                                        class="btn btn-success btn-labeled btn-labeled-start flex-shrink-0 ">
-                                                        <span class="btn-labeled-icon bg-black bg-opacity-20">
-                                                            <i class="ph-plus"></i>
-                                                        </span>
-                                                        Add Row
-                                                    </button>
-                                                    <button type="button" id="clearAll"
-                                                        class="btn btn-danger btn-labeled btn-labeled-start flex-shrink-0 ">
-                                                        <span class="btn-labeled-icon bg-black bg-opacity-20">
-                                                            <i class="ph-trash"></i>
-                                                        </span>
-                                                        Clear all
-                                                    </button>
+                                            </div>
+                                            <div class="row justify-content-center align-items-center g-2 mb-3">
+
+                                                <div class="col">
+                                                    <label for="" class="form-label">Amount</label>
+                                                    <input type="text" class="form-control mask_currency"
+                                                        placeholder="Enter amount in PHP" id="amountToLoan" name="amount">
+                                                </div>
+                                                <div class="col">
+                                                    <label for="" class="form-label">Perk Type</label>
+                                                    <select class="form-select" name="perk_type" id="">
+                                                        <option selected>Select one</option>
+                                                        <option value="Food Allowance">Food Allowance</option>
+                                                        <option value="Transportation Allowance">Transportation Allowance
+                                                        </option>
+                                                    </select>
                                                 </div>
                                             </div>
-                                            <table class="w-100" id="manualAttendanceTable">
-                                                <tbody>
-                                                </tbody>
-                                            </table>
+
+                                            <div class="mb-3">
+                                                <label for="" class="form-label">Remarks(Optional)</label>
+                                                <textarea class="form-control" name="remarks" id="" rows="3"></textarea>
+                                            </div>
+
                                         </div>
                                         <div class="modal-footer">
                                             <button type="submit" class="btn btn-primary">
@@ -117,12 +124,11 @@
                         </div>
                     </div>
 
-                    <button type="button" class="btn btn-secondary btn-labeled btn-labeled-start" id="release_payroll"
-                        disabled>
+                    <button type="button" class="btn btn-secondary btn-labeled btn-labeled-start" id="export_table">
                         <span class="btn-labeled-icon bg-black bg-opacity-20">
-                            <i class="ph-paper-plane-tilt"></i>
+                            <i class="ph-download"></i>
                         </span>
-                        Release Payroll
+                        Export table
                     </button>
                 </div>
             </div>
@@ -135,34 +141,30 @@
                 options.
             </div>
 
-
             <table class="table datatable-responsive">
                 <thead>
                     <tr>
                         <th data-orderable="false" class="text-center">
                             <input type="checkbox" class="form-check-input" id="cc_li_c">
                         </th>
-                        <th>Employee Code</th>
                         <th>Name</th>
                         <th>Amount</th>
-                        <th class="text-center">Perk Type</th>
-                        <th>Date Issued</th>
+                        <th>Remarks</th>
                         <th>Status</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($perks as $item)
+                    @foreach ($employees as $item)
                         @foreach ($item->perks as $subItem)
                             <tr>
                                 <th class="d-flex justify-content-center ">
-                                    <input type="checkbox" class="form-check-input">
+                                    <input type="checkbox" class="form-check-input"
+                                        data-employee-id="{{ $item->code }}">
                                 </th>
-                                <td><a href="#">{{ $item->code }}</a></td>
                                 <td>{{ $item->first_name . ' ' . $item->last_name }}</td>
                                 <td>{{ $subItem->amount }}</td>
-                                <td class="text-center">{{ $subItem->perk_type }}</td>
-                                <td>{{ $subItem->date_issued }}</td>
+                                <td>{{ $subItem->remarks }}</td>
                                 <td><span
                                         class="badge {{ $statusColors[$subItem->status] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">{{ Str::title($subItem->status) }}</span>
                                 </td>
@@ -205,248 +207,124 @@
     <script src="{{ URL::asset('assets/js/vendor/tables/datatables/extensions/responsive.min.js') }}"></script>
     <script src="{{ URL::asset('assets/js/vendor/notifications/sweet_alert.min.js') }}"></script>
     <script src="{{ URL::asset('assets/js/vendor/forms/selects/select2.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/js/vendor/forms/inputs/imask.min.js') }}"></script>
+
+    <script src="{{ URL::asset('assets/demo/pages/form_layouts.js') }}"></script>
+    {{-- <script src="{{ URL::asset('assets/demo/pages/form_controls_extended.js') }}"></script> --}}
 @endsection
 @section('scripts')
     <script src="{{ URL::asset('assets/demo/pages/datatables_extension_responsive.js') }}"></script>
-    <script src="{{ URL::asset('assets/demo/pages/extra_sweetalert.js') }}"></script>
     <script src="{{ URL::asset('assets/demo/pages/form_select2.js') }}"></script>
-
-    <script>
-        const Modals = function() {
-
-            const _componentModalBootbox = function() {
-                if (typeof bootbox == 'undefined') {
-                    console.warn('Warning - bootbox.min.js is not loaded.');
-                    return;
+    {{-- <script src="{{URL::asset('assets/demo/pages/components_modals.js')}}"></script> --}}
+    <script type="module">
+        $(".mask_currency").each(function(index) {
+            const maskCurrency = IMask(this, {
+                mask: 'PHP num', // adding 'PHP' at the beginning of the mask
+                blocks: {
+                    num: {
+                        mask: Number,
+                        signed: true, // allowing negative numbers
+                        scale: 2, // digits after point, 0 for integers
+                        thousandsSeparator: ",", // any single char
+                        padFractionalZeros: false, // if true, then pads zeros at end to the length of scale
+                        normalizeZeros: false, // appends or removes zeros at ends
+                        radix: "." // fractional delimiter
+                    }
                 }
-
-                const bbAlert = document.querySelector('#alert');
-                if (bbAlert) {
-                    bbAlert.addEventListener('click', function() {
-                        bootbox.alert({
-                            title: 'Check this out!',
-                            message: 'Native alert dialog has been replaced with Bootbox alert box.'
-                        });
-                    });
-                }
-            };
-
-            const _componentModalRemote = function() {
-                function load(url, element) {
-                    req = new XMLHttpRequest();
-                    req.open("GET", url, false);
-                    req.send(null);
-
-                    element.innerHTML = req.responseText;
-                }
-
-                const remoteDataModal = document.getElementById('modal_remote');
-                if (remoteDataModal) {
-                    remoteDataModal.addEventListener('click', function() {
-                        load("resources/views/layouts/modals/attendance_modal.blade.php", remoteDataModal
-                            .querySelector('.modal-body'));
-                    });
-                }
-            };
-
-            return {
-                initComponents: function() {
-                    _componentModalBootbox();
-                    _componentModalRemote();
-                }
-            }
-        }();
+            });
+        })
 
         $(document).ready(function() {
-            Modals.initComponents();
-
             const csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-            // Get the header checkbox and all checkboxes in the table body
             const selectAllCheckbox = $('#cc_li_c');
             const checkboxes = $('.datatable-responsive tbody input[type="checkbox"]');
-            const releasePayrollButton = $('#release_payroll');
+            const releasePayrollButton = $('#releasePayrollButton');
 
-            // Add an event listener to the header checkbox
             selectAllCheckbox.on('change', function() {
-                // Loop through all checkboxes in the table body and set their checked property
                 checkboxes.each(function() {
                     const employeeId = $(this).data('employeeId');
-
                     this.checked = selectAllCheckbox.prop('checked');
-
                     if (this.checked) {
                         console.log("Employee ID checked:", employeeId);
                     }
                 });
-
-                // Set the indeterminate state based on checked checkboxes in the table body
                 updateIndeterminateState();
-
                 releasePayrollButton.prop('disabled', checkboxes.filter(':checked').length === 0);
             });
 
-            // Add an event listener to each checkbox in the table body
             checkboxes.on('change', function() {
-                // If any checkbox in the body is unchecked, uncheck the header checkbox
                 selectAllCheckbox.prop('checked', checkboxes.filter(':checked').length === checkboxes
                     .length);
-
-                // Set the indeterminate state based on checked checkboxes in the table body
                 updateIndeterminateState();
-
-                // console.log($(this).val());
-
                 releasePayrollButton.prop('disabled', checkboxes.filter(':checked').length === 0);
-
             });
 
-            // Function to update the indeterminate state of the header checkbox
             function updateIndeterminateState() {
                 const checkedCheckboxes = checkboxes.filter(':checked');
                 selectAllCheckbox.prop('indeterminate', checkedCheckboxes.length > 0 && checkedCheckboxes.length <
                     checkboxes.length);
             }
 
-            $('#release_payroll').on('click', function() {
-                // Get the checked checkboxes and log their employee IDs
-                const checkedCheckboxes = checkboxes.filter(':checked');
-                const employeeIds = [];
+            $('select[name="employee"]').change(function() {
+                // Assuming there's a function to fetch the loan amount for the selected employee
+                var employeeCode = $(this).val();
 
-                checkedCheckboxes.each(function() {
-                    const employeeId = $(this).data('employeeId');
-                    console.log("Employee ID checked for payroll release:", employeeId);
-                    employeeIds.push(employeeId);
-                });
-
-                // Send the checked checkboxes' values through AJAX
-                // $.ajax({
-                //     url: '/payroll/store',
-                //     method: 'POST',
-                //     data: {
-                //         'name': 'test',
-                //         'employeeIds': employeeIds, // Include the array in the data
-                //     },
-                //     headers: {
-                //         'X-CSRF-TOKEN': csrfToken,
-                //     },
-                //     success: function(response) {
-                //         console.log(response);
-                //     },
-                //     error: function(error) {
-                //         console.error(error);
-                //     }
-                // });
+                console.log(employeeCode)
             });
 
-
-            var maxRows = 5; // Maximum number of rows
-
-            // Add Row
-            $("#addRow").click(function() {
-                var currentRows = $("#manualAttendanceTable tbody tr").length;
-
-                if (currentRows < maxRows) {
-                    var newRow = '<tr>' +
-                        '<td>' +
-                        '<select data-placeholder="Select perk type" class="form-control select w-100">' +
-                        '<optgroup label="Allowance">' +
-                            '<option value="1">Overtime Meal Allowance</option>' +
-                            '<option value="2">Transport Expense</option>' +
-                        '</optgroup>' +
-                        '<optgroup label="Incentives">' +
-                            '<option value="3">13th Month Pay</option>' +
-                            '<option value="4">Holiday Pay</option>' +
-                            '<option value="5">Overtime Pay</option>' +
-                            '<option value="6">Night Shift</option>' +
-                        '</optgroup>' +
-                        '</select>' +
-                        '</td>' +
-                        '<td><input type="time" class="form-control" name="time_in[]" id="" aria-describedby="helpId" placeholder="" /></td>' +
-                        '<td><input type="time" class="form-control" name="time_out[]" id="" aria-describedby="helpId" placeholder="" /></td>' +
-                        '<td><button type="button" class="btn btn-danger btn-icon delete-row"><i class="ph-trash"></i></button></td>' +
-                        '</tr>';
-
-                    $("#manualAttendanceTable tbody").append(newRow);
-
-                    // Reinitialize Select2 after appending new row
-                    Select2Selects.init();
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Maximum limit of 5 rows reached!',
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    });
-                }
-            });
-
-
-            // Remove Row
-            $(document).on('click', '.delete-row', function() {
-                $(this).closest('tr').remove();
-            });
-
-            // Clear All
-            $("#clearAll").click(function() {
-                $("#manualAttendanceTable tbody").empty();
-            });
 
             $("#manualEntryForm").on("submit", function(e) {
                 e.preventDefault();
+                // var formData = $(this).serialize();
+                let formData = new FormData($(this)[0])
+                console.log('Form data:', formData);
 
-                let formData = new FormData($(this)[0]);
-                // $.ajax({
-                //     url: '/attendance/store',
-                //     method: 'POST',
-                //     data: formData,
-                //     processData: false,
-                //     contentType: false,
-                //     headers: {
-                //         'X-CSRF-TOKEN': csrfToken,
-                //     },
-                //     success: function(response) {
-                //         // Check if the response contains the expected data
-                //         if (response && response.attendance_records) {
-                //             // Close the modal
-                //             $('#addManuallyModal').modal('hide');
+                $.ajax({
+                    url: '/perks/store',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    success: function(response) {
+                        // Check if the response contains the expected data
+                        if (response && response.perk_record) {
+                            // Close the modal
+                            $('#addManuallyModal').modal('hide');
 
-                //             // Display SweetAlert for success
-                //             Swal.fire({
-                //                 icon: 'success',
-                //                 title: 'Success!',
-                //                 text: 'Attendance records saved successfully!',
-                //                 customClass: {
-                //                     confirmButton: 'btn btn-primary',
-                //                 },
-                //             });
-                //         } else {
-                //             // Handle unexpected response
-                //             console.error('Unexpected response format:', response);
-                //         }
-                //     },
-                //     error: function(error) {
-                //         // Close the modal (in case it's still open)
-                //         $('#addManuallyModal').modal('hide');
+                            // Display SweetAlert for success
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Perk record saved successfully!',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            }).then(function() {
+                                location.reload()
+                            });
 
-                //         // Display SweetAlert for error
-                //         Swal.fire({
-                //             icon: 'error',
-                //             title: 'Error!',
-                //             text: 'An error occurred while saving attendance records.',
-                //             customClass: {
-                //                 confirmButton: 'btn btn-primary',
-                //             },
-                //         });
-                //         console.error(error);
-                //     }
-                // });
+                        } else {
+                            // Handle unexpected response
+                            console.error('Unexpected response format:', response);
+                        }
+                    },
+                    error: function(error) {
+                        $('#addManuallyModal').modal('hide');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'An error occurred while saving attendance records.',
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        });
+                        console.error(error);
+                    }
+                });
             });
-
-
-
         });
     </script>
 @endsection

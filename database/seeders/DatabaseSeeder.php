@@ -24,7 +24,5 @@ class DatabaseSeeder extends Seeder
 
         // Run test datas
         Employee::factory()->count(5)->hasEssAccount(1)->create();
-
-
     }
 }

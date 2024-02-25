@@ -40,13 +40,6 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::prefix('ess')->group(function () {
 
-        // Route::controller(EssController::class)->group(function(){
-        //     Route::get('/login', 'index')->name('ess.login');
-        //     Route::post('/verify', 'verify')->name('ess.login.verify');
-        //     Route::get('/validate', 'validateOTP')->name('ess.validate.otp');
-        //     Route::post('/logout', 'destroy')->name('ess.logout');
-        // })->prefix('auth');
-
         Route::controller(EssController::class)->group(function () {
             Route::get('/login', 'index')->name('ess.login');
             Route::post('/verify', 'verify')->name('ess.login.verify');
@@ -107,6 +100,7 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::controller(PerkController::class)->group(function () {
         Route::get('/perks', 'index')->name('perks');
+        Route::post('/perks/store', 'store')->name('perks.store');
     });
 
     Route::controller(ActivityLogController::class)->group(function () {

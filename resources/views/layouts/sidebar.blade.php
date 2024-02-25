@@ -95,6 +95,7 @@
                             </a>
                             <ul
                                 class="nav-group-sub collapse {{ request()->routeIs('deductions_and_contributions.*') ? 'show' : '' }}">
+                                
                                 <li class="nav-item"><a href="{{ route('deductions_and_contributions.sss') }}"
                                     class="nav-link {{ request()->routeIs('deductions_and_contributions.sss') ? 'active' : '' }}">SSS Loan</a></li>
                                 <li class="nav-item"><a href="{{ route('deductions_and_contributions.pagibig') }}"

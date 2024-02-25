@@ -26,7 +26,8 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-        User::create(['name' => 'admin','email' => 'admin@themesbrand.com','password' => Hash::make('123456'),'email_verified_at'=>'2022-10-10 17:04:58','avatar' => 'avatar-1.jpg','created_at' => now(),]);
+
+        User::create(['name' => 'Workfolio Admin','email' => 'admin@ess25.workfolio.com','password' => Hash::make('123456'),'email_verified_at'=>'2022-10-10 17:04:58','avatar' => 'avatar-1.jpg','created_at' => now(),]);
     }
 
     /**
