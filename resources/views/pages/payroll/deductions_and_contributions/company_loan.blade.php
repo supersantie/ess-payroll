@@ -173,7 +173,6 @@
                         <th>Amount</th>
                         <th>Balance</th>
                         <th>Loan Repayment</th>
-                        <th>Remarks</th>
                         <th>Status</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -190,8 +189,8 @@
                                 <td>{{ $subItem->amount }}</td>
                                 <td>{{ $subItem->amount_to_be_paid }}</td>
                                 <td>{{ $subItem->loan_repayment }}</td>
-                                <td>test</td>
-                                <td>{{ $subItem->loan_status }}</td>
+                                <td><span
+                                    class="badge {{ $statusColors[$subItem->loan_status] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">{{ Str::title($subItem->loan_status) }}</span></td>
                                 <td class="text-center">
                                     <div class="d-inline-flex">
                                         <div class="dropdown">
@@ -334,7 +333,9 @@
                                 customClass: {
                                     confirmButton: 'btn btn-primary',
                                 },
-                            });
+                            }).then(function() {
+                                location.reload()
+                            });;
                         } else {
                             // Handle unexpected response
                             console.error('Unexpected response format:', response);

@@ -22,9 +22,9 @@ class CompanyLoanController extends Controller
         // dd()
 
         $statusColors = [
-            'on time' => 'bg-success bg-opacity-10 text-success',
-            'undertime' => 'bg-secondary bg-opacity-10 text-secondary',
-            'late' => 'bg-danger bg-opacity-10 text-danger',
+            'Paid' => 'bg-success bg-opacity-10 text-success',
+            'Unsettled' => 'bg-danger bg-opacity-10 text-danger',
+            'Pending' => 'bg-warning bg-opacity-10 text-warning',
         ];
 
         return view('pages.payroll.deductions_and_contributions.company_loan', compact('employees', 'loans', 'statusColors'));

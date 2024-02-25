@@ -137,75 +137,71 @@
             </div>
 
             <div class="card-body">
-                <div class="alert alert-info border-0 alert-dismissible fade show">
-                    <span class="fw-semibold">Heads up!</span> You are currently viewing <a href="#"
-                        class="alert-link">January 01 2024 to January 31 2024</a>.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            </div>
+                <table class="table datatable-responsive">
+                    <thead>
+                        <tr>
+                            <th data-orderable="false" class="text-center">
+                                <input type="checkbox" class="form-check-input" id="cc_li_c">
+                            </th>
+                            <th>Date</th>
+                            <th>Employee Code</th>
+                            <th>Name</th>
+                            <th>Time In</th>
+                            <th>Time Out</th>
+                            <th class="text-center">Working Hours</th>
+                            <th>Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($attendances as $item)
+                            @foreach ($item->attendances as $subItem)
+                                <tr>
+                                    <th class="d-flex justify-content-center ">
+                                        <input type="checkbox" class="form-check-input"
+                                            data-employee-id="{{ $item->code }}">
+                                    </th>
+                                    <td>{{ $subItem->date }}</td>
+                                    <td><a href="#">{{ $item->code }}</a></td>
+                                    <td>{{ $item->first_name . ' ' . $item->last_name }}</td>
+                                    <td>{{ $subItem->time_in }}</td>
+                                    <td>{{ $subItem->time_out }}</td>
+                                    <td class="text-center">{{ $subItem->working_hours }}</td>
+                                    <td><span
+                                            class="badge {{ $statusColors[$subItem->status] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">{{ Str::title($subItem->status) }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-inline-flex">
+                                            <div class="dropdown">
+                                                <a href="#" class="text-body" data-bs-toggle="dropdown">
+                                                    <i class="ph-list"></i>
+                                                </a>
 
-            <table class="table datatable-responsive">
-                <thead>
-                    <tr>
-                        <th data-orderable="false" class="text-center">
-                            <input type="checkbox" class="form-check-input" id="cc_li_c">
-                        </th>
-                        <th>Date</th>
-                        <th>Employee Code</th>
-                        <th>Name</th>
-                        <th>Time In</th>
-                        <th>Time Out</th>
-                        <th class="text-center">Working Hours</th>
-                        <th>Status</th>
-                        <th class="text-center">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($attendances as $item)
-                        @foreach ($item->attendances as $subItem)
-                            <tr>
-                                <th class="d-flex justify-content-center ">
-                                    <input type="checkbox" class="form-check-input"
-                                        data-employee-id="{{ $item->code }}">
-                                </th>
-                                <td>{{ $subItem->date }}</td>
-                                <td><a href="#">{{ $item->code }}</a></td>
-                                <td>{{ $item->first_name . ' ' . $item->last_name }}</td>
-                                <td>{{ $subItem->time_in }}</td>
-                                <td>{{ $subItem->time_out }}</td>
-                                <td class="text-center">{{ $subItem->working_hours }}</td>
-                                <td><span
-                                        class="badge {{ $statusColors[$subItem->status] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">{{ Str::title($subItem->status) }}</span>
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-inline-flex">
-                                        <div class="dropdown">
-                                            <a href="#" class="text-body" data-bs-toggle="dropdown">
-                                                <i class="ph-list"></i>
-                                            </a>
-
-                                            <div class="dropdown-menu dropdown-menu-end ">
-                                                <a href="#" class="dropdown-item">
-                                                    <i class="ph-file-pdf me-2"></i>
-                                                    Export to .pdf
-                                                </a>
-                                                <a href="#" class="dropdown-item">
-                                                    <i class="ph-file-csv me-2"></i>
-                                                    Export to .csv
-                                                </a>
-                                                <a href="#" class="dropdown-item">
-                                                    <i class="ph-file-doc me-2"></i>
-                                                    Export to .doc
-                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-end ">
+                                                    <a href="#" class="dropdown-item">
+                                                        <i class="ph-file-pdf me-2"></i>
+                                                        Export to .pdf
+                                                    </a>
+                                                    <a href="#" class="dropdown-item">
+                                                        <i class="ph-file-csv me-2"></i>
+                                                        Export to .csv
+                                                    </a>
+                                                    <a href="#" class="dropdown-item">
+                                                        <i class="ph-file-doc me-2"></i>
+                                                        Export to .doc
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
+                            @endforeach
                         @endforeach
-                    @endforeach
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+
+
         </div>
     </div>
     <!-- /content area -->
@@ -344,7 +340,27 @@
                         'X-CSRF-TOKEN': csrfToken,
                     },
                     success: function(response) {
-                        console.log(response);
+                        // Check if the response contains the expected data
+                        if (response && response.cutoff_release) {
+                            // Close the modal
+                            $('#addManuallyModal').modal('hide');
+
+                            // Display SweetAlert for success
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Perk record saved successfully!',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            }).then(function() {
+                                location.reload()
+                            });
+
+                        } else {
+                            // Handle unexpected response
+                            console.error('Unexpected response format:', response);
+                        }
                     },
                     error: function(error) {
                         console.error(error);
@@ -412,10 +428,12 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success!',
-                                text: 'Attendance records saved successfully!',
+                                text: 'Perk record saved successfully!',
                                 customClass: {
                                     confirmButton: 'btn btn-primary',
                                 },
+                            }).then(function() {
+                                location.reload()
                             });
                         } else {
                             // Handle unexpected response

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Perk;
 use App\Models\Employee;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 
 class PerkController extends Controller
 {
@@ -16,14 +18,14 @@ class PerkController extends Controller
         $employees = Employee::all();
         $perks = Employee::with('perks')->get();
 
-
+        // dd("test");
         $statusColors = [
             'released' => 'bg-success bg-opacity-10 text-success',
             'hold' => 'bg-secondary bg-opacity-10 text-secondary',
             'issued' => 'bg-warning bg-opacity-10 text-warning',
         ];
         //
-        return view('pages.payroll.incentives_and_allowance', compact('employees','perks', 'statusColors'));
+        return view('pages.payroll.incentives_and_allowance', compact('employees', 'perks', 'statusColors'));
     }
 
     /**
@@ -39,7 +41,21 @@ class PerkController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        try {
+            $perkRecord = Perk::create([
+                "perk_type" => $request->perk_type,
+                "employee_code" => $request->employee,
+                "amount" => doubleval(str_replace(',', '', Str::of($request->amount)->replaceFirst("PHP ", ""))),
+                "remarks" => $request->remarks,
+            ]);
+
+            return response()->json(['perk_record' => $perkRecord], 200);
+        }catch (QueryException $e) {
+            return response()->json(['error' => 'Database error'], 500);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'An error occurred'], 500);
+        }
     }
 
     /**

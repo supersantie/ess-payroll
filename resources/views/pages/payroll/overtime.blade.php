@@ -434,10 +434,12 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success!',
-                                text: 'Attendance records saved successfully!',
+                                text: 'Overtime records saved successfully!',
                                 customClass: {
                                     confirmButton: 'btn btn-primary',
                                 },
+                            }).then(function(){
+                                location.reload()
                             });
                         } else {
                             // Handle unexpected response

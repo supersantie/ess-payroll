@@ -10,7 +10,7 @@ use App\Models\Attendance;
 use App\Models\ActivityLog;
 use App\Imports\UsersImport;
 use Illuminate\Http\Request;
-use App\Exports\AttendancesExport;
+use App\Exports\AttendanceExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\QueryException;
 
@@ -142,7 +142,7 @@ class AttendanceController extends Controller
 
     public function export()
     {
-        return Excel::download(new AttendancesExport, 'attendances.xlsx');
+        return Excel::download(new AttendanceExport, 'attendances.xlsx');
     }
 
     public function import()
