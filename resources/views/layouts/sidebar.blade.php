@@ -147,7 +147,7 @@
                         </li> --}}
 
 
-                        <!-- Forms -->
+                        {{-- <!-- Forms -->
                         <li class="nav-item-header">
                             <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Forms</div>
                             <i class="ph-dots-three sidebar-resize-show"></i>
@@ -1141,7 +1141,7 @@
                                             soon</span></a></li>
                             </ul>
                         </li>
-                        <!-- /page kits -->
+                        <!-- /page kits --> --}}
 
                     </ul>
                 </div>

@@ -71,7 +71,6 @@ Route::group(['middleware' => 'web'], function () {
         });
     });
 
-
     // Auth::routes();
 
     Route::controller(LoginController::class)->group(function () {
@@ -89,7 +88,7 @@ Route::group(['middleware' => 'web'], function () {
 
 
         Route::get('/attendance/export', 'export')->name('attendance.export');
-        Route::get('/attendance/import', 'import')->name('attendance.import');
+        Route::post('/attendance/import', 'import')->name('attendance.import');
     });
 
     Route::controller(OvertimeController::class)->group(function () {
@@ -105,11 +104,14 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::controller(ActivityLogController::class)->group(function () {
         Route::get('/activity_logs', 'index')->name('activity_logs');
+
+        Route::get('/activity_logs/export', 'export')->name('activity_logs.export');
     });
 
     Route::controller(PayrollController::class)->group(function () {
         Route::get('/payroll', 'index')->name('reports.payroll');
         Route::post('/payroll/store', 'store')->name('reports.payroll.store');
+        Route::get('/payroll/export', 'export')->name('reports.payroll.export');
     });
 
     Route::controller(PayslipController::class)->group(function () {
@@ -118,6 +120,7 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::controller(CutoffController::class)->group(function () {
         Route::get('/cutoff', 'index')->name('reports.cut_off');
+        Route::get('/cutoff/export', 'export')->name('reports.cut_off.export');
     });
 
     Route::controller(PayrollSettingController::class)->group(function () {

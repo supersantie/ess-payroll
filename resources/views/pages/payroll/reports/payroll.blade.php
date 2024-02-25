@@ -29,13 +29,12 @@
                     </div>
                 </div>
 
-                <button type="button" class="btn btn-secondary btn-labeled btn-labeled-start" id="release_payroll"
-                        >
+                <a href="{{ route('reports.payroll.export') }}" role="button" class="btn btn-secondary btn-labeled btn-labeled-start" id="release_payroll">
                     <span class="btn-labeled-icon bg-black bg-opacity-20">
-                        <i class="ph-scroll"></i>
+                        <i class="ph-download"></i>
                     </span>
-                    Generate Payslip
-                </button>
+                    Export as CSV
+                </a>
             </div>
         </div>
 

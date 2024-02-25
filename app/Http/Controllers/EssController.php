@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Employee;
 use App\Models\EssAccount;
 use Illuminate\Http\Request;
+use Jenssegers\Agent\Facades\Agent;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
@@ -22,12 +23,17 @@ class EssController extends Controller
 
     public function verify(Request $request)
     {
+
+
+        // Redirect the user to the dashboard if the user has already requested an OTP within the last 5 minutes.
         $validatedData = $request->validate([
             'employee_code' => 'required',
             'password' => 'required',
         ]);
 
         $employee = EssAccount::where('employee_code', $validatedData['employee_code'])->first();
+
+        $employeeMail = $employee->email;
 
         if (!$employee) {
             return response()->json(['error' => 'Employee not found'], 404);
@@ -42,28 +48,48 @@ class EssController extends Controller
             $employeeCode = $employee->employee_code;
             $countdownDuration = 300;
 
-            return view('auth.ess_otp', compact('employeeCode', 'errorMessage', 'countdownDuration'));
+
+
+            return view('auth.ess_otp', compact('employeeCode', 'employeeMail', 'errorMessage', 'countdownDuration'));
+        }
+
+        if ($request->has('device_id') && Agent::device() !== $employee->device_id) {
+            $employee->device_id = Agent::device();
+            $employee->save();
+
+            return redirect()->route('pages.ess.dashboard');
         }
 
         $otp = mt_rand(100000, 999999);
         $employee->otp_code = $otp;
         $employee->otp_requested_at = Carbon::now();
+
+        $employee->device_id = Agent::device();
         $employee->save();
 
         $employeeCode = $employee->employee_code;
 
-        // Send email asynchronously using queues
         Queue::push(function () use ($employee, $otp) {
             Mail::to($employee->email)->send(new OtpEmail($otp));
         });
 
-        return view('auth.ess_otp', compact('employeeCode'));
+
+
+
+
+
+
+        return view('auth.ess_otp', compact('employeeCode', 'employeeMail'));
     }
+
+
 
 
 
     public function validateOTP(Request $request)
     {
+
+
         try {
             // 1. Get the OTP code input and employee code
             $otp = $request->input('otp_code');
