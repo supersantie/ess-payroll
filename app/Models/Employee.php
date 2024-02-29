@@ -47,6 +47,9 @@ class Employee extends Model
         return $this->hasMany(CompanyLoan::class, 'employee_code', $this->getRouteKeyName());
     }
 
+    public function leaves(){
+        return $this->hasMany(Leave::class, 'employee_code', $this->getRouteKeyName());
+    }
     
 
 

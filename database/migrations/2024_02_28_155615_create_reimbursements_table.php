@@ -11,16 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attendances', function (Blueprint $table) {
+        Schema::create('reimbursements', function (Blueprint $table) {
             $table->id();
             $table->string('employee_code')->index();
-            $table->time('time_in')->required();
-            $table->time('time_out')->required();
-            $table->double('working_hours');
-            $table->enum('status', ['on time', 'undertime', 'late', 'on leave']);
-            $table->date('date');
-            $table->enum('payroll_status', ['recorded', 'processed'])->default('recorded');
             $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
+
+            $table->double('amount');
+            $table->string('or_number');
+            $table->string('proof_of_payment');
+            $table->text('remarks');
+            $table->enum('status', ['approved', 'pending', 'denied'])->default('pending');
+            $table->enum('reimbursement_category', ['miscellaneous', 'travel', 'transportation', 'office supplies', 'meal']);
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendances');
+        Schema::dropIfExists('reimbursements');
     }
 };

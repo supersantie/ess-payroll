@@ -5,7 +5,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EssController;
+use App\Http\Controllers\LoanController;
 use App\Http\Controllers\PerkController;
+use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\CutoffController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PayslipController;
@@ -18,8 +20,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\EssAccountController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\CompanyLoanController;
-use App\Http\Controllers\LoanController;
 use App\Http\Controllers\PayrollSettingController;
+use App\Http\Controllers\ReimbursementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,8 +66,19 @@ Route::group(['middleware' => 'web'], function () {
             // Payslip
             Route::controller(PayslipController::class)->group(function () {
                 Route::get('/payslips', 'index')->name('payslips.index');
+                Route::get('/pdf', 'pdf')->name('payslips.pdf');
             })->prefix('payslips');
             // End of Payslip
+
+            Route::controller(LeaveController::class)->group(function () {
+                Route::get('/leaves', 'index')->name('leaves.index');
+                Route::post('/leaves/store', 'store')->name('leaves.store');
+            })->prefix('leaves');
+
+            Route::controller(ReimbursementController::class)->group(function () {
+                Route::get('/reimbursements', 'index')->name('reimbursements.index');
+                Route::post('/reimbursements/store', 'store')->name('reimbursements.store');
+            })->prefix('reimbursement');
 
 
         });

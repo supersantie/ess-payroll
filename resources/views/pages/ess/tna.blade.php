@@ -62,6 +62,7 @@
                         <th>Time Out</th>
                         <th class="text-center">Working Hours</th>
                         <th>Status</th>
+                        <th></th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -78,6 +79,9 @@
                             <td><span
                                     class="badge {{ $statusColors[$item->status] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">{{ Str::title($item->status) }}</span>
                             </td>
+                            <td><span
+                                class="badge {{ $statusColors[$item->payroll_status] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">{{ Str::title($item->payroll_status) }}</span>
+                        </td>
                             <td class="text-center">
                                 <div class="d-inline-flex">
                                     <div class="dropdown">

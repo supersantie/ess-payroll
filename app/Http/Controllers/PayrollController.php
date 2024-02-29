@@ -56,11 +56,13 @@ class PayrollController extends Controller
     {
 
         try {
-            /*
-            TODO:
-            - Check if the employee has previous unsettled loan from company
-            - Throw error if have previous loan
-        */
+
+            /**
+             * TODO:
+             *      1. Call the Leave Model.
+             *      2. Inside the loop-through of attendances. Check if the date is in between of the start and end date cutoff period and also check the leave status must be approve.
+             *      3. If so then inside of statement check if it is sick, vacation, birthday, materinity, bereavement then put status on leave but include it to the computation of payroll because it is paid leave. EXCEPT, leave without pay.
+             */
 
             $currentDate = now();
             $startOfMonth = $currentDate->clone()->startOfMonth();
@@ -83,12 +85,9 @@ class PayrollController extends Controller
 
             foreach ($employees as $employee) {
                 $employeeId = $employee->code;
-
-                // Process company loan
                 $employeeCompanyLoan = $employee->companyLoans->first();
-
                 $employeeLoanAmount = $employee->companyLoans->first()->amount_to_be_paid ?? 0;
-                // dd($employeeLoanAmount);
+
                 if (!$previousCutoff || $previousCutoff->payroll_period === '2nd cutoff') {
                     $payrollPeriod = '1st cutoff';
                 } else {
@@ -102,8 +101,6 @@ class PayrollController extends Controller
                     }
                 }
 
-
-                // Process attendance and overtime
                 $attendanceRecords = $employee->attendances()->where('payroll_status', '!=', 'processed')->get();
                 $overtimeRecords = $employee->overtimes;
                 $totalWorkingHours = 0;
@@ -123,11 +120,6 @@ class PayrollController extends Controller
                 $netPay = ($baseSalary / 8 * $totalWorkingHours) + ($baseSalary / 8 * $totalOvertimeHours * ($overtimeRecords->count() > 0 ? $overtimeRecords->first()->rate_percentage / 100 : 0));
 
                 $netPayAfterLoan = $netPay - $loanAmount;
-
-                // Check if the payroll period is 2nd cutoff then deduct the following
-                // SSS: 4.5% of employee's base salary
-                // Philhealth: 5% of employee's base salary
-                // PAGIBIG: 200
 
                 $sssContribution = 0;
                 $pagibigContribution = 0;
@@ -161,7 +153,6 @@ class PayrollController extends Controller
                 $totalReleasedPay += $netPay;
             }
 
-            // Create cutoff record
             if (!$previousCutoff || $previousCutoff->payroll_period === '2nd cutoff') {
                 $payrollPeriod = '1st cutoff';
                 Log::info('Setting payroll period to 1st cutoff');
@@ -179,7 +170,6 @@ class PayrollController extends Controller
                 "total_released_amount" => $totalReleasedPay - $loanAmount
             ]);
 
-            // Log activity
             $userEmail = $request->user()->email ?? '';
             $description = 'Payroll released for ' . $payrollPeriod . ' with total amount of ' . $totalReleasedPay;
             $ipAddress = $request->ip();
@@ -198,10 +188,6 @@ class PayrollController extends Controller
             return response()->json(['error' => 'An error occurred'], 500);
         }
     }
-
-
-
-
 
     /**
      * Display the specified resource.
