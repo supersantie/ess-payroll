@@ -15,13 +15,18 @@ class TimeLogController extends Controller
     {
         //
 
-
-
         $attendances = Attendance::where('employee_code', session('info')->code)->get();
 
         // dd($employee);
 
-        return view('pages.ess.tna', compact('attendances'));
+        $statusColors = [
+            'on time' => 'bg-success bg-opacity-10 text-success',
+            'undertime' => 'bg-secondary bg-opacity-10 text-secondary',
+            'late' => 'bg-danger bg-opacity-10 text-danger',
+            'processed' => 'bg-success bg-opacity-10 text-success',
+        ];
+
+        return view('pages.ess.tna', compact('attendances', 'statusColors'));
     }
 
     /**

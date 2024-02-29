@@ -31,8 +31,6 @@
                                 data-bs-target="#addManuallyModal">Add manually</a>
                             <a href="#" class="dropdown-item" data-bs-toggle="modal"
                                 data-bs-target="#uploadFileModal">Upload a file...</a>
-                            <a href="#" class="dropdown-item">Upload biometric file</a>
-                            <a href="#" class="dropdown-item">Download CSV template</a>
                         </div>
 
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Payslip;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Spatie\LaravelPdf\Facades\Pdf;
 
 class PayslipController extends Controller
 {
@@ -66,5 +67,15 @@ class PayslipController extends Controller
     public function destroy(Payslip $payslip)
     {
         //
+    }
+
+    public function export()
+    {
+    }
+
+    public function pdf()
+    {
+        $pdf = PDF::view('pdf.invoice'); // Load the Blade view
+        $pdf->save('test.pdf');
     }
 }
