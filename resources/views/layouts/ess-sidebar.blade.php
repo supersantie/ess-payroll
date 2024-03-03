@@ -61,35 +61,12 @@
                                     class="nav-link {{ request()->routeIs('leaves.index') ? 'active' : '' }}">Leave</a>
                         </li>
                         <li class="nav-item"><a href="{{ route('reimbursements.index') }}"
-                            class="nav-link {{ request()->routeIs('reimbursements.index') ? 'active' : '' }}">Reimbursement</a></li>
-                        <li class="nav-item"><a href="" class="nav-link">Certificate of Employment</a></li>
+                                class="nav-link {{ request()->routeIs('reimbursements.index') ? 'active' : '' }}">Reimbursement</a>
+                        </li>
+                        <li class="nav-item"><a href="{{ route('certificate.index') }}"
+                                class="nav-link {{ request()->routeIs('certificate.index') ? 'active' : '' }}">Certificate
+                                of Employment</a></li>
                     </ul>
-                    </li>
-                    <li class="nav-item nav-item-submenu">
-                        <a href="#" class="nav-link">
-                            <i class="ph-scales"></i>
-                            <span>Company Policies</span>
-                        </a>
-                        <ul class="nav-group-sub collapse">
-
-                            <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.sss"
-                                    class="nav-link">Memo</a></li>
-                            <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.pag_ibig"
-                                    class="nav-link">Personnel Action Notice</a></li>
-                            <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.phil_health"
-                                    class="nav-link">Incident Report</a></li>
-                            <li class="nav-item"><a href="pages.payroll.deductions_and_contributions.phil_health"
-                                    class="nav-link">Evaluations</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="index" class="nav-link">
-                            <i class="ph-gift"></i>
-                            <span>
-                                EE & ER Shares
-                            </span>
-                        </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('payslips.index') }}"

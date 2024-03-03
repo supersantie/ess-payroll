@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attendances', function (Blueprint $table) {
+        Schema::create('certificates', function (Blueprint $table) {
             $table->id();
+            $table->enum('certificate_type', ['Certificate of Employment']);
             $table->string('employee_code')->index();
-            $table->time('time_in')->nullable();
-            $table->time('time_out')->nullable();
-            $table->double('working_hours')->nullable();
-            $table->enum('status', ['on time', 'undertime', 'late', 'on leave'])->nullable();
-            $table->date('date');
-            $table->enum('payroll_status', ['recorded', 'processed'])->default('recorded');
             $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
+            $table->enum('reason_type', ['Personal', 'Education', 'Government']);
+            $table->text('remarks');
+            $table->enum('status', ['approve','denied','for clearance', 'pending'])->default('pending');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendances');
+        Schema::dropIfExists('certificates');
     }
 };

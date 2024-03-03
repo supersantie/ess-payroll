@@ -19,6 +19,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\EssAccountController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\CompanyLoanController;
 use App\Http\Controllers\PayrollSettingController;
 use App\Http\Controllers\ReimbursementController;
@@ -41,7 +42,6 @@ Route::group(['middleware' => 'web'], function () {
 
 
     Route::prefix('ess')->group(function () {
-
         Route::controller(EssController::class)->group(function () {
             Route::get('/login', 'index')->name('ess.login');
             Route::post('/verify', 'verify')->name('ess.login.verify');
@@ -79,8 +79,6 @@ Route::group(['middleware' => 'web'], function () {
                 Route::get('/reimbursements', 'index')->name('reimbursements.index');
                 Route::post('/reimbursements/store', 'store')->name('reimbursements.store');
             })->prefix('reimbursement');
-
-
         });
     });
 
@@ -150,6 +148,12 @@ Route::group(['middleware' => 'web'], function () {
     Route::controller(LoanController::class)->group(function () {
         Route::get('/sss', 'sss')->name('deductions_and_contributions.sss');
         Route::get('/pagibig', 'pagibig')->name('deductions_and_contributions.pagibig');
+        Route::post('/loans/store', 'store')->name('deductions_and_contributions.pagibig.store');
+    });
+
+    Route::controller(CertificateController::class)->group(function () {
+        Route::get('/certificate', 'index')->name('certificate.index');
+        Route::post('/certificate/store', 'store')->name('certificate.store');
     });
 
 

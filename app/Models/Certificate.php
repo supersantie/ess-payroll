@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Attendance extends Model
+class Certificate extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['employee_code','time_in', 'time_out','working_hours','date','payroll_status', 'status'];
+    protected $fillable = ["employee_code","reason_type","remarks","status"];
 
     public function employee(){
         $this->belongsTo(Employee::class);
