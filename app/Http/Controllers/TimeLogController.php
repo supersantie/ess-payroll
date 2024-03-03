@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Attendance;
+use Carbon\Carbon;
 use App\Models\TimeLog;
+use App\Models\Attendance;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Database\QueryException;
 
 class TimeLogController extends Controller
 {
@@ -42,18 +45,74 @@ class TimeLogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if ($request->attendance_type === "Time In") {
+            try {
+                // Check if there is already an attendance record for today's date
+                $existingAttendance = Attendance::where('employee_code', session('info')->code)
+                    ->whereDate('date', now()->toDateString())
+                    ->first();
 
-        // Get the image (required)
-        // Get the time in (required)
-        // Get the time out (required)
-        // Get the current date 
-        // Get the current employee logged in
-        // Store all the data
-        // Store the image into storage
+                if ($existingAttendance) {
+                    return response()->json(['error' => 'Attendance already recorded for today'], 400);
+                }
 
-        // Throw an error if the user doesnt provide each
+                // Logic for recording Time In
+                $attendanceRecord = Attendance::create([
+                    'employee_code' => session('info')->code,
+                    'date' => now(),
+                    'time_in' => now()->toTimeString(),
+                    'working_hours' => null, // Set to null initially
+                    'status' => null, // Set to null initially
+                ]);
+
+                return response()->json(['message' => 'Time In recorded successfully'], 200);
+            } catch (QueryException $e) {
+                return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+            }
+        } elseif ($request->attendance_type === "Time Out") {
+            try {
+                // Logic for recording Time Out
+                $employeeCode = session('info')->code; // Assuming you store employee code in the session
+
+                // Find the latest attendance record for the employee
+                $latestAttendance = Attendance::where('employee_code', $employeeCode)
+                    ->latest('date')
+                    ->first();
+
+                // Update the time_out field of the latest attendance record with the current time
+                $latestAttendance->update(['time_out' => now()->toTimeString()]);
+
+                // Calculate working hours based on time_in and time_out
+                $startTime = Carbon::parse($latestAttendance->time_in);
+                $endTime = now();
+                $hoursWorked = $endTime->diffInHours($startTime);
+
+                // Update the working_hours field of the latest attendance record
+                $latestAttendance->update(['working_hours' => $hoursWorked]);
+
+                // Determine the status based on working hours
+                if ($hoursWorked === 8) {
+                    $status = 'on time';
+                } elseif ($hoursWorked < 8) {
+                    $status = 'undertime';
+                } else {
+                    $status = 'late';
+                }
+
+                // Update the status of the attendance record
+                $latestAttendance->update(['status' => $status]);
+
+                return response()->json(['message' => 'Time Out recorded successfully'], 200);
+            } catch (QueryException $e) {
+                return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+            }
+        }
     }
+
 
     /**
      * Display the specified resource.

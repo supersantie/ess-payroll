@@ -14,7 +14,7 @@
 
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between ">
-                <h5 class="mb-0">Company Loan List</h5>
+                <h5 class="mb-0">PAG-IBIG Loan List</h5>
 
                 <div class="d-flex gap-2">
                     <div class="btn-group">
@@ -35,7 +35,7 @@
                             <a href="#" class="dropdown-item">Download CSV template</a>
                         </div>
 
-                        
+
 
                         {{-- Add manually modal --}}
                         <div class="modal fade" id="addManuallyModal" aria-hidden="true"
@@ -50,6 +50,7 @@
                                             aria-label="Close"></button>
                                     </div>
                                     <form id="manualEntryForm">
+                                        <input type="hidden" name="government_benefit_type" value="pag_ibig">
                                         <div class="modal-body">
                                             <div class="mb-3">
                                                 You are using the <code>manual entry</code>. But you have a choice to <a
@@ -68,6 +69,13 @@
 
                                             </div>
 
+                                            <div class="mb-3">
+                                                <label for="" class="form-label">Loan Account Number</label>
+                                                <input type="text" class="form-control" name="loan_account_number"
+                                                    id="" aria-describedby="helpId" placeholder="" />
+
+                                            </div>
+
                                             <div class="row justify-content-center align-items-center g-2 mb-3">
                                                 {{-- TODO: Get the amount to be loan --}}
                                                 <div class="col">
@@ -78,8 +86,8 @@
                                                 <div class="col">
                                                     {{-- TODO: Get the months want to be paid --}}
                                                     <label for="" class="form-label">Months to be paid</label>
-                                                    <input type="number" class="form-control" name="months" id=""
-                                                        aria-describedby="helpId" placeholder="" />
+                                                    <input type="number" class="form-control" name="months_to_pay"
+                                                        id="" aria-describedby="helpId" placeholder="" />
                                                 </div>
                                             </div>
 
@@ -90,14 +98,15 @@
                                                     <label for="" class="form-label">Amount to be paid(
                                                         Month)</label>
                                                     <input type="text" class="form-control mask_currency"
-                                                        placeholder="PHP 0.00" id="mask_currency" name="amount" readonly>
+                                                        placeholder="PHP 0.00" id="mask_currency" name="amount_to_be_paid"
+                                                        readonly>
                                                 </div>
                                                 <div class="col">
-                                                    <label for="" class="form-label">Loan Repayment</label>
-                                                    <select class="form-select" name="loan_repayment" id="">
+                                                    <label for="" class="form-label">Loan Type</label>
+                                                    <select class="form-select" name="loan_type" id="">
                                                         <option selected>Select one</option>
-                                                        <option value="Every 1st Cutoff">Every 1st Cutoff</option>
-                                                        <option value="Every 2nd Cutoff">Every 2nd Cutoff</option>
+                                                        <option value="Calamity Loan">Calamity Loan</option>
+                                                        <option value="Housing Loan">Housing Loan</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -160,19 +169,60 @@
                         <th data-orderable="false" class="text-center">
                             <input type="checkbox" class="form-check-input" id="cc_li_c">
                         </th>
+                        <th>Loan Account Number</th>
                         <th>Employee Code</th>
                         <th>Name</th>
-                        <th>Amount</th>
-                        <th>Balance</th>
-                        <th>Loan Start</th>
-                        <th>Loan End</th>
-                        <th>Method</th>
-                        <th>Debt Repayment</th>
+                        <th>Name</th>
+                        <th>Name</th>
+
                         <th>Status</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                    @foreach ($employees as $item)
+                        @foreach ($item->loans as $subItem)
+                            <tr>
+                                <th class="d-flex justify-content-center ">
+                                    <input type="checkbox" class="form-check-input"
+                                        data-employee-id="{{ $item->code }}">
+                                </th>
+                                <td>{{ $subItem->loan_account_number }}</td>
+                                <td>{{ $item->first_name . ' ' . $item->last_name }}</td>
+                                <td>{{ $subItem->amount }}</td>
+                                <td>{{ $subItem->amount_to_be_paid }}</td>
+                                <td>{{ $subItem->loan_type }}</td>
+                                <td><span
+                                        class="badge {{ $statusColors[$subItem->status] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">{{ Str::title($subItem->status) }}</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-inline-flex">
+                                        <div class="dropdown">
+                                            <a href="#" class="text-body" data-bs-toggle="dropdown">
+                                                <i class="ph-list"></i>
+                                            </a>
+
+                                            <div class="dropdown-menu dropdown-menu-end ">
+                                                <a href="#" class="dropdown-item">
+                                                    <i class="ph-file-pdf me-2"></i>
+                                                    Export to .pdf
+                                                </a>
+                                                <a href="#" class="dropdown-item">
+                                                    <i class="ph-file-csv me-2"></i>
+                                                    Export to .csv
+                                                </a>
+                                                <a href="#" class="dropdown-item">
+                                                    <i class="ph-file-doc me-2"></i>
+                                                    Export to .doc
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endforeach
+                </tbody>
             </table>
         </div>
     </div>
@@ -250,42 +300,65 @@
             });
 
             // Calculate and display the amount to be paid each month based on input values
-            $('#amountToLoan, input[name="months"]').on('input', function() {
+            $('#amountToLoan, input[name="months_to_pay"]').on('input', function() {
                 var amountToLoan = parseFloat($('#amountToLoan').val().replace(/[^\d.]/g, '')) || 0;
-                var months = parseInt($('input[name="months"]').val()) || 0;
+                var months = parseInt($('input[name="months_to_pay"]').val()) || 0;
                 var amountPerMonth = months !== 0 ? amountToLoan / months :
-                0; // Add a check to prevent division by zero
+                    0; // Add a check to prevent division by zero
                 $('#mask_currency').val('PHP ' + amountPerMonth.toFixed(2));
             });
 
             $("#manualEntryForm").on("submit", function(e) {
                 e.preventDefault();
+
+                // alert("test")
                 // var formData = $(this).serialize();
                 let formData = new FormData($(this)[0])
                 console.log('Form data:', formData);
-                // $.ajax({
-                //     url: '/attendance/store',
-                //     method: 'POST',
-                //     data: formData,
-                //     processData: false,
-                //     contentType: false,
-                //     headers: {
-                //         'X-CSRF-TOKEN': csrfToken,
-                //     },
-                //     success: function(response) {},
-                //     error: function(error) {
-                //         $('#addManuallyModal').modal('hide');
-                //         Swal.fire({
-                //             icon: 'error',
-                //             title: 'Error!',
-                //             text: 'An error occurred while saving attendance records.',
-                //             customClass: {
-                //                 confirmButton: 'btn btn-primary',
-                //             },
-                //         });
-                //         console.error(error);
-                //     }
-                // });
+                $.ajax({
+                    url: '{{ route('deductions_and_contributions.pagibig.store') }}',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    success: function(response) {
+                        if (response && response.success) {
+                            // Close the modal
+                            $('#addManuallyModal').modal('hide');
+
+                            // Display SweetAlert for success
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Pag Ibig Loan record saved successfully!',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            }).then(function() {
+                                location.reload()
+                            });
+                        } else {
+                            // Handle unexpected response
+                            console.error('Unexpected response format:', response);
+                        }
+
+                    },
+                    error: function(error) {
+                        $('#addManuallyModal').modal('hide');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'An error occurred while saving attendance records.',
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        });
+                        console.error(error);
+                    }
+                });
             });
         });
     </script>

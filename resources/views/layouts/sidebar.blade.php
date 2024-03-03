@@ -80,8 +80,6 @@
                                 <li class="nav-item"><a href="{{ route('reports.payroll') }}"
                                         class="nav-link {{ request()->routeIs('reports.payroll') ? 'active' : '' }}">Payroll</a>
                                 </li>
-                                <li class="nav-item"><a href="pages.payroll.reports.13th_month" class="nav-link">13th
-                                        Month Pay</a></li>
                                 <li class="nav-item"><a href="{{ route('reports.cut_off') }}"
                                         class="nav-link {{ request()->routeIs('reports.cut_off') ? 'active' : '' }}">Cut-off</a>
                                 </li>

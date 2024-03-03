@@ -43,9 +43,6 @@ class CompanyLoanController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        // dd($request);
-
         try {
             $employeeCode = $request->employee;
             // Convert amount to float and round to 2 decimal places

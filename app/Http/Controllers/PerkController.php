@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Perk;
 use App\Models\Employee;
+use App\Models\ActivityLog;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
@@ -50,8 +51,20 @@ class PerkController extends Controller
                 "remarks" => $request->remarks,
             ]);
 
+            $userEmail = $request->user()->email ?? '';
+            $description = 'Perk type created for ' . $request->employee . ' ' . $request->perk_type;
+            $ipAddress = $request->ip();
+            $actionType = 'create';
+
+            ActivityLog::create([
+                'user_email' => $userEmail,
+                'description' => $description,
+                'ip_address' => $ipAddress,
+                'action_type' => $actionType,
+            ]);
+
             return response()->json(['perk_record' => $perkRecord], 200);
-        }catch (QueryException $e) {
+        } catch (QueryException $e) {
             return response()->json(['error' => 'Database error'], 500);
         } catch (\Throwable $th) {
             return response()->json(['error' => 'An error occurred'], 500);

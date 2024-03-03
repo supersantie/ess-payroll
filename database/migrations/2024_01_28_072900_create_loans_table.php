@@ -17,16 +17,13 @@ return new class extends Migration
             $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
 
             $table->string('loan_account_number')->required();
-
-
             $table->integer('months_to_pay');
-
-            $table->double('outstanding_balance')->default(0);
-            $table->double('total_amount_to_pay_monthly')->default(0);
+            $table->double('amount')->required();
+            $table->double('amount_to_be_paid')->default(0);
 
             $table->enum("government_benefit_type",["sss", "pag_ibig"]);
             $table->enum("loan_type",["Salary Loan", "Calamity Loan", "Housing Loan", "Educational Loan"]);
-            $table->enum("statis",["On going", "Finished"]);
+            $table->enum("status",["On going", "Finished"])->default('On going');
             $table->timestamps();
         });
     }

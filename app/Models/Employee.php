@@ -11,7 +11,6 @@ class Employee extends Model
 
     protected $fillable = ['payroll_status'];
 
-
     public function getRouteKeyName(): string
     {
         return 'code';
@@ -22,7 +21,6 @@ class Employee extends Model
         return $this->hasOne(EssAccount::class, 'employee_code', $this->getRouteKeyName());
     }
     
-
     public function attendances(){
         return $this->hasMany(Attendance::class, 'employee_code', $this->getRouteKeyName());
     }
@@ -51,6 +49,9 @@ class Employee extends Model
         return $this->hasMany(Leave::class, 'employee_code', $this->getRouteKeyName());
     }
     
+    public function loans(){
+        return $this->hasMany(Loan::class, 'employee_code', $this->getRouteKeyName());
+    }
 
 
     

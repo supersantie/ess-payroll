@@ -77,6 +77,7 @@
                                                     <label for="" class="form-label">Perk Type</label>
                                                     <select class="form-select" name="perk_type" id="">
                                                         <option selected>Select one</option>
+                                                        <option value="13th Month Pay">13th Month Pay</option>
                                                         <option value="Food Allowance">Food Allowance</option>
                                                         <option value="Transportation Allowance">Transportation Allowance
                                                         </option>
@@ -150,6 +151,7 @@
                         <th>Name</th>
                         <th>Amount</th>
                         <th>Remarks</th>
+                        <th>Remarks</th>
                         <th>Status</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -165,6 +167,7 @@
                                 <td>{{ $item->first_name . ' ' . $item->last_name }}</td>
                                 <td>{{ $subItem->amount }}</td>
                                 <td>{{ $subItem->remarks }}</td>
+                                <td>{{ $subItem->perk_type }}</td>
                                 <td><span
                                         class="badge {{ $statusColors[$subItem->status] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">{{ Str::title($subItem->status) }}</span>
                                 </td>
