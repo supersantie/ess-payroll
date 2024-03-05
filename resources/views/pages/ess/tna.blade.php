@@ -32,21 +32,6 @@
                         Time Out
                     </button>
 
-                    <button type="button" class="btn btn-info btn-labeled btn-labeled-start" id="overtimeIn" disabled>
-                        <span class="btn-labeled-icon bg-black bg-opacity-20">
-                            <i class="ph-fingerprint-simple"></i>
-                        </span>
-                        Overtime In
-                    </button>
-
-                    <button type="button" class="btn btn-secondary btn-labeled btn-labeled-start" id="overtimeOut"
-                        disabled>
-                        <span class="btn-labeled-icon bg-black bg-opacity-20">
-                            <i class="ph-fingerprint-simple"></i>
-                        </span>
-                        Overtime Out
-                    </button>
-
                     <button type="button" class="btn btn-primary btn-labeled btn-labeled-start" id="release_payroll">
                         <span class="btn-labeled-icon bg-black bg-opacity-20">
                             <i class="ph-download"></i>
@@ -83,7 +68,7 @@
                             <td class="text-center">{{ $item->time_out ?? '--' }}</td>
                             <td class="text-center">{{ $item->working_hours ?? '--' }}</td>
                             <td class="text-center">
-                                @if ($statusColors[$item->status])
+                                @if ($item->status)
                                     <span
                                         class="badge {{ $statusColors[$item->status] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">{{ Str::title($item->status) }}</span>
                                 @else
@@ -220,6 +205,8 @@
                                     icon: 'success',
                                     confirmButtonClass: 'btn btn-primary',
                                     confirmButtonText: 'Close'
+                                }).then(function(){
+                                    location.reload()
                                 });
                                 // You can add any further actions you need to perform after a successful AJAX call
                             },
@@ -231,6 +218,8 @@
                                     icon: 'error',
                                     confirmButtonClass: 'btn btn-primary',
                                     confirmButtonText: 'Close'
+                                }).then(function(){
+                                    location.reload()
                                 });
                             }
                         });

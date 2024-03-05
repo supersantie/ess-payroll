@@ -33,7 +33,7 @@
                 The <code>responsive</code> option can be given as a boolean value, or as an object with configuration
                 options.
             </div>
-            <table class="table datatable-responsive">
+            <table class="table datatable-responsive h-100">
                 <thead>
                     <tr>
                         <th data-orderable="false" class="text-center">
@@ -70,28 +70,11 @@
                                         class="badge {{ $statusColors[$subItem->status] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">{{ Str::title($subItem->status) }}</span>
                                 </td>
                                 <td class="text-center">
-                                    <div class="d-inline-flex">
-                                        <div class="dropdown">
-                                            <a href="#" class="text-body" data-bs-toggle="dropdown">
-                                                <i class="ph-list"></i>
-                                            </a>
-
-                                            <div class="dropdown-menu dropdown-menu-end ">
-                                                <a href="#" class="dropdown-item">
-                                                    <i class="ph-file-pdf me-2"></i>
-                                                    Export to .pdf
-                                                </a>
-                                                <a href="#" class="dropdown-item">
-                                                    <i class="ph-file-csv me-2"></i>
-                                                    Export to .csv
-                                                </a>
-                                                <a href="#" class="dropdown-item">
-                                                    <i class="ph-file-doc me-2"></i>
-                                                    Export to .doc
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <a href="{{ route('payslips.pdf', ['id' => $subItem->id]) }}"
+                                        class="btn btn-info export-pdf-btn" data-payroll-id="{{ $subItem->id }}">
+                                        <i class="ph-file-pdf me-2"></i>
+                                        Export to .pdf
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach

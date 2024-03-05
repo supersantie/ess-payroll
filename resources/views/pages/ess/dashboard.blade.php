@@ -475,7 +475,7 @@
                 <div class="mb-3">
                     <div class="row row-tile g-0">
                         <div class="col">
-                            <a href="{{ route('ess.tna.capture') }}" role="button"
+                            <a href="" role="button"
                                 class="btn btn-light w-100 flex-column rounded-0 rounded-top-start py-2">
                                 <i class="ph-calendar-check text-primary ph-2x mb-1"></i>
                                 Time & Attendance

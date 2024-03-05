@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\TimeLog;
 use App\Models\Attendance;
+use App\Models\Overtime;
+use App\Models\PayrollSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\QueryException;
@@ -31,6 +33,24 @@ class TimeLogController extends Controller
 
         return view('pages.ess.tna', compact('attendances', 'statusColors'));
     }
+
+    public function overtime()
+    {
+
+        $overtimes = Overtime::where('employee_code', session('info')->code)->get();
+
+        $statusColors = [
+            'on time' => 'bg-success bg-opacity-10 text-success',
+            'undertime' => 'bg-secondary bg-opacity-10 text-secondary',
+            'late' => 'bg-danger bg-opacity-10 text-danger',
+            'processed' => 'bg-success bg-opacity-10 text-success',
+        ];
+
+        return view('pages.ess.overtime', compact('overtimes', 'statusColors'));
+    }
+
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -72,6 +92,8 @@ class TimeLogController extends Controller
                 return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
             }
         } elseif ($request->attendance_type === "Time Out") {
+
+            
             try {
                 // Logic for recording Time Out
                 $employeeCode = session('info')->code; // Assuming you store employee code in the session

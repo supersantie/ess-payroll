@@ -40,13 +40,13 @@
                         <div class="mb-3">
                             <label class="form-label">System Name:</label>
                             <input type="text" class="form-control" name="system_name"
-                                value="{{ $keySetting['system_name'] ?? '' }}">
+                                value="{{ $payrollSettings['system_name'] ?? '' }}">
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Description:</label>
                             <textarea rows="3" cols="3" maxlength="225" class="form-control maxlength-textarea"
-                                placeholder="This textarea has a limit of 225 chars." name="system_description"></textarea>
+                                placeholder="This textarea has a limit of 225 chars." name="system_description">{{ $payrollSettings['system_description'] ?? '' }}</textarea>
                         </div>
                     </fieldset>
 
@@ -72,13 +72,13 @@
 
                         <div class="mb-3">
                             <label class="form-label">Philhealth:</label>
-                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency"
+                            <input type="text" class="form-control" placeholder="Enter a percentage" id=""
                                 name="philhealth">
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">PAG IBIG:</label>
-                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency"
+                            <input type="text" class="form-control" placeholder="Enter a percentage" id=""
                                 name="pag_ibig">
                         </div>
                     </fieldset>
@@ -90,7 +90,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Overtime Rate:</label>
-                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency"
+                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id=""
                                 name="overtime_rate">
                         </div>
                         <div class="row justify-content-center align-items-center g-2 mb-3">
@@ -112,8 +112,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Night Differential Rate:</label>
-                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency"
-                                name="night_diff_rate">
+                            <input type="text" class="form-control" placeholder="Enter amount in PHP"
+                                id="mask_currency" name="night_diff_rate">
                         </div>
                         <div class="row justify-content-center align-items-center g-2 mb-3">
                             <div class="col">
@@ -148,7 +148,40 @@
                                 <option value="monthly">Monthly</option>
                                 <option value="semi monthly">Semi Monthly</option>
                             </select>
+
                         </div>
+
+                        <div class="row justify-content-center align-items-center g-2 mb-3">
+                            <div class="col">
+                                <label class="form-label">First Cut Off Start Date</label>
+                                <select data-placeholder="Must select the start" class="form-control select-access-value"
+                                    name="1st_cut_off_date_start">
+                                    <option></option>
+                                    @for ($i = 1; $i <= 31; $i++)
+                                        <option value="{{ $i }}" >{{ $i }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label class="form-label">First Cut Off End Date</label>
+                                <input type="text" name="1st_cut_off_date_end" class="form-control" id="" readonly
+                                    value="">
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-center align-items-center g-2 mb-3">
+                            <div class="col">
+                                <label class="form-label">Second Cut Off Start Date</label>
+                                <input type="text" name="2nd_cut_off_date_start" class="form-control" id="" readonly
+                                    value="">
+                            </div>
+                            <div class="col">
+                                <label class="form-label">Second Cut Off End Date</label>
+                                <input type="text" name="2nd_cut_off_date_end" class="form-control" id="" readonly
+                                    value="">
+                            </div>
+                        </div>
+
 
                         <div class="mb-3">
                             <label class="form-label">Loan Payments</label>
