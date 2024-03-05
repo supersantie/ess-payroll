@@ -47,8 +47,6 @@ Route::group(['middleware' => 'web'], function () {
             Route::post('/verify', 'verify')->name('ess.login.verify');
             Route::post('/validate_otp', 'validateOTP')->name('auth.validate.otp');
             Route::post('/logout', 'destroy')->name('ess.logout');
-
-            Route::get('/tna/capture', 'captureAttendance')->name('ess.tna.capture');
         })->prefix('auth');
 
         Route::middleware(['ess.account'])->group(function () {
@@ -66,7 +64,7 @@ Route::group(['middleware' => 'web'], function () {
             // Payslip
             Route::controller(PayslipController::class)->group(function () {
                 Route::get('/payslips', 'index')->name('payslips.index');
-                Route::get('/pdf', 'pdf')->name('payslips.pdf');
+                Route::get('/payslips/pdf/{id}', 'pdf')->name('payslips.pdf');
             })->prefix('payslips');
             // End of Payslip
 

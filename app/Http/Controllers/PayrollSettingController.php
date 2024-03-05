@@ -13,15 +13,10 @@ class PayrollSettingController extends Controller
      */
     public function index()
     {
-        $settings = PayrollSetting::all();
-        $keySetting = [];
+        $payrollSettings = PayrollSetting::pluck('value', 'key')->toArray();
 
-        foreach($settings as $setting){
-            $keySetting[$setting->key] = $setting->value;
-        }
-        
     
-        return view('pages.payroll.settings', compact('settings', 'keySetting'));
+    return view('pages.payroll.settings', compact('payrollSettings'));
     }
     
     
