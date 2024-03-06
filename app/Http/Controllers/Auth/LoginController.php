@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -10,7 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
-class LoginController extends Controller 
+class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
@@ -31,23 +33,100 @@ class LoginController extends Controller
     //     $this->middleware('guest')->except('logout');
     // }
 
-    public function index(){
+    public function index()
+    {
         return view('auth.login');
     }
 
-    public function store(LoginRequest $request)
+    public function login(Request $request)
     {
-        // $request->authenticate();
+        $this->validateLogin($request);
 
-        Log::info('Accessed the login controller');
+        if (
+            method_exists($this, 'hasTooManyLoginAttempts') &&
+            $this->hasTooManyLoginAttempts($request)
+        ) {
+            $this->fireLockoutEvent($request);
+
+            return $this->sendLockoutResponse($request);
+        }
+
+        if ($this->attemptLogin($request)) {
+            if ($request->hasSession()) {
+                $request->session()->put('auth.password_confirmed_at', time());
+            }
+
+            $userEmail = $request->user()->email ?? '';
+            $description = 'Logged In to the system';
+            $ipAddress = $request->ip();
+            $actionType = 'login';
+
+            ActivityLog::create([
+                'user_email' => $userEmail,
+                'description' => $description,
+                'ip_address' => $ipAddress,
+                'action_type' => $actionType,
+            ]);
+
+            return $this->sendLoginResponse($request);
+        }
+
+        $this->incrementLoginAttempts($request);
+
+        return $this->sendFailedLoginResponse($request);
+    }
+
+    public function logout(Request $request)
+    {
+
+        $userEmail = $request->user()->email ?? '';
+        $description = 'Logged Out to the system';
+        $ipAddress = $request->ip();
+        $actionType = 'logout';
+
+        ActivityLog::create([
+            'user_email' => $userEmail,
+            'description' => $description,
+            'ip_address' => $ipAddress,
+            'action_type' => $actionType,
+        ]);
+
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        if ($response = $this->loggedOut($request)) {
+
+            return $response;
+        }
 
 
-        $request->authenticate();
 
+        return $request->wantsJson()
+            ? new JsonResponse([], 204)
+            : redirect('/');
+    }
+
+    protected function sendLoginResponse(Request $request)
+    {
         $request->session()->regenerate();
-        
-        $request->logLoginActivity();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        $request->session()->regenerateToken();
+
+        $this->clearLoginAttempts($request);
+
+        return redirect('/dashboard');
+    }
+
+
+    protected function redirectPath()
+    {
+        if (method_exists($this, 'redirectTo')) {
+            return $this->redirectTo();
+        }
+
+        return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
     }
 }

@@ -35,7 +35,7 @@
                             <i class="ph-dots-three sidebar-resize-show"></i>
                         </li>
                         <li class="nav-item">
-                            <a href="index" class="nav-link">
+                            <a href="{{ route('payroll.dashboard') }}"  class="nav-link {{ request()->routeIs('payroll.dashboard') ? 'active' : '' }}">
                                 <i class="ph-house"></i>
                                 <span>
                                     Dashboard

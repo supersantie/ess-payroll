@@ -62,10 +62,6 @@
                                     <input type="text" class="form-control" placeholder="Enter employee share percentage"
                                         name="sss">
                                 </div>
-                                <div class="col">
-                                    <input type="text" class="form-control" placeholder="Enter employer share percentage"
-                                        name="sss">
-                                </div>
                             </div>
 
                         </div>
