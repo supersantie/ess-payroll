@@ -88,7 +88,6 @@
                                     <a href="/" class="btn btn-light w-100">Back to Main Portal</a>
                                 </div>
 
-                                <span class="form-text text-center text-muted">By continuing, you're confirming that you've read our <a href="#">Terms &amp; Conditions</a> and <a href="#">Cookie Policy</a></span>
                             </div>
                         </div>
                     </form>

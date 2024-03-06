@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Employee;
 use App\Mail\PayrollNotify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -21,8 +22,8 @@ use App\Http\Controllers\EssAccountController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\CompanyLoanController;
-use App\Http\Controllers\PayrollSettingController;
 use App\Http\Controllers\ReimbursementController;
+use App\Http\Controllers\PayrollSettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,20 @@ Route::group(['middleware' => 'web'], function () {
     });
 
 
+    Route::get('/dashboard', function () {
+
+        $payrolls = Employee::with(['payrolls', 'companyLoans'])->get();
+
+        $statusColors = [
+            'on time' => 'bg-success bg-opacity-10 text-success',
+            'undertime' => 'bg-secondary bg-opacity-10 text-secondary',
+            'late' => 'bg-danger bg-opacity-10 text-danger',
+        ];
+
+        return view('pages.payroll.index', compact('payrolls',));
+    })->name('payroll.dashboard');
+
+
     Route::prefix('ess')->group(function () {
         Route::controller(EssController::class)->group(function () {
             Route::get('/login', 'index')->name('ess.login');
@@ -55,7 +70,7 @@ Route::group(['middleware' => 'web'], function () {
             })->name('ess.dashboard');
 
             // Time and Attendance
-            Route::controller(TimeLogController::class)->group(function () {              
+            Route::controller(TimeLogController::class)->group(function () {
                 Route::get('/tna', 'index')->name('tna.index');
                 Route::post('/tna', 'store')->name('tna.store');
             })->prefix('tna');

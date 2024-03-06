@@ -1,9 +1,13 @@
 @extends('layouts.master')
 @section('content')
-@component('components.breadcrumb')
-@slot('title') Home @endslot
-@slot('subtitle') Dashboard @endslot
-@endcomponent
+    @component('components.breadcrumb')
+        @slot('title')
+            Settings
+        @endslot
+        @slot('subtitle')
+            System
+        @endslot
+    @endcomponent
 <!-- Content area -->
 <div class="content">
 
