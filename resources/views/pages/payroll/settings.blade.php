@@ -20,13 +20,13 @@
             </div>
 
             <div class="card-body border-top">
-                <div class="alert bg-danger text-white alert-icon-start alert-dismissible fade show border-0">
+                {{-- <div class="alert bg-danger text-white alert-icon-start alert-dismissible fade show border-0">
                     <span class="alert-icon bg-black bg-opacity-20">
                         <i class="ph-x-circle"></i>
                     </span>
                     <span class="fw-semibold">Oh snap!</span> Payroll Settings is not currently set!.
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
-                </div>
+                </div> --}}
                 <div class="mb-4">
                     Think of the <code>settings</code> in your payroll system as the customized controls that shape and
                     direct
@@ -56,77 +56,27 @@
                             You may set the system's <code>contribution amount</code> if the government benefits raise up.
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">SSS:</label>
+                            <label class="form-label">SSS (%):</label>
                             <div class="row justify-content-center align-items-center g-2">
                                 <div class="col">
                                     <input type="text" class="form-control" placeholder="Enter employee share percentage"
-                                        name="sss">
+                                        name="sss" value="{{ $payrollSettings['sss_ee_percentage'] }}">
                                 </div>
                             </div>
 
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Philhealth:</label>
+                            <label class="form-label">Philhealth (%):</label>
                             <input type="text" class="form-control" placeholder="Enter a percentage" id=""
-                                name="philhealth">
+                                name="philhealth" value="{{ $payrollSettings['philhealth_contribution_percentage'] }}">
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">PAG IBIG:</label>
+                            <label class="form-label">PAG IBIG (PHP):</label>
                             <input type="text" class="form-control" placeholder="Enter a percentage" id=""
-                                name="pag_ibig">
+                                name="pag_ibig" value="{{ $payrollSettings['pag_ibig_contribution_amount'] }}">
                         </div>
-                    </fieldset>
-
-                    <fieldset class="mb-3">
-                        <legend class="fs-base fw-bold border-bottom pb-2 mb-3">Compensations</legend>
-                        <div class="mb-4">
-                            You can change the percentage of system's <code>compensations</code>.
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Overtime Rate:</label>
-                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id=""
-                                name="overtime_rate">
-                        </div>
-                        <div class="row justify-content-center align-items-center g-2 mb-3">
-                            <div class="col">
-                                <label for="" class="form-label">Hour Start:</label>
-                                <input type="time" class="form-control" name="" id=""
-                                    aria-describedby="helpId" placeholder="" />
-                            </div>
-                            <div class="col">
-                                <label for="" class="form-label">Hour End:</label>
-                                <input type="time" class="form-control" name="" id=""
-                                    aria-describedby="helpId" placeholder="" />
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Holiday Rate:</label>
-                            <input type="text" class="form-control" placeholder="Enter amount in PHP" id="mask_currency"
-                                name="holiday_rate">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Night Differential Rate:</label>
-                            <input type="text" class="form-control" placeholder="Enter amount in PHP"
-                                id="mask_currency" name="night_diff_rate">
-                        </div>
-                        <div class="row justify-content-center align-items-center g-2 mb-3">
-                            <div class="col">
-                                <label for="" class="form-label">Hour Start:</label>
-                                <input type="time" class="form-control" name="" id=""
-                                    aria-describedby="helpId" placeholder="" />
-                            </div>
-                            <div class="col">
-                                <label for="" class="form-label">Hour End:</label>
-                                <input type="time" class="form-control" name="" id=""
-                                    aria-describedby="helpId" placeholder="" />
-                            </div>
-                        </div>
-
-
-
-
                     </fieldset>
 
                     <fieldset class="mb-3">
@@ -137,12 +87,16 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Payroll</label>
+                            <label class="form-label">Cut Off Period</label>
                             <select data-placeholder="Select something" class="form-control select-access-value"
-                                name="payroll_period">
+                                name="cut_off_period">
                                 <option></option>
-                                <option value="monthly">Monthly</option>
-                                <option value="semi monthly">Semi Monthly</option>
+                                <option value="1st cutoff"
+                                    {{ $payrollSettings['cut_off_period'] == '1st cutoff' ? 'selected' : '' }}>1st Cut Off
+                                </option>
+                                <option value="2nd cutoff"
+                                    {{ $payrollSettings['cut_off_period'] == '2nd cutoff' ? 'selected' : '' }}>2nd Cut Off
+                                </option>
                             </select>
 
                         </div>
@@ -154,27 +108,29 @@
                                     name="1st_cut_off_date_start">
                                     <option></option>
                                     @for ($i = 1; $i <= 31; $i++)
-                                        <option value="{{ $i }}" >{{ $i }}</option>
+                                        <option value="{{ $i }}"
+                                            {{ $payrollSettings['1st_cut_off_date_start'] == $i ? 'selected' : '' }}>
+                                            {{ $i }}</option>
                                     @endfor
                                 </select>
                             </div>
                             <div class="col">
                                 <label class="form-label">First Cut Off End Date</label>
-                                <input type="text" name="1st_cut_off_date_end" class="form-control" id="" readonly
-                                    value="">
+                                <input type="text" name="1st_cut_off_date_end" class="form-control" id=""
+                                    readonly value="{{ $payrollSettings['1st_cut_off_date_end'] }}">
                             </div>
                         </div>
 
                         <div class="row justify-content-center align-items-center g-2 mb-3">
                             <div class="col">
                                 <label class="form-label">Second Cut Off Start Date</label>
-                                <input type="text" name="2nd_cut_off_date_start" class="form-control" id="" readonly
-                                    value="">
+                                <input type="text" name="2nd_cut_off_date_start" class="form-control" id=""
+                                    readonly value="{{ $payrollSettings['2nd_cut_off_date_start'] }}">
                             </div>
                             <div class="col">
                                 <label class="form-label">Second Cut Off End Date</label>
-                                <input type="text" name="2nd_cut_off_date_end" class="form-control" id="" readonly
-                                    value="">
+                                <input type="text" name="" class="form-control" id="" readonly
+                                    value="{{ $payrollSettings['2nd_cut_off_date_end'] }}">
                             </div>
                         </div>
 
@@ -184,22 +140,30 @@
                             <select data-placeholder="Select something" class="form-control select-access-value"
                                 name="payroll_period">
                                 <option></option>
-                                <option value="monthly">Every first cut off</option>
-                                <option value="semi monthly">Every second cut off</option>
-                                <option value="semi monthly">Paid half per cut off</option>
+                                <option value="1st cutoff"
+                                    {{ $payrollSettings['loan_repayment_period'] == '1st cutoff' ? 'selected' : '' }}>1st
+                                    Cut Off</option>
+                                <option value="2nd cutoff"
+                                    {{ $payrollSettings['loan_repayment_period'] == '2nd cutoff' ? 'selected' : '' }}>2nd
+                                    Cut Off</option>
                             </select>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Contribution Period</label>
                             <select data-placeholder="Select something" class="form-control select-access-value"
-                                name="payroll_period">
+                                name="contribution_period">
                                 <option></option>
-                                <option value="monthly">Every first cut off</option>
-                                <option value="semi monthly">Every second cut off</option>
-                                <option value="semi monthly">Twice a month</option>
+                                <option value="1st cutoff"
+                                    {{ $payrollSettings['contribution_period'] === '1st cutoff' ? 'selected' : '' }}>1st
+                                    Cut Off</option>
+                                <option value="2nd cutoff"
+                                    {{ $payrollSettings['contribution_period'] === '2nd cutoff' ? 'selected' : '' }}>2nd
+                                    Cut Off</option>
                             </select>
+
                         </div>
+
                     </fieldset>
 
                     <div class="text-end">
@@ -217,11 +181,14 @@
     <script src="{{ URL::asset('assets/js/vendor/forms/selects/select2.min.js') }}"></script>
     <script src="{{ URL::asset('assets/js/vendor/forms/inputs/imask.min.js') }}"></script>
     <script src="{{ URL::asset('assets/js/vendor/forms/inputs/maxlength.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/js/vendor/notifications/sweet_alert.min.js') }}"></script>
+
 @endsection
 @section('scripts')
     <script src="{{ URL::asset('assets/demo/pages/form_layouts.js') }}"></script>
     <script src="{{ URL::asset('assets/demo/pages/form_controls_extended.js') }}"></script>
     <script src="{{ URL::asset('assets/demo/pages/form_select2.js') }}"></script>
+    <script src="{{ URL::asset('assets/demo/pages/extra_sweetalert.js') }}"></script>
 
     <script>
         $(function() {
@@ -230,19 +197,33 @@
 
                 let formData = new FormData($(this)[0])
 
-                const csrfToken = $('meta[name="csrf-token"]').attr('content');
-
                 $.ajax({
-                    url: '/payroll_settings',
+                    url: '{{ route('payroll_settings.update') }}',
                     method: 'POST',
                     data: formData,
                     processData: false,
                     contentType: false,
                     headers: {
-                        'X-CSRF-TOKEN': csrfToken,
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
                     },
                     success: function(response) {
-                        console.log(response);
+                        if (response && response.success) {
+
+                            // Display SweetAlert for success
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Updated Payroll Settings successfully!',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            }).then(function() {
+                                location.reload()
+                            });
+                        } else {
+                            // Handle unexpected response
+                            console.error('Unexpected response format:', response);
+                        }
                     },
                     error: function(error) {
                         console.error(error);

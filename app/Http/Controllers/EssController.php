@@ -24,7 +24,6 @@ class EssController extends Controller
     public function verify(Request $request)
     {
 
-
         // Redirect the user to the dashboard if the user has already requested an OTP within the last 5 minutes.
         $validatedData = $request->validate([
             'employee_code' => 'required',
@@ -48,8 +47,6 @@ class EssController extends Controller
             $employeeCode = $employee->employee_code;
             $countdownDuration = 300;
 
-
-
             return view('auth.ess_otp', compact('employeeCode', 'employeeMail', 'errorMessage', 'countdownDuration'));
         }
 
@@ -69,15 +66,10 @@ class EssController extends Controller
 
         $employeeCode = $employee->employee_code;
 
+        // Run php artisan queue:work
         Queue::push(function () use ($employee, $otp) {
             Mail::to($employee->email)->send(new OtpEmail($otp));
         });
-
-
-
-
-
-
 
         return view('auth.ess_otp', compact('employeeCode', 'employeeMail'));
     }
@@ -88,7 +80,6 @@ class EssController extends Controller
 
     public function validateOTP(Request $request)
     {
-
 
         try {
             // 1. Get the OTP code input and employee code
@@ -123,10 +114,5 @@ class EssController extends Controller
 
         // return view('auth.ess_login');
         return redirect()->intended('/ess/login');
-    }
-
-    public function captureAttendance()
-    {
-        return view('pages.ess.tna_capture');
     }
 }

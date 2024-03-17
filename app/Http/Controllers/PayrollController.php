@@ -206,50 +206,55 @@ class PayrollController extends Controller
     public function store(Request $request)
     {
 
+        /**
+         * 
+         * TODO:
+         * Based on the current date get the current period after that then compute the total working hours and pay for the cutoff start date and cut off end date.
+         * 
+         * 
+         */
+
         try {
-            /**
-             * TODO: 
-             * - Determine what is the contribution period by using $payrollSettings['contribution_period']
-             * - After getting it, determine the current date and if it is in range of 1st_cutoff_period_start/end (1-15) or 2nd_cutoff_period_start/end (16-31)
-             * 
-             * - If current date is in 1-15 day then it is 1st cutoff also if it is 16-31 then it must be 2nd cutoff
-             * - So after determining the day then you need to find the right cutoff period based on current day. 
-             * - If the payrollSettings['contribution_period'] is 2nd cutoff and now is in range of 2nd cutoff then deduct the contributions
-             * 
-             *  CODE: 
-                $sssContribution = $employee->basic_daily_rate * doubleval($payrollSettings['sss_ee_percentage']);
-                $pagibigContribution = intval($payrollSettings['pag_ibig_contribution_amount']);
-                $philhealthContribution = $employee->basic_daily_rate * doubleval($payrollSettings['philhealth_contribution_percentage']);
-
-                $totalContributionDeduction = $sssContribution + $pagibigContribution + $philhealthContribution;
-
-                $netPay = $netPayAfterLoan - $totalContributionDeduction;
-             * 
-             * Ofcourse, when you generate a cutoff it must be the value of determining the cutoff period based on the current day!.
-             */
-
             $payrollSettings = PayrollSetting::pluck('value', 'key')->toArray();
 
             $currentDate = now();
-            $startOfMonth = $currentDate->clone()->startOfMonth();
-            $endOfMonth = $currentDate->clone()->endOfMonth();
 
-            $startOfMonth->startOfMonth()->weekday() === Carbon::SUNDAY && $startOfMonth->addWeekday(); // Skip Sunday
-            $startOfMonth->startOfMonth()->weekday() === Carbon::SATURDAY && $startOfMonth->addWeekday(2); // Skip Saturday
-
-            $endOfMonth->endOfMonth()->weekday() === Carbon::SATURDAY && $endOfMonth->subWeekday(); // Skip Saturday
-            $endOfMonth->endOfMonth()->weekday() === Carbon::SUNDAY && $endOfMonth->subWeekday(2); // Skip Sunday
+            $startOfMonth = $currentDate->copy()->startOfMonth();
+            $endOfMonth = $currentDate->copy()->endOfMonth();
 
             $payrollPeriod = $payrollSettings['cut_off_period'];
+
+            $year = $currentDate->year;
+            $month = $currentDate->month;
+
+            $currentPeriod = null;
+            $firstCutoffDayStart = Carbon::create($year, $month, $payrollSettings['1st_cut_off_date_start'])->startOfDay();
+            $firstCutoffDayEnd = Carbon::create($year, $month, $payrollSettings['1st_cut_off_date_end'])->endOfDay();
+            $secondCutoffDayStart = Carbon::create($year, $month, $payrollSettings['2nd_cut_off_date_start'])->startOfDay();
+            $secondCutoffDayEnd = Carbon::create($year, $month, $payrollSettings['2nd_cut_off_date_end'])->endOfDay();
+
+            $cutoffStart = null;
+            $cutoffEnd = null;
+
+            if ($currentDate->between($firstCutoffDayStart, $firstCutoffDayEnd)) {
+                $currentPeriod = '1st cutoff';
+                $cutoffStart = $firstCutoffDayStart;
+                $cutoffEnd = $firstCutoffDayEnd;
+            } elseif ($currentDate->between($secondCutoffDayStart, $secondCutoffDayEnd)) {
+                $currentPeriod = '2nd cutoff';
+                $cutoffStart = $secondCutoffDayStart;
+                $cutoffEnd = $secondCutoffDayEnd;
+            } else {
+                $currentPeriod = 'Default Period';
+            }
 
             $employeeIds = $request->employeeIds;
             $employees = Employee::with(['attendances', 'overtimes', 'companyLoans' => function ($query) {
                 $query->where('loan_status', 'Unsettled');
             }])->whereIn('code', $employeeIds)->get();
 
-            $previousCutoff = Cutoff::orderBy('generated_date', 'desc')->first();
             $loanAmount = 0.00;
-            $totalReleasedPay = 0;
+            $totalReleasedPay = 0.00;
 
             foreach ($employees as $employee) {
                 $employeeId = $employee->code;
@@ -266,13 +271,15 @@ class PayrollController extends Controller
 
                 $attendanceRecords = $employee->attendances()->where('payroll_status', '!=', 'processed')->get();
                 $overtimeRecords = $employee->overtimes;
-                $totalWorkingHours = 0;
-                $totalOvertimeHours = 0;
+                $totalWorkingHours = 0.0;
+                $totalOvertimeHours = 0.0;
                 $baseSalary = $employee->basic_daily_rate;
 
                 foreach ($attendanceRecords as $record) {
-                    $totalWorkingHours += $record->working_hours;
-                    $record->update(['payroll_status' => 'processed']);
+                    if ($record->payroll_status != 'processed') {
+                        $totalWorkingHours += $record->working_hours;
+                        $record->update(['payroll_status' => 'processed']);
+                    }
                 }
 
                 foreach ($overtimeRecords as $overtime) {
@@ -288,14 +295,16 @@ class PayrollController extends Controller
                 $pagibigContribution = 0;
                 $philhealthContribution = 0;
 
-                if ($payrollPeriod == '2nd cutoff') {
-                    $sssContribution = $employee->basic_daily_rate * doubleval($payrollSettings['sss_ee_percentage']);
-                    $pagibigContribution = intval($payrollSettings['pag_ibig_contribution_amount']);
-                    $philhealthContribution = $employee->basic_daily_rate * doubleval($payrollSettings['philhealth_contribution_percentage']);
+                if ($currentPeriod == $payrollSettings['contribution_period']) {
+                    if ($netPay >= 0) {
+                        $sssContribution = $employee->basic_daily_rate * doubleval($payrollSettings['sss_ee_percentage']);
+                        $pagibigContribution = intval($payrollSettings['pag_ibig_contribution_amount']);
+                        $philhealthContribution = $employee->basic_daily_rate * doubleval($payrollSettings['philhealth_contribution_percentage']);
 
-                    $totalContributionDeduction = $sssContribution + $pagibigContribution + $philhealthContribution;
+                        $totalContributionDeduction = $sssContribution + $pagibigContribution + $philhealthContribution;
 
-                    $netPay = $netPayAfterLoan - $totalContributionDeduction;
+                        $netPay = $netPayAfterLoan - $totalContributionDeduction;
+                    }
                 }
 
                 Payroll::create([
@@ -307,14 +316,13 @@ class PayrollController extends Controller
                     "phil_health" => $philhealthContribution,
                     "pag_ibig" => $pagibigContribution,
                     "net_pay" => $netPay,
-                    "start_date" => $startOfMonth,
-                    "end_date" => $endOfMonth,
+                    "start_date" => $cutoffStart,
+                    "end_date" => $cutoffEnd,
                 ]);
 
                 $totalReleasedPay += $netPay;
             }
 
-            Log::info('Setting payroll period to ' . $payrollSettings['cut_off_period']);
 
             Cutoff::create([
                 "generated_date" => $currentDate,
@@ -339,7 +347,7 @@ class PayrollController extends Controller
         } catch (QueryException $e) {
             return response()->json(['error' => $e], 500);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'An error occurred'], 500);
+            return response()->json(['error' => $e], 500);
         }
     }
 

@@ -23,6 +23,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Run test datas
-        Employee::factory()->count(5)->hasEssAccount(1)->create();
+        Employee::factory()->count(30)->hasEssAccount(1)->create();
     }
 }

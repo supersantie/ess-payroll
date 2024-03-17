@@ -1,8 +1,10 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\Employee;
 use App\Mail\PayrollNotify;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EssController;
@@ -44,7 +46,10 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::get('/dashboard', function () {
 
-        $payrolls = Employee::with(['payrolls', 'companyLoans'])->get();
+        $employees = Employee::with(['payrolls', 'companyLoans'])->get();
+        $currentMonthEmployeesCount = Employee::whereYear('created_at', '=', Carbon::now()->year)
+        ->whereMonth('created_at', '=', Carbon::now()->month)
+        ->count();
 
         $statusColors = [
             'on time' => 'bg-success bg-opacity-10 text-success',
@@ -52,7 +57,7 @@ Route::group(['middleware' => 'web'], function () {
             'late' => 'bg-danger bg-opacity-10 text-danger',
         ];
 
-        return view('pages.payroll.index', compact('payrolls',));
+        return view('pages.payroll.index', compact('employees','currentMonthEmployeesCount'));
     })->name('payroll.dashboard');
 
 
@@ -66,6 +71,7 @@ Route::group(['middleware' => 'web'], function () {
 
         Route::middleware(['ess.account'])->group(function () {
             Route::get('/dashboard', function (Request $request) {
+                // dd(session('ess_account'));
                 return view('pages.ess.dashboard');
             })->name('ess.dashboard');
 
@@ -149,7 +155,7 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::controller(PayrollSettingController::class)->group(function () {
         Route::get('/payroll_settings', 'index')->name('payroll_settings');
-        Route::post('/payroll_settings', 'update')->name('update');
+        Route::post('/payroll_settings', 'update')->name('payroll_settings.update');
     });
 
     Route::controller(CompanyLoanController::class)->group(function () {
