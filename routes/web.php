@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use App\Models\Cutoff;
 use App\Models\Employee;
 use App\Mail\PayrollNotify;
 use Illuminate\Http\Request;
@@ -24,6 +25,7 @@ use App\Http\Controllers\EssAccountController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\CompanyLoanController;
+use App\Http\Controllers\PayrollDashboardController;
 use App\Http\Controllers\ReimbursementController;
 use App\Http\Controllers\PayrollSettingController;
 
@@ -43,23 +45,7 @@ Route::group(['middleware' => 'web'], function () {
         return view('auth.login');
     });
 
-
-    Route::get('/dashboard', function () {
-
-        $employees = Employee::with(['payrolls', 'companyLoans'])->get();
-        $currentMonthEmployeesCount = Employee::whereYear('created_at', '=', Carbon::now()->year)
-        ->whereMonth('created_at', '=', Carbon::now()->month)
-        ->count();
-
-        $statusColors = [
-            'on time' => 'bg-success bg-opacity-10 text-success',
-            'undertime' => 'bg-secondary bg-opacity-10 text-secondary',
-            'late' => 'bg-danger bg-opacity-10 text-danger',
-        ];
-
-        return view('pages.payroll.index', compact('employees','currentMonthEmployeesCount'));
-    })->name('payroll.dashboard');
-
+    Route::get('/dashboard', [PayrollDashboardController::class, 'index'])->name('payroll.dashboard');
 
     Route::prefix('ess')->group(function () {
         Route::controller(EssController::class)->group(function () {
@@ -176,14 +162,14 @@ Route::group(['middleware' => 'web'], function () {
     });
 
 
-    Route::get('/test_email', function () {
-        try {
-            Mail::to('gcristianber@gmail.com')->send(new PayrollNotify());
-            return response()->json(['Great! Successfully send in your mail']);
-        } catch (Exception $e) {
-            return response()->json(['Sorry! Please try again latter']);
-        }
-    });
+    // Route::get('/test_email', function () {
+    //     try {
+    //         Mail::to('gcristianber@gmail.com')->send(new PayrollNotify());
+    //         return response()->json(['Great! Successfully send in your mail']);
+    //     } catch (Exception $e) {
+    //         return response()->json(['Sorry! Please try again latter']);
+    //     }
+    // });
 
     Route::group(['middleware' => 'auth'], function () {
         Route::get('{any}', [LimitlessController::class, 'index'])->name('index');
