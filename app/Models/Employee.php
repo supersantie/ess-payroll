@@ -9,7 +9,7 @@ class Employee extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['payroll_status'];
+    protected $fillable = ['payroll_status', 'last_name'];
 
     public function getRouteKeyName(): string
     {

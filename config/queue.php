@@ -31,16 +31,17 @@ return [
     'connections' => [
 
         'sync' => [
-            'driver' => 'sync',
+            'driver' => 'database',
         ],
 
         'database' => [
             'driver' => 'database',
-            'table' => 'jobs',
+            'table' => 'jobs', // Specify the table name here
             'queue' => 'default',
             'retry_after' => 90,
             'after_commit' => false,
         ],
+        
 
         'beanstalkd' => [
             'driver' => 'beanstalkd',

@@ -17,6 +17,19 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
+            $table->enum('job_role', [
+                'Software Engineer',
+                'Web Developer',
+                'Graphic Designer',
+                'Digital Marketer',
+                'Customer Service Representative',
+                'Accountant',
+                'Human Resources Manager',
+                'Sales Manager',
+                'Project Manager',
+                'Content Writer'
+            ]);
+
             $table->double('basic_daily_rate')->required();
             $table->double('monthly_salary')->required();
             $table->string('profile_picture')->nullable();
@@ -27,7 +40,7 @@ return new class extends Migration
 
             $table->date('date_hired')->required();
             $table->enum('status', ['full time', 'part time', 'probationary', 'terminated'])->default('probationary');
-            
+
             $table->timestamps();
         });
     }

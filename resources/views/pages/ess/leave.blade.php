@@ -50,7 +50,7 @@
                                             </div>
                                             <div class="col">
                                                 <label for="" class="form-label">Leave Category</label>
-                                                <select class="form-select form-select-lg" name="leave_category"
+                                                <select class="form-select" name="leave_category"
                                                     id="" required>
                                                     <option selected>Select one</option>
                                                     <option value="leave without pay">Leave Without Pay</option>

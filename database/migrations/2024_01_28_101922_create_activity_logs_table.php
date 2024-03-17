@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('user_email')->index();
             $table->text('description');
             $table->string('ip_address');
-            $table->enum('action_type', ['login', 'logout', 'create', 'edit', 'delete', 'view', 'upload', 'print']);
+            $table->enum('action_type', ['login', 'logout', 'create', 'edit', 'delete', 'view', 'upload', 'print', 'update']);
             $table->foreign('user_email')->references('email')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

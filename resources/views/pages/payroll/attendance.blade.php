@@ -31,7 +31,8 @@
                                 data-bs-target="#addManuallyModal">Add manually</a>
                             <a href="#" class="dropdown-item" data-bs-toggle="modal"
                                 data-bs-target="#uploadFileModal">Upload a file...</a>
-                            <a href="{{ asset('storage/templates/attendance-template-upload.xlsx') }}" class="dropdown-item">Download CSV template</a>
+                            <a href="{{ asset('storage/templates/attendance-template-upload.xlsx') }}"
+                                class="dropdown-item">Download CSV template</a>
                         </div>
 
                         {{-- Add manually modal --}}
@@ -157,6 +158,7 @@
                             <th>Time Out</th>
                             <th class="text-center">Working Hours</th>
                             <th>Status</th>
+                            <th>Payroll</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
@@ -177,6 +179,9 @@
                                     <td><span
                                             class="badge {{ $statusColors[$subItem->status] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">{{ Str::title($subItem->status) }}</span>
                                     </td>
+                                    <td><span
+                                        class="badge {{ $payrollStatusColors[$subItem->payroll_status] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">{{ Str::title($subItem->payroll_status) }}</span>
+                                </td>
                                     <td class="text-center">
                                         <div class="d-inline-flex">
                                             <div class="dropdown">
@@ -278,53 +283,60 @@
 
             const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-            // Get the header checkbox and all checkboxes in the table body
-            const selectAllCheckbox = $('#cc_li_c');
             const checkboxes = $('.datatable-responsive tbody input[type="checkbox"]');
-            const releasePayrollButton = $('#release_payroll');
+            // Function to initialize event listeners for checkboxes
+            function initializeCheckboxEventListeners() {
+                // Get the header checkbox and all checkboxes in the table body
+                const selectAllCheckbox = $('#cc_li_c');
+                const releasePayrollButton = $('#release_payroll');
 
-            // Add an event listener to the header checkbox
-            selectAllCheckbox.on('change', function() {
-                // Loop through all checkboxes in the table body and set their checked property
-                checkboxes.each(function() {
-                    const employeeId = $(this).data('employeeId');
+                // Add an event listener to the header checkbox
+                selectAllCheckbox.on('change', function() {
+                    // Toggle the checked state of all checkboxes in the table body
+                    $('.datatable-responsive tbody input[type="checkbox"]').prop('checked', $(this).prop(
+                        'checked'));
 
-                    this.checked = selectAllCheckbox.prop('checked');
+                    // Set the indeterminate state based on checked checkboxes in the table body
+                    updateIndeterminateState();
 
-                    if (this.checked) {
-                        console.log("Employee ID checked:", employeeId);
-                    }
+                    // Enable/disable the release payroll button based on the number of checked checkboxes
+                    releasePayrollButton.prop('disabled', $(
+                        '.datatable-responsive tbody input[type="checkbox"]:checked').length === 0);
                 });
 
-                // Set the indeterminate state based on checked checkboxes in the table body
-                updateIndeterminateState();
+                // Add an event listener to each checkbox in the table body (using event delegation)
+                $('.datatable-responsive tbody').on('change', 'input[type="checkbox"]', function() {
+                    // Update the state of the header checkbox based on the checkboxes in the table body
+                    selectAllCheckbox.prop('checked', $(
+                        '.datatable-responsive tbody input[type="checkbox"]:checked').length === $(
+                        '.datatable-responsive tbody input[type="checkbox"]').length);
 
-                releasePayrollButton.prop('disabled', checkboxes.filter(':checked').length === 0);
-            });
+                    // Set the indeterminate state based on checked checkboxes in the table body
+                    updateIndeterminateState();
 
-            // Add an event listener to each checkbox in the table body
-            checkboxes.on('change', function() {
-                // If any checkbox in the body is unchecked, uncheck the header checkbox
-                selectAllCheckbox.prop('checked', checkboxes.filter(':checked').length === checkboxes
-                    .length);
+                    // Enable/disable the release payroll button based on the number of checked checkboxes
+                    releasePayrollButton.prop('disabled', $(
+                        '.datatable-responsive tbody input[type="checkbox"]:checked').length === 0);
+                });
 
-                // Set the indeterminate state based on checked checkboxes in the table body
-                updateIndeterminateState();
-
-                // console.log($(this).val());
-
-                releasePayrollButton.prop('disabled', checkboxes.filter(':checked').length === 0);
-
-            });
-
-            // Function to update the indeterminate state of the header checkbox
-            function updateIndeterminateState() {
-                const checkedCheckboxes = checkboxes.filter(':checked');
-                selectAllCheckbox.prop('indeterminate', checkedCheckboxes.length > 0 && checkedCheckboxes.length <
-                    checkboxes.length);
+                // Function to update the indeterminate state of the header checkbox
+                function updateIndeterminateState() {
+                    const checkedCheckboxes = $('.datatable-responsive tbody input[type="checkbox"]:checked');
+                    selectAllCheckbox.prop('indeterminate', checkedCheckboxes.length > 0 && checkedCheckboxes
+                        .length <
+                        $('.datatable-responsive tbody input[type="checkbox"]').length);
+                }
             }
 
+            // Initialize event listeners for checkboxes
+            initializeCheckboxEventListeners();
+
+
+            // Add an event listener to the release payroll button
             $('#release_payroll').on('click', function() {
+                // Get all checkboxes within the DataTable
+                const checkboxes = $('.datatable-responsive tbody input[type="checkbox"]');
+
                 // Get the checked checkboxes and log their employee IDs
                 const checkedCheckboxes = checkboxes.filter(':checked');
                 const employeeIds = [];
@@ -356,7 +368,7 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success!',
-                                text: 'Perk record saved successfully!',
+                                text: 'Attendance record saved successfully!',
                                 customClass: {
                                     confirmButton: 'btn btn-primary',
                                 },
@@ -376,6 +388,7 @@
             });
 
 
+
             var maxRows = 5; // Maximum number of rows
             // Add Row
             $("#addRow").click(function() {
@@ -384,8 +397,8 @@
                 if (currentRows < maxRows) {
                     var newRow = '<tr>' +
                         '<td><input type="date" class="form-control" name="date[]" id="" aria-describedby="helpId" placeholder="" /></td>' +
-                        '<td><input type="time" class="form-control" name="time_in[]" id="" aria-describedby="helpId" placeholder="" /></td>' +
-                        '<td><input type="time" class="form-control" name="time_out[]" id="" aria-describedby="helpId" placeholder="" /></td>' +
+                        '<td><input type="time" class="form-control" name="time_in[]" id="" value="09:00" aria-describedby="helpId" placeholder="" /></td>' +
+                        '<td><input type="time" class="form-control" name="time_out[]" id="" value="18:00" aria-describedby="helpId" placeholder="" /></td>' +
                         '<td><button type="button" class="btn btn-danger btn-icon delete-row"><i class="ph-trash"></i></button></td>' +
                         '</tr>';
 
@@ -435,7 +448,7 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success!',
-                                text: 'Perk record saved successfully!',
+                                text: 'Attendance record saved successfully!',
                                 customClass: {
                                     confirmButton: 'btn btn-primary',
                                 },
@@ -488,7 +501,7 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success!',
-                                text: 'Perk record saved successfully!',
+                                text: 'Upload Attendance record saved successfully!',
                                 customClass: {
                                     confirmButton: 'btn btn-primary',
                                 },

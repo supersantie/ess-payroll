@@ -151,7 +151,7 @@
                         <th>Name</th>
                         <th>Amount</th>
                         <th>Remarks</th>
-                        <th>Remarks</th>
+                        <th>Perk Type</th>
                         <th>Status</th>
                         <th class="text-center">Actions</th>
                     </tr>

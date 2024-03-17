@@ -47,9 +47,9 @@
                 <tbody>
                     @foreach ($cutoffs as $key)
                         <tr>
-                            <td>{{ \Carbon\Carbon::parse($key->generated_date)->format('F d, Y') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($key->start_date)->format('F d, Y') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($key->end_date)->format('F d, Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($key->generated_date)->format('d F Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($key->start_date)->format('d F Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($key->end_date)->format('d F Y') }}</td>
                             <td class="">{{ Illuminate\Support\Number::currency($key->total_released_amount, 'PHP') }}</td>
                             <td class="text-center">
                                 <div class="d-inline-flex">

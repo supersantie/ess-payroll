@@ -20,13 +20,13 @@
                 <div class="card bg-teal text-white">
                     <div class="card-body">
                         <div class="d-flex">
-                            <h3 class="mb-0">77</h3>
-                            <span class="badge bg-black bg-opacity-50 rounded-pill align-self-center ms-auto">+25</span>
+                            <h3 class="mb-0">{{ $employees->where('status', '!=', 'terminated')->count() }}</h3>
+                            <span class="badge bg-black bg-opacity-50 rounded-pill align-self-center ms-auto">+ {{ $currentMonthEmployeesCount }}</span>
                         </div>
 
                         <div>
                             Active Employees
-                            <div class="fs-sm opacity-75">52 avg</div>
+                            <div class="fs-sm opacity-75">{{ $employees->count() }} overall</div>
                         </div>
                     </div>
 
@@ -197,7 +197,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($payrolls as $item)
+                        @foreach ($employees as $item)
                             @foreach ($item->payrolls as $subItem)
                                 <tr>
                                     <th class="d-flex justify-content-center ">

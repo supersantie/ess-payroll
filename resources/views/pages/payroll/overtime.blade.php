@@ -29,9 +29,6 @@
                         <div class="dropdown-menu">
                             <a href="javascript:(0)" class="dropdown-item" data-bs-toggle="modal"
                                 data-bs-target="#addManuallyModal">Add manually</a>
-                            <a href="#" class="dropdown-item" data-bs-toggle="modal"
-                                data-bs-target="#uploadFileModal">Upload a file...</a>
-                            <a href="#" class="dropdown-item">Download CSV template</a>
                         </div>
 
                         {{-- Add manually modal --}}
@@ -174,17 +171,17 @@
                                             </a>
 
                                             <div class="dropdown-menu dropdown-menu-end ">
-                                                <a href="#" class="dropdown-item">
-                                                    <i class="ph-file-pdf me-2"></i>
-                                                    Export to .pdf
+                                                <a href="javascript:(0)" class="dropdown-item text-success approve-btn">
+                                                    <i class="ph-check me-2"></i>
+                                                    Approve
                                                 </a>
-                                                <a href="#" class="dropdown-item">
-                                                    <i class="ph-file-csv me-2"></i>
-                                                    Export to .csv
+                                                <a href="javascript:(0)" class="dropdown-item text-danger deny-btn">
+                                                    <i class="ph-x-circle me-2"></i>
+                                                    Deny
                                                 </a>
-                                                <a href="#" class="dropdown-item">
-                                                    <i class="ph-file-doc me-2"></i>
-                                                    Export to .doc
+                                                <a href="javascript:(0)" class="dropdown-item text-warning hold-btn">
+                                                    <i class="ph-pause-circle me-2"></i>
+                                                    Hold
                                                 </a>
                                             </div>
                                         </div>
@@ -345,8 +342,8 @@
                 if (currentRows < maxRows) {
                     var newRow = '<tr>' +
                         '<td><input type="date" class="form-control" name="date[]" id="" aria-describedby="helpId" placeholder="" /></td>' +
-                        '<td><input type="time" class="form-control start-time" name="time_in[]" id="" aria-describedby="helpId" placeholder="" /></td>' +
-                        '<td><input type="time" class="form-control end-time" name="time_out[]" id="" aria-describedby="helpId" placeholder="" /></td>' +
+                        '<td><input type="time" class="form-control start-time" name="time_in[]" value="19:00" aria-describedby="helpId" placeholder="" /></td>' +
+                        '<td><input type="time" class="form-control end-time" name="time_out[]" value="21:00" id="" aria-describedby="helpId" placeholder="" /></td>' +
                         '<td><button type="button" class="btn btn-danger btn-icon delete-row"><i class="ph-trash"></i></button></td>' +
                         '</tr>';
 

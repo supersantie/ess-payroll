@@ -23,8 +23,6 @@ class AttendanceImport implements ToCollection
     {
         $errors = []; // Array to store errors
 
-
-
         try {
             $rows = $rows->skip(1);
 
@@ -46,20 +44,33 @@ class AttendanceImport implements ToCollection
                         $basicDailyRate = $employee->basic_daily_rate;
                         $hourRate = $basicDailyRate / 8;
 
-                        $hoursWorked = Carbon::parse($endTime)->diffInHours($startTime);
-                        $earnings = $hoursWorked * $hourRate;
+                        $totalMinutesWorked = Carbon::parse($endTime)->diffInMinutes($startTime);
+
+                        // Subtract 1 hour for break time
+                        $totalMinutesWorked -= 60;
+
+                        // Ensure the total minutes worked is not negative
+                        if ($totalMinutesWorked < 0) {
+                            $totalMinutesWorked = 0; // Set to 0 if negative
+                        }
+
+                        // Convert total minutes worked to hours
+                        $hoursWorked = $totalMinutesWorked / 60;
+
+                        // Round the hours worked to one decimal place
+                        $hoursWorkedRounded = round($hoursWorked, 1);
+
+                        $earnings = $hoursWorkedRounded * $hourRate;
 
                         $attendanceRecord = [
                             'employee_code' => $employeeCode,
                             'date' => $date,
                             'time_in' => $startTime,
                             'time_out' => $endTime,
-                            'working_hours' => $hoursWorked,
+                            'working_hours' => $hoursWorkedRounded,
                             'earnings' => $earnings,
                             'status' => 'on time'
                         ];
-
-
 
                         $description = 'Attendance record created for ' . $employee->first_name . ' ' . $employee->last_name . ' through import';
                         $actionType = 'create';

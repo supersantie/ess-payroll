@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\PayrollSetting;
+use Illuminate\Support\Facades\Log;
 
 class PayrollSettingController extends Controller
 {
@@ -15,11 +17,11 @@ class PayrollSettingController extends Controller
     {
         $payrollSettings = PayrollSetting::pluck('value', 'key')->toArray();
 
-    
-    return view('pages.payroll.settings', compact('payrollSettings'));
+
+        return view('pages.payroll.settings', compact('payrollSettings'));
     }
-    
-    
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -34,7 +36,6 @@ class PayrollSettingController extends Controller
      */
     public function store(Request $request)
     {
-
     }
 
     /**
@@ -59,21 +60,42 @@ class PayrollSettingController extends Controller
     public function update(Request $request, PayrollSetting $payrollSetting)
     {
 
-        // dd($request->all());
-        //
+        // $updates = [];
         try {
             foreach ($request->all() as $key => $value) {
-                // Update or create a record based on the 'key' value
-                PayrollSetting::updateOrCreate(
-                    ['key' => $key],
-                    ['value' => $value]
-                );
+                // Find the existing record by key
+                $existingSetting = PayrollSetting::where('key', $key)->first();
+
+                if ($existingSetting) {
+                    // Update the existing record
+                    $existingSetting->update(['value' => $value]);
+                } else {
+                    // Log that the key does not exist
+                    Log::warning("Setting with key '$key' does not exist. Skipping update.");
+                }
+
+                Log::info($key . $value);
             }
+
+            $userEmail = $request->user()->email ?? '';
+            $description = 'Updated payroll settings';
+            $ipAddress = $request->ip();
+            $actionType = 'update';
+
+            ActivityLog::create([
+                'user_email' => $userEmail,
+                'description' => $description,
+                'ip_address' => $ipAddress,
+                'action_type' => $actionType,
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Settings updated successfully!'], 200);
         } catch (\Throwable $th) {
             // Handle the exception, log it, or rethrow if necessary
             throw $th;
         }
     }
+
 
     /**
      * Remove the specified resource from storage.
