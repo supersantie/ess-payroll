@@ -8,6 +8,7 @@ use Dompdf\Options;
 use App\Models\Payroll;
 use App\Models\Payslip;
 use App\Models\Employee;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Response;
@@ -81,13 +82,16 @@ class PayslipController extends Controller
 
     public function pdf($id)
     {
-        $payroll = Payroll::with(['employee', 'employee.overtimes'])->findOrFail($id); // Use findOrFail to throw an exception if the payroll is not found
+        $payroll = Payroll::with(['employee', 'employee.overtimes'])->findOrFail($id);
 
         $totalOvertimePay = 0;
-
+        
         foreach ($payroll->employee->overtimes as $overtime) {
-            // Calculate the overtime pay for each entry
-            $overtimePay = $overtime->no_of_hours * ($payroll->employee->basic_daily_rate * $overtime->rate_percentage);
+            $overtimeRate = $payroll->employee->basic_daily_rate / 8 * 0.25 + $payroll->employee->basic_daily_rate / 8;
+        
+
+            $overtimePay = $overtime->no_of_hours * $overtimeRate;
+        
             $totalOvertimePay += $overtimePay;
         }
 
@@ -115,8 +119,8 @@ class PayslipController extends Controller
         $dompdf->render();
 
         // Set the response headers
-        $date = Carbon::parse($payroll->created_at)->format('Y-m-d'); // Format the date
-        $fileName = 'payroll_' . $date . '.pdf'; // Concatenate the date to the file name
+        $date = Carbon::parse($payroll->created_at)->format('Y-m-d-h:i:s'); // Format the date
+        $fileName = 'payslip_'. Str::lower($payroll->employee->code) . '-' . $date . '.pdf'; // Concatenate the date to the file name
         $headers = [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename="' . $fileName . '"', // Set the filename in the response headers

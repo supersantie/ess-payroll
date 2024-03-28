@@ -12,6 +12,7 @@ use App\Models\ActivityLog;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\PayrollSetting;
+use App\Models\SssContribution;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
@@ -25,6 +26,18 @@ class PayrollController extends Controller
     public function index()
     {
         //
+
+        // foreach (SssContribution::all() as $contribution) {
+        //     $monthlySalary = 16000;
+
+        //     $range = Str::of(Str::replace('  ',' ',Str::replace([',', '-'], '',$contribution->range_compensation)))->explode(' ');
+
+        //     if($monthlySalary > $range[0] && $monthlySalary < $range[1]){
+        //         dd($contribution->ee_amount_contribution);
+        //     }
+
+        // }
+
 
         $payrolls = Employee::with(['payrolls', 'companyLoans'])->get();
 
@@ -206,14 +219,6 @@ class PayrollController extends Controller
     public function store(Request $request)
     {
 
-        /**
-         * 
-         * TODO:
-         * Based on the current date get the current period after that then compute the total working hours and pay for the cutoff start date and cut off end date.
-         * 
-         * 
-         */
-
         try {
             $payrollSettings = PayrollSetting::pluck('value', 'key')->toArray();
 
@@ -287,7 +292,32 @@ class PayrollController extends Controller
                     $overtime->update(['status' => 'processed']);
                 }
 
-                $netPay = ($baseSalary / 8 * $totalWorkingHours) + ($baseSalary / 8 * $totalOvertimeHours * ($overtimeRecords->count() > 0 ? $overtimeRecords->first()->rate_percentage / 100 : 0));
+                /**
+                 * Base Salary: 610
+                 * Hour Rate: 76.5
+                 * Overtime Percentage: 0.25
+                 * 
+                 */
+
+                // $hourRate = $baseSalary / 8; 
+                // $overTimeRate = $hourRate * $overtimeRecords->first()->rate_percentage;
+                // $totalOverTimePay = $hourRate + $overTimeRate * $overtimeRecords->count();
+
+                // $netPay = ($baseSalary / 8 * $totalWorkingHours) + ($baseSalary / 8 * $totalOvertimeHours * ($overtimeRecords->count() > 0 ? $overtimeRecords->first()->rate_percentage / 100 : 0));
+
+                // Base Salary and Hourly Rate
+                $hourRate = $baseSalary / 8;
+
+                // Overtime Rate Calculation
+                $overtimeRate = $hourRate * (1 + 0.25);
+
+                // Total Overtime Pay Calculation
+                $totalOvertimePay = $overtimeRate * $totalOvertimeHours;
+
+                // Updated Net Pay Calculation
+                $netPay = ($baseSalary / 8 * $totalWorkingHours) + $totalOvertimePay;
+
+                // ============== //
 
                 $netPayAfterLoan = $netPay - $loanAmount;
 
@@ -297,7 +327,18 @@ class PayrollController extends Controller
 
                 if ($currentPeriod == $payrollSettings['contribution_period']) {
                     if ($netPay >= 0) {
-                        $sssContribution = $employee->basic_daily_rate * doubleval($payrollSettings['sss_ee_percentage']);
+                        foreach (SssContribution::all() as $contribution) {
+                            $monthlySalary = $employee->monthly_salary;
+                
+                            $range = Str::of(Str::replace('  ',' ',Str::replace([',', '-'], '',$contribution->range_compensation)))->explode(' ');
+                
+                            if($monthlySalary > $range[0] && $monthlySalary < $range[1]){
+                                $sssContribution = $contribution->ee_amount_contribution;
+                            }
+                
+                        }
+
+
                         $pagibigContribution = intval($payrollSettings['pag_ibig_contribution_amount']);
                         $philhealthContribution = $employee->basic_daily_rate * doubleval($payrollSettings['philhealth_contribution_percentage']);
 
@@ -306,6 +347,19 @@ class PayrollController extends Controller
                         $netPay = $netPayAfterLoan - $totalContributionDeduction;
                     }
                 }
+
+                info([
+                    "employee_code" => $employeeId,
+                    "paid_hours" => $totalWorkingHours,
+                    "overtime" => $totalOvertimeHours,
+                    "company_loan" => $loanAmount,
+                    "sss" => $sssContribution,
+                    "phil_health" => $philhealthContribution,
+                    "pag_ibig" => $pagibigContribution,
+                    "net_pay" => $netPay,
+                    "start_date" => $cutoffStart,
+                    "end_date" => $cutoffEnd,
+                ]);
 
                 Payroll::create([
                     "employee_code" => $employeeId,

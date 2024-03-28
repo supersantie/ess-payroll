@@ -58,7 +58,10 @@ Route::group(['middleware' => 'web'], function () {
         Route::middleware(['ess.account'])->group(function () {
             Route::get('/dashboard', function (Request $request) {
                 // dd(session('ess_account'));
-                return view('pages.ess.dashboard');
+
+                $payrolls = Employee::with('payrolls')->where('code', session('info')->code)->first();
+
+                return view('pages.ess.dashboard', compact('payrolls'));
             })->name('ess.dashboard');
 
             // Time and Attendance
