@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PayrollSettingsSeeder::class,
             // EmployeeSeeder::class
+            SssContributionSeeder::class
         ]);
 
         // Run test datas

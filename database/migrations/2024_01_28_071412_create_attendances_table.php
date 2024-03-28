@@ -24,19 +24,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // // ? CORE DATABASE
-        // Schema::create('attendances', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->string('employee_code')->index();
-        //     $table->time('time_in')->nullable();
-        //     $table->time('time_out')->nullable();
-        //     $table->double('working_hours')->nullable();
-        //     $table->enum('status', ['on time', 'undertime', 'late', 'on leave'])->nullable();
-        //     $table->date('date');
-        //     $table->enum('payroll_status', ['recorded', 'processed'])->default('recorded');
-        //     $table->foreign('employee_code')->references('code')->on('workfolio_core.employees')->onDelete('cascade');
-        //     $table->timestamps();
-        // });
     }
 
     /**
