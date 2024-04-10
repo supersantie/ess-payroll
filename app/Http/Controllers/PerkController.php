@@ -16,8 +16,8 @@ class PerkController extends Controller
      */
     public function index()
     {
-        $employees = Employee::all();
-        $perks = Employee::with('perks')->get();
+        $employees = \App\Models\Core\Employee::all();
+        $perks = \App\Models\Core\Employee::with('perks')->get();
 
         // dd("test");
         $statusColors = [
@@ -65,7 +65,7 @@ class PerkController extends Controller
 
             return response()->json(['perk_record' => $perkRecord], 200);
         } catch (QueryException $e) {
-            return response()->json(['error' => 'Database error'], 500);
+            return response()->json(['error' => 'Database error', 'message' => $e], 500);
         } catch (\Throwable $th) {
             return response()->json(['error' => 'An error occurred'], 500);
         }

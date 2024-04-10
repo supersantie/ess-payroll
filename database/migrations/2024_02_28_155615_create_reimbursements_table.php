@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('reimbursements', function (Blueprint $table) {
             $table->id();
+            // $table->string('employee_code')->index();
+            // $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
+
             $table->string('employee_code')->index();
-            $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
+            $table->foreign('employee_code')->references('code')->on('workfolio_main.employees')->onDelete('cascade');
 
             $table->double('amount');
             $table->string('or_number');

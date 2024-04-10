@@ -3,24 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Exports\PayrollExport;
-use App\Exports\PayrollExport;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Cutoff;
 use App\Models\Payroll;
 use App\Models\Employee;
-use App\Models\ActivityLog;
 use Illuminate\Support\Str;
 use App\Models\ActivityLog;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\PayrollSetting;
 use App\Models\SssContribution;
-use App\Models\SssContribution;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Database\QueryException;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\QueryException;
 
@@ -445,17 +439,8 @@ class PayrollController extends Controller
                         $record->update(['payroll_status' => 'processed']);
                     }
                 }
-                foreach ($attendanceRecords as $record) {
-                    if ($record->payroll_status != 'processed') {
-                        $totalWorkingHours += $record->working_hours;
-                        $record->update(['payroll_status' => 'processed']);
-                    }
-                }
 
-                foreach ($overtimeRecords as $overtime) {
-                    $totalOvertimeHours += $overtime->no_of_hours;
-                    $overtime->update(['status' => 'processed']);
-                }
+
                 foreach ($overtimeRecords as $overtime) {
                     $totalOvertimeHours += $overtime->no_of_hours;
                     $overtime->update(['status' => 'processed']);
@@ -537,24 +522,10 @@ class PayrollController extends Controller
                     "start_date" => $cutoffStart,
                     "end_date" => $cutoffEnd,
                 ]);
-                Payroll::create([
-                    "employee_code" => $employeeId,
-                    "paid_hours" => $totalWorkingHours,
-                    "overtime" => $totalOvertimeHours,
-                    "company_loan" => $loanAmount,
-                    "sss" => $sssContribution,
-                    "phil_health" => $philhealthContribution,
-                    "pag_ibig" => $pagibigContribution,
-                    "net_pay" => $netPay,
-                    "start_date" => $cutoffStart,
-                    "end_date" => $cutoffEnd,
-                ]);
 
                 $totalReleasedPay += $netPay;
             }
 
-                $totalReleasedPay += $netPay;
-            }
 
 
             Cutoff::create([
@@ -583,32 +554,7 @@ class PayrollController extends Controller
             return response()->json(['error' => $e], 500);
         }
     }
-            Cutoff::create([
-                "generated_date" => $currentDate,
-                "start_date" => $startOfMonth,
-                "end_date" => $endOfMonth,
-                "payroll_period" => $payrollPeriod,
-                "total_released_amount" => $totalReleasedPay - $loanAmount
-            ]);
 
-            $userEmail = $request->user()->email ?? '';
-            $description = 'Payroll released for ' . $payrollPeriod . ' with total amount of ' . $totalReleasedPay;
-            $ipAddress = $request->ip();
-            $actionType = 'create';
-
-            ActivityLog::create([
-                'user_email' => $userEmail,
-                'description' => $description,
-                'ip_address' => $ipAddress,
-                'action_type' => $actionType,
-            ]);
-            return response()->json(['cutoff_release' => "Cutoff released successful!"], 200);
-        } catch (QueryException $e) {
-            return response()->json(['error' => $e], 500);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e], 500);
-        }
-    }
 
 
     /**
@@ -651,19 +597,6 @@ class PayrollController extends Controller
 
             $m->to("gcristianber@gmail.com", "Cristianber Gordora")->subject('Test Email');
         });
-    }
-
-    public function export()
-    {
-        $currentDate = Carbon::now()->format('m-d-Y');
-        $fileName = $currentDate . "-payroll.xlsx"; // Specify the file extension
-
-        // dd(Payroll::with('employee')->get());
-
-        // dd(Employee::with('payrolls')->get());
-        return Excel::download(new PayrollExport, $fileName);
-
-        // dd("test");
     }
 
     public function export()
