@@ -26,18 +26,21 @@ class AttendanceController extends Controller
     {
         // SELECT * from Employees_tbl 
 
-        $employees = Employee::all();
-        $attendances = Employee::with(['attendances' => function ($query) {
+        $employees = \App\Models\Core\Employee::all();
+        // dd($employees);
+        // Not Working!
+        $attendances = \App\Models\Core\Employee::with(['attendances' => function ($query) {
             $query->where(function ($query) {
                 $query->where('payroll_status', 'recorded')
                     ->orWhere('payroll_status', 'processed');
             });
-        }])->whereHas('attendances', function ($query) {
-            $query->where(function ($query) {
-                $query->where('payroll_status', 'recorded')
-                    ->orWhere('payroll_status', 'processed');
-            });
-        })->get();
+        }])->get();
+
+        // Working!
+        // $attendances = \App\Models\Core\Employee::with('attendances')->get();
+
+        // $attendances = Attendance::with('employee')->get();
+
 
 
         // dd($attendances);
@@ -74,7 +77,7 @@ class AttendanceController extends Controller
     {
         try {
             $employeeCode = $request->employee;
-            $employee = Employee::where('code', $employeeCode)->first();
+            $employee = \App\Models\Core\Employee::where('code', $employeeCode)->first();
             $basicDailyRate = $employee->basic_daily_rate;
             $hourRate = $basicDailyRate / 8;
 

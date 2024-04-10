@@ -9,6 +9,8 @@ class Payroll extends Model
 {
     use HasFactory;
 
+    protected $connection = 'mysql';
+
     protected $fillable = [
         'employee_code',
         'paid_hours',
@@ -26,6 +28,6 @@ class Payroll extends Model
 
     public function employee()
     {
-        return $this->belongsTo(Employee::class, 'employee_code', 'code');
+        return $this->belongsTo(\App\Models\Core\Employee::class, 'employee_code', 'code');
     }
 }

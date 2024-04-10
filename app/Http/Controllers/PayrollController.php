@@ -39,7 +39,7 @@ class PayrollController extends Controller
         // }
 
 
-        $payrolls = Employee::with(['payrolls', 'companyLoans'])->get();
+        $payrolls = \App\Models\Core\Employee::with(['payrolls', 'companyLoans'])->get();
 
         // foreach($payrolls as $item){
         //     dd($item->payrolls);
@@ -219,6 +219,8 @@ class PayrollController extends Controller
     public function store(Request $request)
     {
 
+        // dd($request->all());
+
         try {
             $payrollSettings = PayrollSetting::pluck('value', 'key')->toArray();
 
@@ -254,7 +256,7 @@ class PayrollController extends Controller
             }
 
             $employeeIds = $request->employeeIds;
-            $employees = Employee::with(['attendances', 'overtimes', 'companyLoans' => function ($query) {
+            $employees = \App\Models\Core\Employee::with(['jobRole','attendances', 'overtimes', 'companyLoans' => function ($query) {
                 $query->where('loan_status', 'Unsettled');
             }])->whereIn('code', $employeeIds)->get();
 
@@ -278,7 +280,7 @@ class PayrollController extends Controller
                 $overtimeRecords = $employee->overtimes;
                 $totalWorkingHours = 0.0;
                 $totalOvertimeHours = 0.0;
-                $baseSalary = $employee->basic_daily_rate;
+                $baseSalary = $employee->jobRole->basic_daily_rate;
 
                 foreach ($attendanceRecords as $record) {
                     if ($record->payroll_status != 'processed') {
@@ -305,19 +307,14 @@ class PayrollController extends Controller
 
                 // $netPay = ($baseSalary / 8 * $totalWorkingHours) + ($baseSalary / 8 * $totalOvertimeHours * ($overtimeRecords->count() > 0 ? $overtimeRecords->first()->rate_percentage / 100 : 0));
 
-                // Base Salary and Hourly Rate
                 $hourRate = $baseSalary / 8;
 
-                // Overtime Rate Calculation
                 $overtimeRate = $hourRate * (1 + 0.25);
 
-                // Total Overtime Pay Calculation
                 $totalOvertimePay = $overtimeRate * $totalOvertimeHours;
 
-                // Updated Net Pay Calculation
                 $netPay = ($baseSalary / 8 * $totalWorkingHours) + $totalOvertimePay;
 
-                // ============== //
 
                 $netPayAfterLoan = $netPay - $loanAmount;
 

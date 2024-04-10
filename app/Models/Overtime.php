@@ -9,9 +9,12 @@ class Overtime extends Model
 {
     use HasFactory;
 
+    protected $connection = 'mysql';
     protected $fillable = ["employee_code","status","no_of_hours","rate_percentage","rate_percentage","date_issued"];
     
     public function employee(){
-        $this->belongsTo(Employee::class);
+        $this->belongsTo(\App\Models\Core\Employee::class);
     }
+
+
 }

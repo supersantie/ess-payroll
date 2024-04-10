@@ -12,6 +12,6 @@ class Certificate extends Model
     protected $fillable = ["employee_code","reason_type","remarks","status"];
 
     public function employee(){
-        $this->belongsTo(Employee::class);
+        $this->belongsTo(\App\Models\Core\Employee::class);
     }
 }

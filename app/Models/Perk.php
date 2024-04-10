@@ -12,6 +12,6 @@ class Perk extends Model
     protected $fillable = ["perk_type", "employee_code", "remarks","amount", "status"];
 
     public function employee(){
-        $this->belongsTo(Employee::class);
+        $this->belongsTo(\App\Models\Core\Employee::class);
     }
 }

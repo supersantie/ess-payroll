@@ -17,7 +17,7 @@ class LoanController extends Controller
 
     public function sss()
     {
-        $employees = Employee::with(['loans' => function ($query) {
+        $employees = \App\Models\Core\Employee::with(['loans' => function ($query) {
             $query->where('government_benefit_type', 'sss');
         }])->get();
 
@@ -33,7 +33,7 @@ class LoanController extends Controller
     public function pagibig()
     {
 
-        $employees = Employee::with(['loans' => function ($query) {
+        $employees = \App\Models\Core\Employee::with(['loans' => function ($query) {
             $query->where('government_benefit_type', 'pag_ibig');
         }])->get();
 
@@ -50,7 +50,7 @@ class LoanController extends Controller
      */
     public function create()
     {
-        $employees = Employee::with('overtimes')->get();
+        $employees = \App\Models\Core\Employee::with('overtimes')->get();
         return view('pages.payroll.overtime', compact('employees', 'statusColors'));
     }
 

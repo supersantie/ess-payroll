@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('company_loans', function (Blueprint $table) {
             $table->id();
+            // $table->string('employee_code')->index();
+            // $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
             $table->string('employee_code')->index();
-            $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
+            $table->foreign('employee_code')->references('code')->on('workfolio_main.employees')->onDelete('cascade');
             $table->double('amount')->required();
             $table->integer('months_to_be_paid')->required();
             $table->double('amount_to_be_paid')->required();

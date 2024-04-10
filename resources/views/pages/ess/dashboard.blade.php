@@ -18,6 +18,7 @@
                     <div class="card-img-actions">
                         <img class="card-img-top img-fluid" src="{{ URL::asset('assets/images/demo/users/face1.jpg') }}"
                             alt="">
+                            
                         <div class="card-img-actions-overlay card-img-top">
                             <a href="#" class="btn btn-outline-white btn-icon rounded-pill">
                                 <i class="ph-plus"></i>
@@ -27,8 +28,6 @@
                             </a>
                         </div>
                     </div>
-
-
                     <div class="card-body text-center">
                         <h6 class="mb-0">{{ session('info')->first_name . ' ' . session('info')->last_name }}</h6>
                         <span class="text-muted"> {{ session('info')->job_role }}</span>
@@ -152,66 +151,28 @@
 
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col col-xl-6">
-                        <div class="card">
-                            <div class="card-header d-flex align-items-center justify-content-between ">
-                                <h5 class="mb-0">Leave Requests</h5>
-
-                                <div class="d-flex gap-2">
-
-                                    <button type="button" class="btn btn-primary btn-labeled btn-labeled-start"
-                                        id="release_payroll">
-                                        <span class="btn-labeled-icon bg-black bg-opacity-20">
-                                            <i class="ph-plus"></i>
-                                        </span>
-                                        Request Leave
-                                    </button>
-
-                                </div>
-                            </div>
-
-                            <table class="table datatable-responsive">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Date to take</th>
-                                        <th class="text-center">Leave Type</th>
-                                        <th class="text-center">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="text-center">
-                                            <span class="d-none d-xl-block">03/28/2024</span>
-                                            <span class="d-block d-xl-none">28 March 2024</span>
-                                        </td>
-                                        <td class="text-center">
-                                            <span class="badge bg-secondary">Sick Leave</span>
-                                        </td>
-                                        </td>
-                                        <td class="text-center">
-                                            <span class="badge bg-danger">Declined</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-center">
-                                            <span class="d-none d-xl-block">04/14/2024</span>
-                                            <span class="d-block d-xl-none">14 April 2024</span>
-                                        </td>
-                                        <td class="text-center">
-                                            <span class="badge bg-teal">Birthday Leave</span>
-                                        </td>
-                                        </td>
-                                        <td class="text-center">
-                                            <span class="badge bg-success">Approved</span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+{{-- 
+                <div class="row justify-content-center align-items-center g-3 mb-3">
+                    <div class="col">
+                        <div class="card bg-success">
+                            <div class="card-body"></div>
                         </div>
                     </div>
-                    <div class="col col-xl-6">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body"></div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body"></div>
+                        </div>
+                    </div>
+                </div> --}}
+
+
+                <div class="row">
+                    <div class="col col-12">
                         <div class="card">
                             <div class="card-header d-flex align-items-center justify-content-between ">
                                 <h5 class="mb-0">Payslips</h5>

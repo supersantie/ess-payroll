@@ -28,7 +28,7 @@ class AttendanceImport implements ToCollection
 
             foreach ($rows as $row) {
                 $employeeCode = $row[0];
-                $employee = Employee::where('code', $employeeCode)->first();
+                $employee = \App\Models\Core\Employee::where('code', $employeeCode)->first();
 
                 if ($employee) {
                     $date = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[1])->format('Y-m-d');

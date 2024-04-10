@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->string('employee_code')->index();
+            $table->foreign('employee_code')->references('code')->on('workfolio_main.employees')->onDelete('cascade');
             $table->time('time_in')->nullable();
             $table->time('time_out')->nullable();
             $table->double('working_hours')->nullable();
             $table->enum('status', ['on time', 'undertime', 'late', 'on leave'])->nullable();
             $table->date('date');
             $table->enum('payroll_status', ['recorded', 'processed'])->default('recorded');
-            $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
             $table->timestamps();
         });
 

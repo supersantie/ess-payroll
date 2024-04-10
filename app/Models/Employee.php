@@ -51,8 +51,7 @@ class Employee extends Model
     
     public function loans(){
         return $this->hasMany(Loan::class, 'employee_code', $this->getRouteKeyName());
-    }
+    }     
 
 
-    
 }

@@ -93,9 +93,6 @@ class TimeLogController extends Controller
             }
         } elseif ($request->attendance_type === "Time Out") {
 
-            // ! BUG: BUG ENCOUNTERED IN TIME OUT
-            
-
             try {
                 // Logic for recording Time Out
                 $employeeCode = session('info')->code; // Assuming you store employee code in the session
@@ -105,9 +102,13 @@ class TimeLogController extends Controller
                     ->latest('date')
                     ->first();
 
+                // Check if the user has already timed out
+                if ($latestAttendance->time_out) {
+                    return response()->json(['error' => 'You have already timed out for today'], 400);
+                }
+
                 // Update the time_out field of the latest attendance record with the current time
                 $latestAttendance->update(['time_out' => now()->format('H:i:s')]);
-  //! IT SEEMS THIS PART IS NOT UPDATING BUT THIS RETURNS TRUE
                 // Calculate working hours based on time_in and time_out
                 $startTime = Carbon::parse($latestAttendance->time_in);
                 $endTime = now();
