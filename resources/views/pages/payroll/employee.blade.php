@@ -21,8 +21,10 @@
             <thead>
                 <tr>
                     <th>Code</th>
+                    <th>Code</th>
                     <th>First Name</th>
                     <th>Last Name</th>
+                    <th>Job Role</th>
                     <th>Job Role</th>
                     <th class="text-end" data-orderable="false">Basic Daily Rate</th>
                     <th>Date Hired</th>
@@ -33,6 +35,9 @@
             <tbody>
                 @foreach ($employees as $item)          
                     <tr>
+                        <td>
+                            <a href="" class="link-primary">{{ $item->code }}</a>
+                        </td>
                         <td>
                             <a href="" class="link-primary">{{ $item->code }}</a>
                         </td>

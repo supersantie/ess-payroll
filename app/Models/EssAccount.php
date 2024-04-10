@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
+
 class EssAccount extends Model
 {
     use HasFactory;
@@ -19,6 +20,11 @@ class EssAccount extends Model
     public function employee(){
         return $this->belongsTo(\App\Models\Core\Employee::class, 'employee_code');
     }
+
+    public function loans(){
+        return $this->hasMany(CompanyLoan::class, 'employee_code', $this->getRouteKeyName());
+    }
+
 
     public function loans(){
         return $this->hasMany(CompanyLoan::class, 'employee_code', $this->getRouteKeyName());

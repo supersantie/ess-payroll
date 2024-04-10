@@ -10,6 +10,7 @@ class Employee extends Model
     use HasFactory;
 
     protected $fillable = ['payroll_status', 'last_name'];
+    protected $fillable = ['payroll_status', 'last_name'];
 
     public function getRouteKeyName(): string
     {
@@ -17,7 +18,9 @@ class Employee extends Model
     }
 
     public function essAccount()
+    public function essAccount()
     {
+        return $this->hasOne(EssAccount::class, 'employee_code', $this->getRouteKeyName());
         return $this->hasOne(EssAccount::class, 'employee_code', $this->getRouteKeyName());
     }
     
