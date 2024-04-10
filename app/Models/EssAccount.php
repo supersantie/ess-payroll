@@ -26,8 +26,4 @@ class EssAccount extends Model
     }
 
 
-    public function loans(){
-        return $this->hasMany(CompanyLoan::class, 'employee_code', $this->getRouteKeyName());
-    }
-
 }

@@ -16,7 +16,7 @@ class OvertimeController extends Controller
     public function index()
     {
         //
-        $employees = Employee::with('overtimes')->get();
+        $employees = \App\Models\Core\Employee::with('overtimes')->get();
 
         // dd($employees);
         // foreach($employees as $employee){

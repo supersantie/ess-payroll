@@ -14,7 +14,7 @@
 
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between ">
-                <h5 class="mb-0">Company Loan List</h5>
+                <h5 class="mb-0">Perks List</h5>
 
                 <div class="d-flex gap-2">
                     <div class="btn-group">

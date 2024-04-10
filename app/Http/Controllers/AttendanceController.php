@@ -8,17 +8,12 @@ use App\Models\Payroll;
 use App\Models\Employee;
 use App\Models\Attendance;
 use App\Models\ActivityLog;
-use App\Models\ActivityLog;
 use App\Imports\UsersImport;
 use Illuminate\Http\Request;
 use App\Exports\AttendanceExport;
-use App\Imports\AttendanceImport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Exports\AttendanceExport;
 use App\Imports\AttendanceImport;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\QueryException;
 
@@ -183,20 +178,6 @@ class AttendanceController extends Controller
             }
             
             
-                // Log activity
-                $userEmail = $request->user()->email ?? '';
-                $description = 'Attendance record created';
-                $ipAddress = $request->ip();
-                $actionType = 'create';
-            
-                ActivityLog::create([
-                    'user_email' => $userEmail,
-                    'description' => $description,
-                    'ip_address' => $ipAddress,
-                    'action_type' => $actionType,
-                ]);
-            }
-            
             return response()->json(['attendance_records' => $attendanceRecords], 200);
         } catch (QueryException $e) {
             return response()->json(['error' => 'Database error'], 500);
@@ -257,7 +238,6 @@ class AttendanceController extends Controller
         return Excel::download(new AttendanceExport, 'attendances.xlsx');
     }
 
-    public function import(Request $request)
     public function import(Request $request)
     {
         try {

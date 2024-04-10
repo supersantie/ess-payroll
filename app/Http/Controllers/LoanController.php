@@ -4,13 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Loan;
 use App\Models\Employee;
-use App\Models\ActivityLog;
 use Illuminate\Support\Str;
-use App\Models\Employee;
 use App\Models\ActivityLog;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Database\QueryException;
 use Illuminate\Database\QueryException;
 
 class LoanController extends Controller

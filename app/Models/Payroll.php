@@ -24,7 +24,6 @@ class Payroll extends Model
         'end_date',
         'status',
         'company_loan'
-        'company_loan'
     ];
 
     public function employee()

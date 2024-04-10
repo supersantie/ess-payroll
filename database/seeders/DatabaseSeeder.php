@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             PayrollSettingsSeeder::class,
             // EmployeeSeeder::class
             SssContributionSeeder::class
-            SssContributionSeeder::class
+            // SssContributionSeeder::class
         ]);
 
         // Run test datas

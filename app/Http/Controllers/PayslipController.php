@@ -21,7 +21,7 @@ class PayslipController extends Controller
     public function index()
     {
         //
-        $payrolls = Employee::with('payrolls')->where('code', session('info')->code)->first();
+        $payrolls = \App\Models\Core\Employee::with('payrolls')->where('code', session('info')->code)->first();
         // dd($payslips->payrolls);
 
         return view('pages.payroll.reports.payslip', compact('payrolls'));

@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('certificates', function (Blueprint $table) {
             $table->id();
             $table->enum('certificate_type', ['Certificate of Employment']);
+            // $table->string('employee_code')->index();
+            // $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
             $table->string('employee_code')->index();
-            $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
+            $table->foreign('employee_code')->references('code')->on('workfolio_main.employees')->onDelete('cascade');
             $table->enum('reason_type', ['Personal', 'Education', 'Government']);
             $table->text('remarks');
             $table->enum('status', ['approve','denied','for clearance', 'pending'])->default('pending');

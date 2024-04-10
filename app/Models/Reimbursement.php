@@ -9,5 +9,6 @@ class Reimbursement extends Model
 {
     use HasFactory;
 
+    protected $connection = "mysql";
     protected $fillable = ["employee_code","amount","or_number","proof_of_payment","remarks","status","reimbursement_category"];
 }

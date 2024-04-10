@@ -9,6 +9,7 @@ class Perk extends Model
 {
     use HasFactory;
 
+    protected $connection = "mysql";
     protected $fillable = ["perk_type", "employee_code", "remarks","amount", "status"];
 
     public function employee(){
