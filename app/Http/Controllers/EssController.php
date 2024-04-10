@@ -67,9 +67,9 @@ class EssController extends Controller
         $employeeCode = $employee->employee_code;
 
         // Run php artisan queue:work
-        Queue::push(function () use ($employee, $otp) {
+        // Queue::push(function () use ($employee, $otp) {
             Mail::to($employee->email)->send(new OtpEmail($otp));
-        });
+        // });
 
         return view('auth.ess_otp', compact('employeeCode', 'employeeMail'));
     }
@@ -95,7 +95,7 @@ class EssController extends Controller
             }
 
             // 4. If valid, store the ESS Account in the session
-            $info = Employee::where('code', $employeeCode)->first();
+            $info = \App\Models\Core\Employee::where('code', $employeeCode)->first();
             $request->session()->put(['info' => $info, 'ess_account' => $employee]);
 
             // 5. Return a JSON response indicating success

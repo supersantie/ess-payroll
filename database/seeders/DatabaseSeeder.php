@@ -21,9 +21,10 @@ class DatabaseSeeder extends Seeder
             PayrollSettingsSeeder::class,
             // EmployeeSeeder::class
             SssContributionSeeder::class
+            SssContributionSeeder::class
         ]);
 
         // Run test datas
-        Employee::factory()->count(30)->hasEssAccount(1)->create();
+        // Employee::factory()->count(30)->hasEssAccount(1)->create();
     }
 }

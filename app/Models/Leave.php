@@ -12,6 +12,6 @@ class Leave extends Model
     protected $fillable = ["employee_code","reason","leave_date","status ","leave_category"];
 
     public function employee(){
-        $this->belongsTo(Employee::class);
+        $this->belongsTo(\App\Models\Core\Employee::class);
     }
 }

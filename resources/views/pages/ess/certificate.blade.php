@@ -14,7 +14,7 @@
 
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between ">
-                <h5 class="mb-0">Certificate of Employment</h5>
+                <h5 class="mb-0">Certificates</h5>
 
                 <div class="d-flex gap-2">
 

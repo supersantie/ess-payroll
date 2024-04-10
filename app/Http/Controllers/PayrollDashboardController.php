@@ -12,7 +12,7 @@ class PayrollDashboardController extends Controller
 
     public function index()
     {
-        $employees = Employee::with(['payrolls', 'companyLoans'])->get();
+        $employees = \App\Models\Core\Employee::with(['payrolls', 'companyLoans'])->get();
 
         $currentMonthEmployeesCount = Employee::whereYear('created_at', '=', Carbon::now()->year)
             ->whereMonth('created_at', '=', Carbon::now()->month)

@@ -155,6 +155,8 @@
                                     icon: 'success',
                                     confirmButtonClass: 'btn btn-primary',
                                     confirmButtonText: 'Close'
+                                }).then(function (params) {
+                                    location.reload()
                                 });
                                 // You can add any further actions you need to perform after a successful AJAX call
                             },
@@ -201,26 +203,25 @@
                                 // Handle the success response
                                 Swal.fire({
                                     title: 'Recorded!',
-                                    text: 'Your time out has been successfully recorded.', // Display error message received from server
+                                    text: response
+                                    .message, // Display success message received from server
                                     icon: 'success',
                                     confirmButtonClass: 'btn btn-primary',
                                     confirmButtonText: 'Close'
-                                }).then(function(){
-                                    location.reload()
+                                }).then(function() {
+                                    location.reload();
                                 });
-                                // You can add any further actions you need to perform after a successful AJAX call
                             },
                             error: function(xhr, status, error) {
                                 // Handle any errors that occur during the AJAX call
+                                var errorMessage = xhr.responseJSON.error;
                                 Swal.fire({
                                     title: 'Error!',
                                     text: errorMessage, // Display error message received from server
                                     icon: 'error',
                                     confirmButtonClass: 'btn btn-primary',
                                     confirmButtonText: 'Close'
-                                }).then(function(){
-                                    location.reload()
-                                });
+                                })
                             }
                         });
                     }

@@ -45,38 +45,86 @@
                         <li class="nav-item">
                             <a href="{{ route('tna.index') }}"
                                 class="nav-link {{ request()->routeIs('tna.index') ? 'active' : '' }}">
-                                <i class="ph-folder-simple-lock"></i>
+                                <i class="ph-calendar"></i>
                                 <span>
                                     Time & Attendance
                                 </span>
                             </a>
                         </li>
-                        <li class="nav-item nav-item-submenu">
-                            <a href="#" class="nav-link">
-                                <i class="ph-spinner-gap"></i>
-                                <span>Requests</span>
+                        <li class="nav-item">
+                            <a href="{{ route('leaves.index') }}"
+                                class="nav-link {{ request()->routeIs('leaves.index') ? 'active' : '' }}">
+                                <i class="ph-calendar-x"></i>
+                                <span>
+                                    Leave Requests
+                                </span>
                             </a>
-                            <ul class="nav-group-sub collapse ">
-                                <a href="{{ route('leaves.index') }}"
-                                    class="nav-link {{ request()->routeIs('leaves.index') ? 'active' : '' }}">Leave</a>
                         </li>
-                        <li class="nav-item"><a href="{{ route('reimbursements.index') }}"
-                                class="nav-link {{ request()->routeIs('reimbursements.index') ? 'active' : '' }}">Reimbursement</a>
+                        <li class="nav-item">
+                            <a href="{{ route('reimbursements.index') }}"
+                                class="nav-link {{ request()->routeIs('reimbursements.index') ? 'active' : '' }}">
+                                <i class="ph-coins"></i>
+                                <span>
+                                    Reimbursements
+                                </span>
+                            </a>
                         </li>
-                        <li class="nav-item"><a href="{{ route('certificate.index') }}"
-                                class="nav-link {{ request()->routeIs('certificate.index') ? 'active' : '' }}">Certificate
-                                of Employment</a></li>
-                    </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('payslips.index') }}"
-                            class="nav-link {{ request()->routeIs('payslips.index') ? 'active' : '' }}">
-                            <i class="ph-scroll"></i>
-                            <span>
-                                Payslips
-                            </span>
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a href="{{ route('certificate.index') }}"
+                                class="nav-link {{ request()->routeIs('certificate.index') ? 'active' : '' }}">
+                                <i class="ph-newspaper-clipping"></i>
+                                <span>
+                                    Certificates
+                                </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('payslips.index') }}"
+                                class="nav-link {{ request()->routeIs('payslips.index') ? 'active' : '' }}">
+                                <i class="ph-scroll"></i>
+                                <span>
+                                    Payslips
+                                </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                <i class="ph-check-square"></i>
+                                <span>
+                                    Surveys & Feedbacks
+                                </span>
+                            </a>
+                        </li>
+                        <li
+                            class="nav-item nav-item-submenu {{ request()->routeIs('reports.*') ? 'nav-item-open' : '' }}">
+                            <a href="#" class="nav-link">
+                                <i class="ph-calendar-blank"></i>
+                                <span>Appointments</span>
+                            </a>
+                            <ul class="nav-group-sub collapse {{ request()->routeIs('appointment.*') ? 'show' : '' }}">
+                                <li class="nav-item"><a href="{{ route('appointment.checkup.index') }}"
+                                        class="nav-link {{ request()->routeIs('appointment.checkup.index') ? 'active' : '' }}">Checkups</a>
+                                </li>
+                                <li class="nav-item"><a href="{{ route('appointment.counselling.index') }}"
+                                        class="nav-link {{ request()->routeIs('appointment.counselling.index') ? 'active' : '' }}">Counselling</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li
+                            class="nav-item nav-item-submenu {{ request()->routeIs('reports.*') ? 'nav-item-open' : '' }}">
+                            <a href="#" class="nav-link">
+                                <i class="ph-bandaids"></i>
+                                <span>Health & Wellness</span>
+                            </a>
+                            <ul class="nav-group-sub collapse {{ request()->routeIs('appointment.*') ? 'show' : '' }}">
+                                <li class="nav-item"><a href="{{ route('appointment.checkup.index') }}"
+                                        class="nav-link {{ request()->routeIs('appointment.checkup.index') ? 'active' : '' }}">Articles</a>
+                                </li>
+                                <li class="nav-item"><a href="{{ route('appointment.counselling.index') }}"
+                                        class="nav-link {{ request()->routeIs('appointment.counselling.index') ? 'active' : '' }}">Programs</a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
                 <!-- /main navigation -->

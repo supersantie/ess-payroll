@@ -18,11 +18,14 @@ return new class extends Migration
             $table->double('rate_percentage');
             $table->dateTime('date_issued');
             $table->enum('status', ['approved', 'denied', 'pending', 'processed'])->default('pending');
-            // Set a specific length for the 'status' enum
-            $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
+
+            // * Referenced to workfolio_main database
+            $table->foreign('employee_code')->references('code')->on('workfolio_main.employees')->onDelete('cascade');
+            // ! Referenced to own database
+            // $table->foreign('employee_code')->references('code')->on('employees')->onDelete('cascade');
+            
             $table->timestamps();
-        });
-        
+        }); 
     }
 
     /**
@@ -33,3 +36,5 @@ return new class extends Migration
         Schema::dropIfExists('overtimes');
     }
 };
+
+

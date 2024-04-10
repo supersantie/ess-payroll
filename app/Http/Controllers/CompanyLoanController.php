@@ -15,9 +15,9 @@ class CompanyLoanController extends Controller
     public function index()
     {
         //
-        $employees = Employee::all();
+        $employees = \App\Models\Core\Employee::all();
 
-        $loans = Employee::with("companyLoans")->get();
+        $loans = \App\Models\Core\Employee::with("companyLoans")->get();
 
         // dd()
 
@@ -61,7 +61,7 @@ class CompanyLoanController extends Controller
 
             return response()->json(['success' => "Added successfully!"], 200);
         } catch (QueryException $e) {
-            return response()->json(['error' => 'Database error'], 500);
+            return response()->json(['error' => 'Database error', 'message' =>$e], 500);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred'], 500);
         }

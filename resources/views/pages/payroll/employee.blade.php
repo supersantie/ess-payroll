@@ -21,8 +21,10 @@
             <thead>
                 <tr>
                     <th>Code</th>
+                    <th>Code</th>
                     <th>First Name</th>
                     <th>Last Name</th>
+                    <th>Job Role</th>
                     <th>Job Role</th>
                     <th class="text-end" data-orderable="false">Basic Daily Rate</th>
                     <th>Date Hired</th>
@@ -36,10 +38,13 @@
                         <td>
                             <a href="" class="link-primary">{{ $item->code }}</a>
                         </td>
+                        <td>
+                            <a href="" class="link-primary">{{ $item->code }}</a>
+                        </td>
                         <td>{{ $item->first_name }}</td>
                         <td>{{ $item->last_name }}</td>
-                        <td>{{ $item->job_role }}</td>
-                        <td class="text-end">{{ Illuminate\Support\Number::currency($item->basic_daily_rate, 'PHP') }}</td>
+                        <td>{{ $item->jobRole->name }}</td>
+                        <td class="text-end">{{ Illuminate\Support\Number::currency($item->jobRole->basic_daily_rate, 'PHP') }}</td>
                         <td>{{ \Carbon\Carbon::parse($item->date_hired)->format('F d, Y') }}</td>
                         <td>
                             <span class="badge {{ $statusColors[$item->status] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">

@@ -5,7 +5,7 @@
             Home
         @endslot
         @slot('subtitle')
-            Reimbursements
+            Counselling Appointments
         @endslot
     @endcomponent
 
@@ -14,7 +14,7 @@
 
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between ">
-                <h5 class="mb-0">Reimbursements</h5>
+                <h5 class="mb-0">Counselling Appointments</h5>
 
                 <div class="d-flex gap-2">
 
@@ -24,61 +24,47 @@
                         <span class="btn-labeled-icon bg-black bg-opacity-20">
                             <i class="ph-plus"></i>
                         </span>
-                        File Reimbursement
+                        Create Appointment
                     </button>
 
 
                     <div class="modal fade" id="modalId" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
                         role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+                        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="modalTitleId">
-                                        File Reimbursement
+                                        Request an Appointment
                                     </h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
-                                <form id="reimbursementForm">
+                                <form id="checkupAppointmentForm">
                                     <div class="modal-body">
-                                        <div class="row justify-content-center align-items-center g-2 mb-3">
-                                            <div class="col">
-                                                <label for="" class="form-label">Amount</label>
-                                                <input type="text" class="form-control mask_currency"
-                                                    placeholder="PHP 0.00" id="mask_currency" name="amount">
 
+                                        <div class="row justify-content-center align-items-center g-2 mb-3">
+                                            <div class="col">
+                                                <label for="" class="form-label">Schedule Date</label>
+                                                <input type="datetime-local" name="schedule" class="form-control"
+                                                    id="">
                                             </div>
                                             <div class="col">
-                                                <label for="" class="form-label">Category</label>
-                                                <select class="form-select " name="reimbursement_category" id=""
-                                                    required>
+                                                <label for="" class="form-label">Checkup Type</label>
+                                                <select class="form-select" name="service_type" id="">
                                                     <option selected>Select one</option>
-                                                    <option value="miscellaneous">Miscellaneous</option>
-                                                    <option value="transportation">Travel</option>
-                                                    <option value="office supplies">Office Supplies</option>
-                                                    <option value="meal">Meal</option>
+                                                    @foreach ($services as $service)
+                                                        <option value="{{ $service->service_id }}">
+                                                            {{ $service->service_name }}</option>
+                                                    @endforeach
                                                 </select>
-                                            </div>
-                                        </div>
-                                        <div class="row justify-content-center align-items-center g-2 mb-3">
-                                            <div class="col">
-                                                <label for="" class="form-label">OR Number</label>
-                                                <input type="text" class="form-control" name="or_number" id=""
-                                                    aria-describedby="helpId" placeholder="" />
-                                            </div>
-                                        </div>
-                                        <div class="row justify-content-center align-items-center g-2 mb-3">
-                                            <div class="col">
-                                                <label for="" class="form-label">Attach File</label>
-                                                <input type="file" class="form-control" name="proof_of_payment"
-                                                    id="" aria-describedby="helpId" placeholder="" />
+
                                             </div>
                                         </div>
 
                                         <div class="row justify-content-center align-items-center g-2">
                                             <div class="col">
-                                                <label for="" class="form-label">Remarks</label>
-                                                <textarea class="form-control" name="remarks" id="" rows="3" placeholder="Explain the expense purpose."
+                                                <label for="" class="form-label">Note</label>
+                                                <textarea class="form-control" name="note" id="" rows="3" placeholder="Explain the expense purpose."
                                                     required></textarea>
                                             </div>
                                         </div>
@@ -105,36 +91,31 @@
                         <th data-orderable="false" class="text-center">
                             <input type="checkbox" class="form-check-input" id="cc_li_c">
                         </th>
-                        <th>Amount</th>
-                        <th>OR Number</th>
-                        <th>Proof of payment</th>
-                        <th>Category</th>
-                        <th>Status</th>
+                        <th>Type</th>
+                        <th>Remarks</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-center">Time</th>
+                        <th class="text-center">Status</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($reimbursements as $item)
+                    @foreach ($counsellings as $counselling)
                         <tr>
-                            <th class="d-flex justify-content-center ">
-                                <input type="checkbox" class="form-check-input" data-reimbursement-id="{{ $item->id }}">
-                            </th>
-                            <td>{{ $item->amount }}</td>
-                            <td>{{ $item->or_number }}</td>
-                            <td>
-
-                                <a href="{{ asset('storage/uploads/' . basename($item->proof_of_payment)) }}"
-                                    class="link-primary">
-                                    <i class="ph-file"></i>
-                                    {{ basename($item->proof_of_payment) }}
-                                </a>
-
-
+                            <td class="text-center">
+                                <input type="checkbox" class="form-check-input" id="cc_li_c">
                             </td>
-                            <td>{{ Str::title($item->reimbursement_category) }}</td>
                             <td>
-                                <span
-                                    class="badge {{ $statusColors[$item->status] ?? 'bg-secondary bg-opacity-10 text-secondary' }}">{{ Str::title($item->status) }}</span>
+                                <span class="fw-bold">{{ $counselling->counselling_type }}</span>
+                            </td>
+                            <td>{{ $counselling->note }}</td>
+                            <td class="text-center">{{ \Carbon\Carbon::parse($counselling->counselling_date)->format('d F Y') }}
+                            </td>
+                            <td class="text-center">{{ \Carbon\Carbon::parse($counselling->counselling_time)->format('h:i A') }}
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-primary">Status</span>
+                            </td>
                             <td class="text-center">
                                 <div class="d-inline-flex">
                                     <div class="dropdown">
@@ -200,13 +181,13 @@
                 });
             })
 
-            $("#reimbursementForm").on("submit", function(e) {
+            $("#checkupAppointmentForm").on("submit", function(e) {
                 e.preventDefault();
 
                 let formData = new FormData($(this)[0]);
 
                 $.ajax({
-                    url: '{{ route('reimbursements.store') }}',
+                    url: '{{ route('appointment.counselling.store') }}',
                     method: 'POST',
                     data: formData,
                     processData: false,

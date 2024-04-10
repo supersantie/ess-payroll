@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Employee;
 use Illuminate\Http\Request;
 
-class EmployeeController extends Controller
+class SurveyFeedbackController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,16 +12,6 @@ class EmployeeController extends Controller
     public function index()
     {
         //
-        $employees = \App\Models\Core\Employee::with(['attendances', 'jobRole'])->get();
-
-        $statusColors = [
-            'probationary' => 'bg-warning bg-opacity-10 text-warning',
-            'part time' => 'bg-secondary bg-opacity-10 text-secondary',
-            'full time' => 'bg-success bg-opacity-10 text-success',
-            'terminated' => 'bg-danger bg-opacity-10 text-danger',
-        ];
-
-        return view('pages.payroll.employee', compact('employees' , 'statusColors'));
     }
 
     /**
@@ -44,7 +33,7 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Employee $employee)
+    public function show(string $id)
     {
         //
     }
@@ -52,7 +41,7 @@ class EmployeeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Employee $employee)
+    public function edit(string $id)
     {
         //
     }
@@ -60,7 +49,7 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Employee $employee)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -68,7 +57,7 @@ class EmployeeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Employee $employee)
+    public function destroy(string $id)
     {
         //
     }

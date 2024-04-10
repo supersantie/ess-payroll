@@ -63,7 +63,6 @@ return [
             ]) : [],
         ],
 
-        // ? WORKFOLIO DATABASES
         'mssp' => [
             'driver' => 'mysql',
             'host' => env('MSSP_DB_HOST', '127.0.0.1'),
@@ -82,14 +81,6 @@ return [
             'password' => env('CORE_DB_PASSWORD', ''),
         ],
 
-        'info_tna_sched' => [
-            'driver' => 'mysql',
-            'host' => env('ITNAS_DB_HOST', '127.0.0.1'),
-            'port' => env('ITNAS_DB_PORT', '3306'),
-            'database' => env('ITNAS_DB_DATABASE', 'forge'),
-            'username' => env('ITNAS_DB_USERNAME', 'forge'),
-            'password' => env('ITNAS_DB_PASSWORD', ''),
-        ],
 
         'pgsql' => [
             'driver' => 'pgsql',
@@ -153,6 +144,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
             'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
